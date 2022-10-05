@@ -1,0 +1,42 @@
+{
+    "data_configs": {
+        "dataset_name": null,
+        "dataset_config_name": null,
+        "train_file": "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/writing_models/data/quality_dataset/cia_train.txt",
+        "validation_file": "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/writing_models/data/quality_dataset/cia_validation.txt",
+        "test_file": "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/writing_models/data/quality_dataset/cia_test.txt",
+        "validation_split_percentage": 5,
+        "tokenizer_name": null,
+        "use_slow_tokenizer": false,
+        "per_device_train_batch_size": 1,
+        "per_device_eval_batch_size": 1,
+        "block_size": null,
+        "preprocessing_num_workers": 4,
+        "overwrite_cache": false,
+        "no_keep_linebreaks": false
+    },
+    "model_configs": {
+        "model_name_or_path": "gpt2",
+        "config_name": null,
+        "model_type": null
+    },
+    "train_configs": {
+        "learning_rate": 5e-5,
+        "weight_decay": 0.0,
+        "num_train_epochs": 20,
+        "max_train_steps": null,
+        "gradient_accumulation_steps": 1,
+        "lr_scheduler_type": "linear",
+        "num_warmup_steps": 0,
+        "seed": null
+    },
+    "save_configs": {
+        "output_dir": "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/writing_models/checkpoints/quality_model/model/",
+        "push_to_hub": false,
+        "hub_model_id": null,
+        "hub_token": null,
+        "checkpointing_steps": null,
+        "resume_from_checkpoint": null,
+        "with_tracking": false
+    }
+}

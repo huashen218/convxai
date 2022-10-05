@@ -1,0 +1,19 @@
+tasks:
+  default:
+    onboard_world: MessengerBotChatOnboardWorld
+    task_world: MessengerBotChatTaskWorld
+    timeout: 1800
+    agents_required: 1
+task_name: chatbot
+world_module: convxai.services.run_server.worlds   ### Locate the convxai system entry point
+overworld: MessengerOverworld
+max_workers: 30
+opt:
+  debug: True
+  models:
+    blender_90M:
+      model: convxai.xai_models.models.xaiagent:XaiAgent  ### Locate the xai_agent model 
+      interactive_mode: True
+      no_cuda: True
+additional_args:
+  page_id: 1 # Configure Your Own Page

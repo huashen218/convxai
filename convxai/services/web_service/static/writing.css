@@ -1,0 +1,639 @@
+
+:root {
+  --main-bg-color: #858FAC;
+  /* --main-bg-color: #4856C1; */
+  --highlight-text: #1B5AA2;
+}
+
+
+
+#form-container {
+  width:100%;
+  padding: 1.35rem;
+  /* height:100% */
+}
+
+
+#editor {
+  font-size: 13pt;
+  /* height: 500px;    Revise height after show models */
+  height: 446px;    
+  padding: 10px;
+  width: 100%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+
+.ql-toolbar {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+}
+
+
+
+
+
+
+
+
+/* =================== Scroll Bar ===================== */
+
+.ql-editor::-webkit-scrollbar, #comment-list::-webkit-scrollbar {
+  width: 16px;
+}
+
+.ql-editor::-webkit-scrollbar-track, #comment-list::-webkit-scrollbar-track {
+  background-color: #e4e4e4;
+  border-radius: 100px;
+}
+
+.ql-editor::-webkit-scrollbar-thumb, #comment-list::-webkit-scrollbar-thumb {
+  border-radius: 100px;
+  border: 4px solid transparent;
+  background-clip: content-box;
+  background-color: var(--main-bg-color);
+}
+
+
+
+
+/* =================== Model Instruction Buttons ===================== */
+
+
+.model-instruction {
+  margin-left:  2%;
+  margin-right: 2%;
+}
+
+.writing-model-buttons {
+  align-items: center;
+  display: block;
+}
+/* 
+.model-writing-1 {
+  margin-left: 10%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  float:left;
+
+  border: 1px solid transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background-color: #7C9AB6;
+}
+
+.model-writing-1:hover {
+  border: 1px solid transparent;
+  background-color: #EAEAEA;
+  color: var(--main-text-color);
+} */
+
+
+
+
+.model-writing-1 {
+  margin-left: 10%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  float:left;
+
+  border: 1px solid transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  /* background-color: #7C9AB6; */
+  background-color: #11479398;
+}
+
+.model-writing-1:hover {
+  border: 1px solid transparent;
+  background-color: #EAEAEA;
+  color: var(--main-text-color);
+}
+
+
+.model-writing-1-instruction{
+  margin-left: 2%;
+  padding: 7px 5px 7px 5px;
+  background-color: #EBEBEB;
+  float:left;
+}
+
+
+
+.model-writing-2 {
+  margin-left: 2%;
+  margin-right: 10%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  float:right;
+  /* float:left; */
+  border: 1px solid transparent;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  /* background-color: #C15C66; */
+  background-color: #A50E0E98;
+}
+
+
+.model-writing-2:hover {
+  border: 1px solid transparent;
+  background-color: #EAEAEA;
+  color: var(--main-text-color);
+}
+
+.model-writing-2-instruction{
+  margin-left: 2%;
+  padding: 7px 5px 7px 5px;
+  background-color: #EBEBEB;
+  float:left;
+  display: inline;
+}
+
+.writing-model-descriptions{
+  height: 200px;
+  margin:5px;
+}
+
+
+
+
+/* =================== Prediction Highlight and Hover ===================== */
+
+
+.predict-model-writing-1:hover {
+  /* background-color: #EAEAEA; */
+  cursor: pointer;
+  background-color: #FCC85D;
+  border-color:#FC9739;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25);
+}
+
+
+
+.predict-model-writing-2:hover {
+  /* background-color: #EAEAEA; */
+  cursor: pointer;
+  background-color: #FCC85D;
+  border-color:#FC9739;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25);
+
+}
+
+.predict-selected {
+  /* background-color: red; */
+  cursor: pointer;
+  border-radius: 5px;
+  border-style: dashed;
+  border-color: #F05365;
+}
+
+
+
+
+/* =================== Diversity Model ===================== */
+
+
+
+p[type="predict-background"] {
+  background-color: #B1CFE798;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.color-background{
+  background-color: #B1CFE798;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+}
+
+
+
+p[type="predict-purpose"] {
+  background-color: #7EB4D698;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.color-purpose{
+  background-color: #7EB4D698;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+}
+
+
+
+p[type="predict-method"] {
+  background-color: #4B91C598;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.color-method{
+  background-color: #4B91C598;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+}
+
+
+
+p[type="predict-finding"] {
+  background-color: #286CAF98;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+}
+.color-finding{
+  background-color: #286CAF98;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+  color: white;
+}
+
+
+
+p[type="predict-other"] {
+  background-color: #11479398;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+}
+.color-other{
+  background-color: #11479398;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+  color: white;
+}
+
+
+
+
+
+
+
+/* =================== Quality Model ===================== */
+
+/* 5D2E46 */
+
+
+p[type="predict-quality1"] {
+  background-color: #fce8e698;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.color-quality1{
+  background-color: #FCE8E698;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+}
+
+
+
+p[type="predict-quality2"] {
+  background-color: #f6aea998;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.color-quality2{
+  background-color: #f6aea998;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+}
+
+
+
+p[type="predict-quality3"] {
+  background-color: #EE675C98;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.color-quality3{
+  background-color: #EE675C98;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+}
+
+
+
+p[type="predict-quality4"] {
+  background-color: #c5221f98;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+}
+.color-quality4{
+  background-color: #c5221f98;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+  color: white;
+}
+
+
+
+p[type="predict-quality5"] {
+  background-color: #A50E0E98;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: white;
+}
+.color-quality5{
+  background-color: #A50E0E98;
+  color: var(--main-text-color);
+  border-radius: 4pt;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+/* ============ Submit button: Loading logo ============= */
+.btn-submit-loader-packager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 36px; */
+}
+.btn-submit-text {
+  font-size: 15px;
+  align-items: center;
+  text-align: center;
+  margin :auto;
+  height: 36px;
+}
+.btn-submit-loader {
+  border: 6px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 6px solid #7C9AB6;
+  width: 36px;
+  height: 36px;
+  animation: spin 1s linear infinite;
+  /* margin-right: 5%; */
+  padding: 0;
+  display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+
+
+
+
+
+#selected-sentences {
+  height: 100pt;
+  overflow: scroll;
+  padding: 10pt;
+  margin-top: 10pt;
+  margin-bottom: 10pt;;
+}
+
+
+
+
+/* 
+.selected-sentences {
+  height: 100pt;
+  overflow: scroll;
+  padding: 10pt;
+  margin-top: 20pt;
+  margin-bottom: 20pt;;
+}
+ */
+
+
+
+/* .selected-sentences{
+    padding: 20px;
+    background: #f2f2f2;
+    border: 5px solid #aaa;
+} */
+
+
+.selections{
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border-style: dashed;
+    border-color: #F05365;
+    /* border: 1px solid #858FAC; */
+}
+
+
+
+.form-select{
+  display: inline-block;
+  width:100%;
+  margin: auto;
+  margin-top: 10pt;
+  margin-bottom: 10pt;
+  padding:.375rem 2.25rem .375rem .75rem;
+  -moz-padding-start:calc(0.75rem - 3px);
+  font-size:12pt;
+  font-weight:400;
+  line-height:1.5;
+  /* color:#212529; */
+  color:#6C6C6C;
+  background-color:#fff;
+
+  background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;
+  background-position:right .75rem center;
+  background-size:16px 12px;border:1px solid #ced4da;
+  border-radius:.25rem;
+  transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  border-color:#86b7fe;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25);
+  appearance:none}@media (prefers-reduced-motion:reduce){.form-select{transition:none}}.form-select:focus{border-color:#86b7fe;
+    outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)}.form-select[multiple],.form-select[size]:not([size="1"]){padding-right:.75rem;background-image:none}.form-select:disabled{background-color:#e9ecef}.form-select:-moz-focusring{color:transparent;
+      text-shadow:0 0 0 #212529}.form-select-sm{padding-top:.25rem;padding-bottom:.25rem;padding-left:.5rem;font-size:.875rem;border-radius:.2rem}
+
+
+
+
+
+
+
+
+/* Step1: define the tooltip css : https://www.w3schools.com/css/tryit.asp?filename=trycss_tooltip */
+
+
+*[data_tooltip] {
+  position: relative;
+}
+
+*[data_tooltip]::after {
+  content: attr(data_tooltip);
+
+  position: absolute;
+  top: -20px;
+  /* right: -20px; */
+  left: -20px;
+  /* width: 350px; */
+  /* height: 100px; */
+
+  pointer-events: none;
+  opacity: 0;
+  /* -webkit-transition: opacity .15s ease-in-out;
+  -moz-transition: opacity .15s ease-in-out;
+  -ms-transition: opacity .15s ease-in-out;
+  -o-transition: opacity .15s ease-in-out;
+  transition: opacity .15s ease-in-out; */
+
+  -webkit-transition: opacity .05s ease-in-out;
+  -moz-transition: opacity .05s ease-in-out;
+  -ms-transition: opacity .05s ease-in-out;
+  -o-transition: opacity .05s ease-in-out;
+  transition: opacity .05s ease-in-out;
+
+
+  display: block;
+  font-size: 15px;
+  line-height: 16px;
+  /* background: #fefdcd; */
+  background: #DEDEDE;
+  /* color: black; */
+  color: var(--main-bg-color);
+  padding: 4px 4px 4px 4px;
+  border: 1px solid #c0c0c0;
+  box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.4);
+}
+
+*[data_tooltip]:hover::after {
+  opacity: 1;
+}
+
+
+
+/* Model-Button-Tooltips */
+
+
+
+*[model_button_tooltip] {
+  position: relative;
+}
+
+*[model_button_tooltip]::after {
+  content: attr(model_button_tooltip);
+
+  position: absolute;
+  top: -20px;
+  /* right: -20px; */
+  left: -20px;
+  /* width: 150px; */
+  /* width: 350px; */
+  /* height: 100px; */
+
+  pointer-events: none;
+  opacity: 0;
+  -webkit-transition: opacity .15s ease-in-out;
+  -moz-transition: opacity .15s ease-in-out;
+  -ms-transition: opacity .15s ease-in-out;
+  -o-transition: opacity .15s ease-in-out;
+  transition: opacity .15s ease-in-out;
+
+  display: block;
+  font-size: 15px;
+  line-height: 16px;
+  /* background: #fefdcd; */
+  background: #DEDEDE;
+  /* color: black; */
+  color: var(--main-bg-color);
+  padding: 4px 4px 4px 4px;
+  border: 1px solid #c0c0c0;
+  box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.4);
+}
+
+*[model_button_tooltip]:hover::after {
+  opacity: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.associate-highlight {
+  background-color: #FCC85D;
+  /* border-color:#86b7fe;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25); */
+  border-color:#FC9739;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25);
+  font-weight: bold;
+}
+
+
+
+
+
+
+.data_tooltip_associate_highlight::after {
+  content: attr(data_tooltip);
+  background-color: #FCC85D;
+  /* border-color:#86b7fe;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25); */
+  border-color:#FC9739;outline:0;box-shadow:0 0 0 .25rem rgba(13,110,253,.25);
+  /* font-weight: bold; */
+
+
+  position: absolute;
+  top: -20px;
+  /* right: -20px; */
+  left: -20px;
+  /* width: 350px; */
+  /* height: 100px; */
+
+  pointer-events: none;
+  opacity: 1;
+  -webkit-transition: opacity .15s ease-in-out;
+  -moz-transition: opacity .15s ease-in-out;
+  -ms-transition: opacity .15s ease-in-out;
+  -o-transition: opacity .15s ease-in-out;
+  transition: opacity .15s ease-in-out;
+
+  display: block;
+  font-size: 15px;
+  line-height: 16px;
+  /* background: #fefdcd; */
+  /* background: #DEDEDE; */
+  /* color: black; */
+  color: var(--main-bg-color);
+  padding: 4px 4px 4px 4px;
+  border: 1px solid #c0c0c0;
+  box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.4);
+
+
+
+}
+
+
+
+
+.comments:hover {
+  /* background-color: #EAEAEA; */
+  cursor: pointer;
+  background-color: #FCC85D;
+  border-color:#FC9739; 
+  outline:0;
+  box-shadow:0 0 0 .25rem rgba(13,110,253,.25);
+}
