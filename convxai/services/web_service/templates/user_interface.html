@@ -1,0 +1,396 @@
+<html>
+
+
+    <head>
+
+        <title>Conversational XAI Assistant for Creative Writing Support</title>
+        <meta charset="utf-8">
+        <link rel="icon" href="/files/favicon-32x32.png" sizes="16x16" type="image/png">
+    
+        <!-- Bootstrap -->
+        <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" rel="stylesheet"/>
+
+        <!-- Include stylesheet -->
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+        
+        <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>                                                                                                                                                           
+
+        <!-- Custom -->
+        <link href="{{url_for('static', filename='main.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='writing.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='chatbot.css')}}" rel="stylesheet">
+
+        <script src="{{url_for('static', filename='prediction.js')}}" defer></script>
+        <script src="{{url_for('static', filename='writing.js')}}" defer></script>
+        <script src="{{url_for('static', filename='chatbot.js')}}" defer></script>
+
+        <!-- Icons -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   
+        <!-- Emoji -->
+        <!-- https://emojipedia.org/woman-student-light-skin-tone/
+        https://fontawesome.com/search?m=free
+        -->
+    </head>
+
+
+    <body>
+        <input type="hidden" id="conversation_id">
+        <input type="hidden" id="test">
+
+        <!-- HTML -->
+        <div class="container">
+            <div class="row" id="display-start">
+                
+                <div class="col-md-10"  style="display: block; margin-left: auto; margin-right: auto; height:100% ">
+                    <div class="card" id="fragment-section-start" style="margin-top: 20px;">
+                        <div class="card-writing-title-theme card-header">
+                            <!-- <i class="fa-brands fa-phoenix-framework fa-lg"></i> -->
+                            <span>Conversational AI Explaination (XAI) Assistant for Scientific Writing Support</span>
+                        </div>
+                        
+                        <br>
+
+                        <span style="margin: 20pt">
+                            <p>Welcome to the user study of the conversational XAI assistant for scientific writing support!</p>
+                            <br>
+
+                            <!-- Adding the video -->
+                            <div>
+                                <p align="center">
+
+                                    <!-- <iframe width="560" height="315" src="https://www.youtube.com/embed/sug5APE8rEM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
+                                    <iframe width="560" height="315" src="https://www.youtube.com/embed/1AeeTTrNudQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </p>
+                            </div>
+
+
+                            <p>
+                                The <b>goal</b> of this system is to <b>help you improve your scientific paper abstract writing by interacting with a conversational explainable AI assistant</b>, where you can request writing feedback and explanations.
+                            </p>
+
+                            <p>
+                                In this video, we will guide you through the system with <b>an example to understand the system pipeline</b>. Then you would be free to explore the system. Let's start! 
+                            </p>
+                                
+
+                            <!-- In this user study, you're shown with two modules:
+                            <ul>
+                                <li> 
+                                    The left pane is the writing support model, where you can upload your scientific paper abstract 
+                                    and view the result of AI prediction with respect to different aspects.
+                                </li>
+                                <li>
+                                    The right pane is the conversational XAI assistant, where you can ask any explanation questions 
+                                    to understand the AI prediction on your abstract writing prediction.
+                                </li>
+                            </ul> -->
+                        </span>
+
+                        <!-- <p style="margin-left:20px">
+                            <span style="font-style: italic;"> 
+                                We are the 
+                                <a href="https://crowd.ist.psu.edu/crowd-ai-lab.html" target="_blank">Crowd-AI Lab at Penn State University</a>. 
+                                Please contact Hua Shen (huashen218@psu.edu) for any questions.
+                            </span>
+                        <br> -->
+
+                        <form class="col-md-12" id="start">
+                            <div class="field is-grouped">
+                                <p class="control">
+                                    <button class="button-font-class btn btn-primary btn-block btn-theme" id="another" type="submit">
+                                        Start Your Task
+                                    </button>
+                                </p>
+                            </div>
+                        </form>
+
+                    </div>  
+                </div>
+
+            </div>
+        </div>
+
+
+
+        <div class="container" id="main-content" style="display:none">
+
+            <div class="row" style="height:100%">
+
+                <div class="col-md-6" id="display-writing">
+
+                    <div class="card-writing-title-theme card-header">
+                        <i class="fa-solid fa-feather-pointed fa-lg" ></i>
+                        <span>&nbsp;Scientific Writing Support</span>
+                        <!-- <i class="fa-solid fa-pen-nib fa-lg"></i> -->
+                        <!-- <i class="fa-solid fa-pen-to-square"></i> -->
+                        <!-- <i class="fa-solid fa-user-astronaut "></i> -->
+                    </div>
+
+                    <div class="card" id="writing_support_card">
+
+                        <div class="card-body" id="form-container">
+
+                            <div class="writing-short-introduction">
+                                <div>
+                                    <span>Which <strong>conference</strong> are you most likely to <strong>submit this paper abstract</strong> to:</span>
+                                    
+                                    <select class="form-select" id="target-conference" aria-label="Default select example">
+                                        <option selected>Please select a target conference</option>
+                                        <option value="ACL"><strong>ACL</strong> (Natural Language Processing Domain)</option>
+                                        <option value="CHI"><strong>CHI</strong> (Human-Computer Interaction Domain) </option>
+                                        <option value="ICLR"><strong>ICLR</strong> (Machine Learning Domain)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                              
+                            
+                            <form id="editor-form" style="display:none">
+                                <br>
+                                <div>
+                                    <span>Select an abstract <strong>example</strong> to try:</span>
+
+                                    <select class="form-select" id="abstract-sample" aria-label="Default select example">
+                                        <option selected><span style="color: #E3E3E3">Select an abstract example</span></option>
+                                        <option value="1">Abstract Example-1</option>
+                                        <option value="2">Abstract Example-2</option>
+                                        <option value="3">Abstract Example-3</option>
+                                    </select>
+                                </div>
+
+                                 
+                                <div>
+                                    <p  style="margin-top:10pt;">Or Edit <strong>your paper abstract</strong>:</p>
+
+                                    <div class = "row form-group">
+                                        <input id="editor-input" type="hidden">
+                                        <div id="editor">
+                                        </div>
+                                    </div>
+
+
+
+                                    <!-- Submit Button -->
+                                    <div class = "row">
+                                        <button id="editor-submit" class="btn btn-primary btn-block btn-theme" type="submit">
+                                            <div class="btn-submit-loader-packager">
+                                                <p class="button-font-class btn-submit-text" >
+                                                    <span style="margin:auto">Click to Submit Your Writing<div class="btn-submit-loader"></div></span>
+                                                </p>    
+                                            </div>
+                                        </button>
+                                    </div>
+
+                                </div>
+
+
+
+
+                                <div class="writing-model-descriptions" style="display:none">
+
+                                    <div class="writing-model-buttons row">
+                                        <input type="hidden" id="writing-model">
+                                        <p>
+                                            Click below buttons to <strong>switch the model's</strong> prediction on each sentence.
+                                        </p>
+                                        <button type="button" class="model-writing-1 button-font-class btn model-switch-btn" id="model-writing-1">Writing Structure Model</button>
+                                        <button type="button" class="model-writing-2 button-font-class btn model-switch-btn" id="model-writing-2">Writing Style Model</button>
+                                    </div>
+            
+                
+                                    <!-- Writing-Model1: Aspect Prediction Instruction -->
+                                    <div class="row model-writing-1-instruction model-instruction " style="display:none;">
+                                        <p>
+                                            A good paper abstract should describe comprehensive research aspects, this model (i.e., a SciBERT-based) classifies each sentence into one of the five aspect labels.
+                                        </p>
+                                        <!-- <div class="text-center" id="viewer-checkbox-container" style="margin: 10px auto 10px auto;"> -->
+                                        <div class="text-center" id="viewer-checkbox-container" style="margin: auto auto auto auto;">
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-background prediction-label" for="background-checkbox">
+                                                Background
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-purpose prediction-label" for="purpose-checkbox">
+                                                Purpose
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-method prediction-label" for="method-checkbox">
+                                                Method
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-finding prediction-label" for="finding-checkbox">
+                                                Finding/Contribution
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-other prediction-label" for="other-checkbox">
+                                                Other
+                                            </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Writing-Model2: Writing Rating Instruction -->
+                                    <div class="row model-writing-2-instruction model-instruction" style="display:none;">
+                                        <p>
+                                            A good paper abstract matches the targeted conference's writing style. This model (i.e., GPT-2 based) compares 'how similar your abstract with the targeted conference' and produce a style quality score on each sentence.
+                                        </p>
+                                        <div class="text-center" id="viewer-checkbox-container" style="margin: auto auto auto auto;">
+
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-quality1 prediction-label" for="background-checkbox">
+                                                Score=1 (lowest)
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-quality2 prediction-label" for="purpose-checkbox">
+                                                Score=2
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-quality3 prediction-label" for="method-checkbox">
+                                                Score=3
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-quality4 prediction-label" for="finding-checkbox">
+                                                Score=4
+                                            </label>
+                                            </div>
+                    
+                                            <div class="form-check form-check-inline">
+                                            <label class="form-check-label color-quality5 prediction-label" for="other-checkbox">
+                                                Score=5 (highest)
+                                            </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>  
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-md-5" id="display-xai" style="display:none">
+        
+
+
+                    <div class="card-conv-title-theme card-header">
+                        <i class="fa-solid fa-user-graduate fa-lg"></i>
+                        <span>&nbsp;Conversational AI Explaination (XAI) Assistant</span>
+                    </div>
+                    
+                    <div class="card" id="convxai_card">
+
+                        <div class="card-body" >
+
+                            <div class="chatBot active;">
+
+                                <div class="chatBotHeading">
+                                    <label for="chatTextBox" id="chatOpenTrigger" class="active text-dark"><span style="white-space:nowrap; overflow: unset;">Conversational Explainable AI (XAI) Assistant</span>
+                                        <!-- <i class="help-icon fa-regular fa-circle-question" id="chatbot-help" style="font-size: 16px;"><span id="chatbot-help-text" class="help-text">This is a display text for help</span></i></label> -->
+                                </div>
+        
+                                <hr class="active">
+                                <div class="chatBody active">
+                                    <div class="chatSession">
+                                    </div>
+                                </div>
+
+                                <div class="card" style="margin-top: 30px; margin-bottom: 10px;">
+                                    <div class="card-header select-sentence">
+                                        <div class="select-sentence-hover">
+                                            <!-- <strong>Selected Sentences to be Explained</strong> -->
+                                            <strong>You can ask below XAI questions for the selected sentence:</strong>
+                                            <i class="help-icon fa-regular fa-circle-question" id="sentence-select-help"></i>
+                                            <div id="sentence-select-help-text" class="help-text" style="display:none;">
+
+
+
+                                                <p>Explain <span class='text-danger font-weight-bold'>General Information</span>:</p>
+                                                    <ul class="a">
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info data-question">data statistics</span>] What data did the system learn from?</li>
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info model-question">model description</span>] What kind of models are used?</li>
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info quality-score-question">quality score</span>] What's the range of the style quality scores?</li>
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info label-distribution-question">label distribution</span>] How are the structure labels distributed?</li>
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info sentence-length-question">sentence length</span>] What's the statistics of the sentence lengths?</li>
+                                                    </ul> 
+                                                <p>Explain the sentence's <span class='text-danger font-weight-bold'>Review</span>:</p>
+                                                    <ul class="b">
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info confidence-question">explain sentence review</span>] Can you explain this sentence review?</li>
+                                                    </ul> 
+                                                <p>Explain the sentence's <span class='text-danger font-weight-bold'>Model Prediction</span>:</p>
+                                                    <ul class="b">
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info confidence-question">prediction confidence</span>] How confident is the model for this prediction?</li>
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info example-question">similar examples</span>] What are some published sentences that look similar to mine semantically?</li> 
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info attribution-question">important words</span>] Which words in this sentence are most important for this prediction?</li>
+                                                        <li> &nbsp;&nbsp;&nbsp;- [<span class="text-info counterfactual-question">conterfactual prediction</span>] How can I revise the input to get a different prediction label?</li>
+                                                    </ul> 
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    
+                                    <div class="card-body">
+                                        <div class="selected-sentences">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <form class="chatForm active" autocomplete="off">
+                                    <div class="typingArea">
+                                        <textarea 
+                                            name="chatInput" 
+                                            id="chatTextBox" 
+                                            class="textArea" 
+                                            onblur="if(!validateMessage()) this.value = 'Type here...'" onfocus="if(!validateMessage()) this.value = ''"
+                                        ></textarea>
+
+                                        <button type="submit" class="button-font-class sendButton" id="sendButton"> <span class="text-white">Send</span></button>
+                                    </div>
+                                </form>
+                            </div>
+                    </div>
+                        
+                </div>
+        
+
+            </div>
+
+
+            </div>
+
+        </div>
+        
+
+    </body>
+</html>
+
+
+
+
