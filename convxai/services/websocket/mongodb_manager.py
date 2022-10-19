@@ -15,11 +15,7 @@ from parlai.chat_service.core.chat_service_manager import ChatServiceManager
 
 import parlai.chat_service.utils.logging as log_utils
 import parlai.chat_service.utils.misc as utils
-#from parlai.chat_service.services.websocket.sockets import MessageSocketHandler
 from .mongodb_agents import MongoAgent
-#import tornado
-#from tornado.options import options
-
 from pymongo import MongoClient
 from datetime import datetime
 from threading import Thread, Event
@@ -46,9 +42,10 @@ class MongoManager(ChatServiceManager):
         super().__init__(opt)
         self.opt = opt
         #self.port = opt.get('port')
-        # self.mongo_host = "localhost"
-        self.mongo_host = "157.230.188.155"
-        self.db_name = "convxai"
+        # self.mongo_host = "157.230.188.155"
+        # self.mongo_host = "130.203.139.47"
+        self.mongo_host = "localhost"
+        self.db_name = "convxai_test" #"convxai" 
         self.mongo = MongoClient(self.mongo_host)[self.db_name]
         
         self.mongo_lock = Event()

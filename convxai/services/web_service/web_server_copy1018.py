@@ -9,46 +9,43 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from threading import Thread, Event
 import time
-from datetime import datetime
+from datetime import datetime 
 import pytz
 import logging
 from convxai.services.utils import create_folder
 
-
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "liaopi6u123sdfakjb23sd"
+# app.config["SECRET_KEY"] = "leampi6u123sdfakjb23sd"
 
-socketio = SocketIO(app, logger=True, engineio_logger=True,
-                    async_mode="threading")
-mongo = MongoClient("localhost")["convxai_test"] # ["convxai"]
+
+socketio = SocketIO(app, logger=True, engineio_logger=True, async_mode="threading")
+mongo = MongoClient("localhost")["convxai"]
+
 thread = Thread()
 thread_stop_event = Event()
-task_mapping = {}  # {task_id : sid}
+task_mapping = {} # {task_id : sid}
 
 
-###### Set up paths to save log files ######
-root_dir = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "../../../"))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
 with open(os.path.join(root_dir, 'runners/sysconfig.json')) as json_file:
     logfilePath = json.load(json_file)['logfilePath']
-logFileName = "log_" + datetime.now().astimezone(pytz.timezone('US/Eastern')
-                                                 ).strftime("%m%d%Y_%H%M%S") + ".txt"
+logFileName = "log_" + datetime.now().astimezone(pytz.timezone('US/Eastern')).strftime("%m%d%Y_%H%M%S") + ".txt"
 create_folder([logfilePath])
+# logfile = open(os.path.join(logfilePath, logFileName), "a")
 logFile = open(os.path.join(logfilePath, logFileName), "a")
-
 
 
 ########################################
 # Threading and MongoDB
 ########################################
 
-def init_threading() -> None:
-    """Initiate the thread to monitor interaction and save data into mongoDB database."""
+def init_threading():
     global thread
     if not thread.is_alive():
         thread = Thread(
-            name='mongo-monitoring',
-            target=mongo_monitoring,
+            name='mongo-monitoring', 
+            target=mongo_monitoring, 
         )
         thread.start()
         print("Starting Mongo Monitoring Thread")
@@ -90,7 +87,6 @@ def mongo_monitoring():
             del task_mapping[source_message_id],
 
 
-
 ########################################
 # Flask Implementation
 ########################################
@@ -120,15 +116,21 @@ def init_conversation():
 
 @app.route("/reset")
 def reset():
+    # send text using ws
     data = json.dumps({"text": "[RESET]"})
+    #ws.send(data)
     return jsonify({"text": "RESET"})
+
+
 
 
 
 ########################################
 # SocketIO Implementation
 ########################################
-"""SocketIO Implementations."""
+"""
+SocketIO Implementation.
+"""
 
 @socketio.on('connect', namespace="/connection")
 def test_connect():
@@ -156,33 +158,46 @@ def interact_socket(body):
         "note": "socket",
     })
 
+
     ### Write logs into files ###
     task_mapping[result.inserted_id] = request.sid
-
-    responseTime = datetime.now().astimezone(
-        pytz.timezone('US/Eastern')).strftime("%m-%d-%Y %H:%M:%S")
+    
+    responseTime = datetime.now().astimezone(pytz.timezone('US/Eastern')).strftime("%m-%d-%Y %H:%M:%S")
     responseText = body["text"]
     responseMessageType = body["message_type"]
     responseWritingModel = body.get("writing_model", None)
 
-    logEntry = responseTime + "  Text: " + responseText + "  \n\t\tMessageType:" + \
-        responseMessageType + "  \n\t\tWritingModel: " + responseWritingModel + "\n"
+    logEntry = responseTime + "  Text: " + responseText + "  \n\t\tMessageType:" + responseMessageType + "  \n\t\tWritingModel: " + responseWritingModel + "\n"
+    # logFile = open(os.path.join(logfilePath, logFileName), "a")
     logFile.write(logEntry+"\n")
     logFile.close()
-    print("Written to file" + logEntry)
+    print("Written to file" +logEntry)
 
 
 
-########################################
-# Run Flask and SocketIO.
-########################################
+
+#########################################
+"""
+Run Flask and Websocket.
+"""
 def run_flask_socketio():
-    """Run Flask and Websocket."""
     socketio.run(app, host="0.0.0.0", port=8080, debug=False)
 
 
+# def run_flask():
+#     #app.run(host="0.0.0.0", port=5000, debug=True)
+#     app.run(host="0.0.0.0", port=8080, debug=True)
+
+
+# def run_web_socket():
+#     ws.run_forever()
 
 
 if __name__ == "__main__":
     init_threading()
     run_flask_socketio()
+
+
+
+    #threading.Thread(target=run_web_socket).start()
+    #run_flask()

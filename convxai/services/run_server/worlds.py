@@ -22,39 +22,27 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
 logger.setLevel(logging.INFO)
 
 
-
 ###### Diversity Model Output Mapping ######
 diversity_model_label_mapping = {
     0: "background",
     1: "purpose",
-    2: "method", 
+    2: "method",
     3: "finding",
     4: "other",
 }
 
 
 ###### Quality Model Output Mapping ######
-# levels = [0.1010, 0.1521, 0.1897, 0.2207]
-# quality_model_label_mapping = lambda x: \
-#     "quality1" if x<levels[0] else (
-#     "quality2" if x>=levels[0] and x<levels[1] else (
-#     "quality3" if  x>=levels[1] and x<levels[2] else (
-#     "quality4" if x>=levels[2] and x<levels[3] else 
-#     "quality5"))
-# )
-
-# levels = [3, 54, 72, 1207]
 levels = [35, 52, 74, 116]
-quality_model_label_mapping = lambda x: \
-    "quality1" if x>levels[3] else (
-    "quality2" if x>=levels[2] and x<levels[3] else (
-    "quality3" if  x>=levels[1] and x<levels[2] else (
-    "quality4" if x>=levels[0] and x<levels[1] else 
-    "quality5"))
+
+
+def quality_model_label_mapping(x): return \
+    "quality1" if x > levels[3] else (
+    "quality2" if x >= levels[2] and x < levels[3] else (
+        "quality3" if x >= levels[1] and x < levels[2] else (
+            "quality4" if x >= levels[0] and x < levels[1] else
+            "quality5"))
 )
-
-
-
 
 
 # ---------- Overworld -------- #
@@ -71,31 +59,26 @@ class MessengerOverworld(World):
         self.first_time = True
         self.episodeDone = False
 
-
-
         ###### Define writing_models' configurations ######
 
         ### Diversity_Model ###
-        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+        root_dir = os.path.abspath(os.path.join(
+            os.path.dirname(__file__), "../../"))
 
-        with open(os.path.join(root_dir, "writing_models/configs/diversity_model_config.json" ), 'r') as fp:
+        with open(os.path.join(root_dir, "writing_models/configs/diversity_model_config.json"), 'r') as fp:
             self.diversity_model_config = json.load(fp)
-        self.diversity_model = DiversityModel(self.diversity_model_config["save_dirs"]["output_dir"])
+        self.diversity_model = DiversityModel(
+            self.diversity_model_config["save_dirs"]["output_dir"])
 
         ### Quality_Model ###
-        with open(os.path.join(root_dir, "writing_models/configs/quality_model_config.json" ), 'r') as fp:
+        with open(os.path.join(root_dir, "writing_models/configs/quality_model_config.json"), 'r') as fp:
             self.quality_model_config = json.load(fp)
-        self.quality_model = QualityModel(self.quality_model_config["save_configs"]["output_dir"])
-
+        self.quality_model = QualityModel(
+            self.quality_model_config["save_configs"]["output_dir"])
 
         ###### define conversational XAI model ######
         self.convai_model = bot
         self.predict_results = {}
-
-
-
-
-
 
     @staticmethod
     def generate_world(opt, agents):
@@ -120,7 +103,6 @@ class MessengerOverworld(World):
     def shutdown(self):
         self.agent.shutdown()
 
-
     def parley(self):
 
         if self.first_time:
@@ -135,14 +117,13 @@ class MessengerOverworld(World):
             )
             self.first_time = False
 
-
         a = self.agent.act()
-        if a is None: return
+        if a is None:
+            return
 
         ###### Convert user inputs into 'message_info' dict ######
         message_info = a["payload"]
         message_info["text"] = a["text"]
-
 
         ###### PANEL ONE - Writing Support Tasks ######
         if message_info["message_type"] == "task":
@@ -158,10 +139,6 @@ class MessengerOverworld(World):
 
             input_paragraph = message_info["text"]
             writing_task = message_info["writing_model"]
-
-
-
-
 
             ################## Return only one model output ##################
             """
@@ -201,38 +178,34 @@ class MessengerOverworld(World):
             """
             ########################################################################
 
-
-
-
-
-
             ################## Return both models' outputs ##################
 
-            ### Writing Model 1 -- Diversity Model ### 
+            ### Writing Model 1 -- Diversity Model ###
             print("\nGenerating writing prediction from the Diversity_Model....")
-            diversity_model_outputs = self.diversity_model.inference(input_paragraph)
+            diversity_model_outputs = self.diversity_model.inference(
+                input_paragraph)
 
             (predict, probability) = diversity_model_outputs['outputs']
             diversity_model_x_text = diversity_model_outputs['inputs']
-            diversity_model_post_text = [{"text": diversity_model_x_text[n], "classname": diversity_model_label_mapping[predict[n]], "score": str(predict[n])} for n in range(len(diversity_model_x_text))]
+            diversity_model_post_text = [{"text": diversity_model_x_text[n], "classname": diversity_model_label_mapping[predict[n]], "score": str(
+                predict[n])} for n in range(len(diversity_model_x_text))]
             # diversity_model_post_text = [{"diversity_model_text": diversity_model_x_text[n], "diversity_model_classname": diversity_model_label_mapping[predict[n]], "diversity_model_score": str(predict[n])} for n in range(len(diversity_model_x_text))]
 
-
-            ### Writing Model 2 -- Quality Model ### 
+            ### Writing Model 2 -- Quality Model ###
             print("\nGenerating writing prediction from the Quality_Model....")
-            quality_model_outputs = self.quality_model.inference(input_paragraph)
+            quality_model_outputs = self.quality_model.inference(
+                input_paragraph)
             (perplexities) = quality_model_outputs['outputs']
 
             ###### Quality Model Output Curve ######
             # perplexities = 1 / np.log(perplexities)
             quality_model_x_text = quality_model_outputs['inputs']
-            quality_model_post_text = [{"text": quality_model_x_text[n], "classname": quality_model_label_mapping(float(perplexities[n])), "score": str(perplexities[n])} for n in range(len(quality_model_x_text))]
+            quality_model_post_text = [{"text": quality_model_x_text[n], "classname": quality_model_label_mapping(
+                float(perplexities[n])), "score": str(perplexities[n])} for n in range(len(quality_model_x_text))]
 
             post_text = diversity_model_post_text + quality_model_post_text
 
-
-
-            ### Send Results to Website ### 
+            ### Send Results to Website ###
             self.agent.observe(
                 {
                     'text': post_text,
@@ -242,8 +215,6 @@ class MessengerOverworld(World):
                     }
                 }
             )
-
-
 
             self.predict_results = {
                 "diversity_model_outputs": {
@@ -259,10 +230,7 @@ class MessengerOverworld(World):
 
             del input_paragraph
 
-
         ########################################################################
-
-
 
         ###### PANEL TWO - ConvXAI Tasks ######
         elif message_info["message_type"] == "conv":
@@ -280,7 +248,8 @@ class MessengerOverworld(World):
                 self.episodeDone = True
             elif '[RESET]' in message_info['text']:
                 self.convai_model.reset()
-                self.agent.observe({"text": "[History Cleared]", "episode_done": False})
+                self.agent.observe(
+                    {"text": "[History Cleared]", "episode_done": False})
             else:
 
                 # self.predict_results['text'] = response['text']
@@ -306,5 +275,3 @@ class MessengerOverworld(World):
                         }
                     }
                 )
-
-                
