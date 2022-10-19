@@ -1,0 +1,6 @@
+{
+    "PYTHONPATH": "/home/hqs5468/hua/workspace/projects/convxai_system",
+    "RUN_SERVICE_DIR": "/data/hua/workspace/projects/convxai_system/convxai/services/web_service",
+    "PORT": 10020,
+    "logfilePath": "/data/hua/workspace/projects/convxai_system/runners/logs/web_service"
+}

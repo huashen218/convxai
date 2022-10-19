@@ -24,9 +24,6 @@ def setup_args():
     parser.add_parlai_data_path()
     parser.add_chatservice_args()
     parser_grp = parser.add_argument_group('Browser Chat')
-    # parser_grp.add_argument(
-    #     '--port', default=35496, type=int, help='Port to run the browser chat server'
-    # )
     parser_grp.add_argument(
         '--port', default=12345, type=int, help='Port to run the browser chat server'
     )

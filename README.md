@@ -1,9 +1,9 @@
-# “Hey ConvXAI<img src="logo.jpeg" width="26">, how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing
+# “Hey ConvXAI<img src="logo_new_wotext.png" width="29"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing
 
 
 This repository is the open source of <b>Conversational XAI (ConvXAI)</b> system to support scientific writing tasks in the human-AI collaborative scenarios.
 
-## How to run the ConvXAI<img src="logo.jpeg" width="15"> system?
+## How to run the ConvXAI<img src="logo_new.png" width="15"> system?
 
 ### Installation
 ```
@@ -15,6 +15,12 @@ You can download our pre-trained writing models or train by your own (See how to
 ```
 download link.
 ```
+
+
+### Prepare PyMongo Database 
+```
+```
+Refere to Pymongo for detailed tutorial: `https://pymongo.readthedocs.io/en/stable/`
 
 ### Run the ConvXAI system
 Open one terminal for running the server. The server is for 
@@ -49,6 +55,9 @@ We refer to Pailai repository to build up our server-client architecture.
 ### Module2 - AI Writing Models
 
 We include two AI writing models.
+
+
+
 
 
 ### Module3 - ConvXAI Models

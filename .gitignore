@@ -4,18 +4,12 @@
 *.swp
 __pycache__
 
-# Distribution / packaging
 
 
 ### ignore data
 convxai/writing_models/data
-
-### ignore models
-convxai/writing_models/checkpoints
-
-
-### ignore data
 convxai/xai_models/data
 
 ### ignore models
+convxai/writing_models/checkpoints
 convxai/xai_models/checkpoints
