@@ -13,3 +13,6 @@ convxai/xai_models/data
 ### ignore models
 convxai/writing_models/checkpoints
 convxai/xai_models/checkpoints
+
+### ignore logs
+runners/logs
