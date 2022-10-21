@@ -6,94 +6,10 @@ from allennlp.nn import util
 
 from torch import backends
 
-# class AttributionExplainer(object):
-    
-#     def __init__(self, configs):
-#         super().__init__()
-#         self.configs = configs
-#         self.diversity_model  = DiversityModel(saved_model_dir=self.configs["writing_model_dir"]["diversity_model"])
-
-#     def _register_embedding_list_hook(self, model, embeddings_list):
-#         def forward_hook(module, inputs, output):
-#             embeddings_list.append(output.squeeze(0).clone().cpu().detach().numpy())
-#         embedding_layer = model.bert.embeddings.word_embeddings
-#         handle = embedding_layer.register_forward_hook(forward_hook)
-#         return handle
-
-#     def _register_embedding_gradient_hooks(self, model, embeddings_gradients):
-#         def hook_layers(module, grad_in, grad_out):
-#             embeddings_gradients.append(grad_out[0])
-#         embedding_layer = model.bert.embeddings.word_embeddings
-#         hook = embedding_layer.register_backward_hook(hook_layers)
-#         return hook
-
-
-#     # def saliency_map(self, model, input_ids, segment_ids, input_mask):
-#     #     torch.enable_grad()
-#     #     model.eval()
-#     #     embeddings_list = []
-#     #     handle = self._register_embedding_list_hook(model, embeddings_list)
-#     #     embeddings_gradients = []
-#     #     hook = self._register_embedding_gradient_hooks(model, embeddings_gradients)
-
-#     #     model.zero_grad()
-#     #     A = model(input_ids, token_type_ids=segment_ids, attention_mask=input_mask)
-#     #     pred_label_ids = np.argmax(A.logits[0].detach().cpu().numpy())
-#     #     A.logits[0][pred_label_ids].backward()
-#     #     handle.remove()
-#     #     hook.remove()
-
-#     #     saliency_grad = embeddings_gradients[0].detach().cpu().numpy()        
-#     #     saliency_grad = np.sum(saliency_grad[0] * embeddings_list[0], axis=1)
-#     #     norm = np.linalg.norm(saliency_grad, ord=1)
-#     #     saliency_grad = [e / norm for e in saliency_grad] 
-
-#     #     return saliency_grad
-
-
-
-#     def saliency_map(self, input, top_k):
-#         # input = "This is a string."
-
-#         ######### Explaining #########
-#         tokens = self.diversity_model.tokenizer(input, add_special_tokens=False) 
-#         input_ids = torch.tensor([tokens['input_ids']], dtype=torch.long).to(device)
-#         token_type_ids = torch.tensor([tokens['token_type_ids']], dtype=torch.long).to(device)
-#         attention_ids = torch.tensor([tokens['attention_mask']], dtype=torch.long).to(device)
-
-
-#         segment_ids = token_type_ids
-#         input_mask = attention_ids
-
-#         torch.enable_grad()
-#         model.eval()
-#         embeddings_list = []
-#         handle = self._register_embedding_list_hook(model, embeddings_list)
-#         embeddings_gradients = []
-#         hook = self._register_embedding_gradient_hooks(model, embeddings_gradients)
-
-#         model.zero_grad()
-#         A = model(input_ids, token_type_ids=segment_ids, attention_mask=input_mask)
-#         pred_label_ids = np.argmax(A.logits[0].detach().cpu().numpy())
-#         A.logits[0][pred_label_ids].backward()
-#         handle.remove()
-#         hook.remove()
-
-#         saliency_grad = embeddings_gradients[0].detach().cpu().numpy()        
-#         saliency_grad = np.sum(saliency_grad[0] * embeddings_list[0], axis=1)
-#         norm = np.linalg.norm(saliency_grad, ord=1)
-#         saliency_grad = [e / norm for e in saliency_grad] 
-
-#         return saliency_grad
-
-
-
-
 
 
 class Feature:
     def __init__(self, pad_length=50, tokenizer=None):
-        # self.pad_length = pad_length
         if tokenizer is None:
             self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
         else:
@@ -147,9 +63,7 @@ class AttributionExplainer(object):
     ):
         super().__init__()
         self.configs = configs
-        self.predictor  = DiversityModel(saved_model_dir=self.configs["writing_model_dir"]["diversity_model"])
-        # model_dir =  "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/writing_models/checkpoints/diversity_model/model"
-        # self.predictor  = DiversityModel(saved_model_dir=model_dir)
+        self.predictor  = DiversityModel(saved_model_dir=self.configs["scientific_writing"]["diversity_model_dir"])
         self.grad_type = grad_type
         self.num_integrated_grad_steps = num_integrated_grad_steps
         self.sign_direction = sign_direction
@@ -201,7 +115,6 @@ class AttributionExplainer(object):
 
         ###### ==>>predic_tok> singapore
         ###### ==>>>>>editor_toks [▁Hospital, ization, s, ▁decreased, ▁in, ▁Australia, ▁and, ▁Singapore, ▁but, ▁increased, ▁in, ▁Taiwan, ▁, ,, ▁Republic, ▁of, ▁China, ▁, ., </s>]
-
 
         return_word_idx = None
         # predic_tok_start = predic_tok.idx

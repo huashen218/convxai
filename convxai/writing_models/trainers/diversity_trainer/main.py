@@ -3,6 +3,7 @@ import json
 import h5py
 import torch
 import argparse
+import pandas as pd
 
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 
@@ -13,6 +14,19 @@ from convxai.writing_models.trainers.diversity_trainer.data_loader import *
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
+
+
+def output_score(score):
+    table = pd.DataFrame(
+        [score[3], score[0], score[1], score[2]],
+        index=["# samples", "Precision", "Recall", "F1"],
+        columns=["background", "purpose", "method", "finding", "other"],
+    )
+    return table
+
+
 
 
 def main(args):

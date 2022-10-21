@@ -1,41 +1,45 @@
-from flask_socketio import SocketIO, emit
-from flask import (
-    Flask, render_template, send_file,
-    request, abort, Response, jsonify,
-)
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# This source code supports the web server of the ConvXAI system.
+# Copyright (c) Hua Shen, Chieh-Yang Huang, 2022.
+#
+
+
 import os
 import json
-from pymongo import MongoClient
-from bson.objectid import ObjectId
-from threading import Thread, Event
-import time
-from datetime import datetime
 import pytz
 import logging
-from convxai.services.utils import create_folder
+from flask_socketio import SocketIO, emit
+from flask import (Flask, render_template, request, jsonify)
+from pymongo import MongoClient
+from threading import Thread, Event
+from datetime import datetime
+from convxai.utils import create_folder
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "liaopi6u123sdfakjb23sd"
-
 socketio = SocketIO(app, logger=True, engineio_logger=True,
                     async_mode="threading")
-mongo = MongoClient("localhost")["convxai_test"] # ["convxai"]
+mongo = MongoClient("localhost")["convxai"]
 thread = Thread()
 thread_stop_event = Event()
-task_mapping = {}  # {task_id : sid}
+task_mapping = {}
 
 
-###### Set up paths to save log files ######
+########################################
+# Set up paths to save log files
+########################################
 root_dir = os.path.abspath(os.path.join(
     os.path.dirname(__file__), "../../../"))
-with open(os.path.join(root_dir, 'runners/sysconfig.json')) as json_file:
-    logfilePath = json.load(json_file)['logfilePath']
+with open(os.path.join(root_dir, 'configs/sysconfig.json')) as json_file:
+    logfilePath = json.load(json_file)['system']['logfilePath']
 logFileName = "log_" + datetime.now().astimezone(pytz.timezone('US/Eastern')
                                                  ).strftime("%m%d%Y_%H%M%S") + ".txt"
 create_folder([logfilePath])
 logFile = open(os.path.join(logfilePath, logFileName), "a")
-
 
 
 ########################################
@@ -43,7 +47,9 @@ logFile = open(os.path.join(logfilePath, logFileName), "a")
 ########################################
 
 def init_threading() -> None:
-    """Initiate the thread to monitor interaction and save data into mongoDB database."""
+    """
+    Initiate the thread to monitor interaction and save data into mongoDB database.
+    """
     global thread
     if not thread.is_alive():
         thread = Thread(
@@ -51,12 +57,14 @@ def init_threading() -> None:
             target=mongo_monitoring,
         )
         thread.start()
-        print("Starting Mongo Monitoring Thread")
+        logging.info("Starting Mongo Monitoring Thread")
 
 
 def mongo_monitoring():
+    """
+    Set up mongoDB monitoring.
+    """
     global task_mapping
-
     pipeline = [{
         "$match": {
             "$and": [
@@ -66,7 +74,6 @@ def mongo_monitoring():
             ]
         }
     }]
-
     with mongo.message.watch(pipeline) as stream:
         for insert_change in stream:
             source_message_id = insert_change["fullDocument"]["reply_to"]
@@ -90,12 +97,14 @@ def mongo_monitoring():
             del task_mapping[source_message_id],
 
 
-
 ########################################
 # Flask Implementation
 ########################################
 
 def get_data():
+    """
+    Get the request data.
+    """
     data = json.loads(str(request.data, encoding='utf-8'))
     return data
 
@@ -107,6 +116,9 @@ def index():
 
 @app.route("/init_conversation", methods=["POST"])
 def init_conversation():
+    """
+    Initiate the conversation.
+    """
     body = get_data()
     res = mongo.message.insert_one({
         "text": body["text"],
@@ -120,15 +132,16 @@ def init_conversation():
 
 @app.route("/reset")
 def reset():
+    """
+    Reset the interface.
+    """
     data = json.dumps({"text": "[RESET]"})
     return jsonify({"text": "RESET"})
-
 
 
 ########################################
 # SocketIO Implementation
 ########################################
-"""SocketIO Implementations."""
 
 @socketio.on('connect', namespace="/connection")
 def test_connect():
@@ -138,11 +151,14 @@ def test_connect():
 
 @socketio.on('disconnect', namespace="/connection")
 def test_disconnect():
-    print('Client disconnected')
+    logging.info('Client disconnected')
 
 
 @socketio.on("interact", namespace="/connection")
 def interact_socket(body):
+    """
+    Interaction between the web server and interface via socketIO.
+    """
     result = mongo.message.insert_one({
         "text": body["text"],
         "role": "user",
@@ -169,18 +185,17 @@ def interact_socket(body):
         responseMessageType + "  \n\t\tWritingModel: " + responseWritingModel + "\n"
     logFile.write(logEntry+"\n")
     logFile.close()
-    print("Written to file" + logEntry)
-
+    logging.info("Written to file" + logEntry)
 
 
 ########################################
 # Run Flask and SocketIO.
 ########################################
 def run_flask_socketio():
-    """Run Flask and Websocket."""
+    """
+    Run Flask and Websocket.
+    """
     socketio.run(app, host="0.0.0.0", port=8080, debug=False)
-
-
 
 
 if __name__ == "__main__":

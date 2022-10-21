@@ -1,44 +1,49 @@
 import os
-import torch
+import h5py
 import stanza
-import pandas as pd
+import logging
 import numpy as np
 
-
-
-
-
-diversity_model_label_mapping = {
-    0: "background",
-    1: "purpose",
-    2: "method", 
-    3: "finding",
-    4: "other",
-}
-
-
 nlp = stanza.Pipeline('en')
-# nlp = stanza.Pipeline('en', use_gpu=False)
 
-
-
-def counting_tokens(abs_text):
-    ### Extract Abstracts ###
-    abs = abs_text.replace("\n", " ")
-    doc = nlp(abs)
-
-    ### Seg Sentences ###
-    # sentences = [sentence.text for sentence in doc.sentences]
-    tokens = [token.text for sentence in doc.sentences for token in sentence.tokens]
-    return tokens
-
-
-
-# splitPuctList = [",", ";", "."]
 splitPuctList = [";", "."]
 LB = ["(", "[", "{"] 
 RB = [")", "]", "}"]
 minTokenNum = 6
+
+
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
+
+def create_folder(folder_list):
+    """Create the folders if the pathes do not exist.
+    """
+    for folder in folder_list:
+        if not os.path.isdir(folder):
+            os.makedirs(folder)
+        logging.info(f"Created folders at {folder_list}")
+
+
+def h5_load(filename, data_list, dtype=None, verbose=False):
+    """Load h5 files.
+    """
+
+    with h5py.File(filename, 'r') as infile:
+        data = []
+        for data_name in data_list:
+            if dtype is not None:
+                temp = np.empty(infile[data_name].shape, dtype=dtype)
+            else:
+                temp = np.empty(infile[data_name].shape, dtype=infile[data_name].dtype)
+            infile[data_name].read_direct(temp)
+            data.append(temp)
+        if verbose:
+            logging.info("\n".join(
+                "{} = {} [{}]".format(data_name, str(real_data.shape), str(real_data.dtype))
+                for data_name, real_data in zip(data_list, data)
+            ))
+            logging.info()
+        return data
 
 
 def paragraph_segmentation(abs_text):
@@ -48,10 +53,6 @@ def paragraph_segmentation(abs_text):
     ### Extract Abstracts ###
     abs = abs_text.replace("\n", " ")
     doc = nlp(abs)
-
-    ### Seg Sentences ###
-    # sentences = [sentence.text for sentence in doc.sentences]
-    tokens = [token.text for sentence in doc.sentences for token in sentence.tokens]
 
     #### Segmentation Rules ####
     ## 1 - We don't break brackets (i.e., (), {}, [])
@@ -83,9 +84,6 @@ def paragraph_segmentation(abs_text):
                 pass
         text_fragments.append(sent_segment)
 
-    # original case
-    # text_fragments = [re.split('; |, |\*', sentence) for sentence in sentences]
-
     segment_num = 0
     sentences_content = []
     fragment_content = []
@@ -98,23 +96,8 @@ def paragraph_segmentation(abs_text):
             frag_content["segment_text"] = text_fragments[sent_id][frag_id]
             frag_content["crowd_label"] = ""
             sentences_content[sent_id].append(frag_content)
-    # return sentences_content
             fragment_content.append(text_fragments[sent_id][frag_id])
     return fragment_content
-
-
-
-def create_folder(folder_list):   #[model_dir, log_dir, result_dir, cache_dir]
-    for folder in folder_list:
-        if not os.path.isdir(folder):
-            os.makedirs(folder)
-    print("Created folders:", folder_list)
-
-
-
-
-
-
 
 
 
@@ -153,13 +136,6 @@ class EarlyStop:
 
 
 
-def output_score(score):
-    table = pd.DataFrame(
-        [score[3], score[0], score[1], score[2]],
-        index=["# samples", "Precision", "Recall", "F1"],
-        columns=["background", "purpose", "method", "finding", "other"],
-    )
-    return table
 
 
 
