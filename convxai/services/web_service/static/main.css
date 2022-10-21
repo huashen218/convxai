@@ -1,196 +1,138 @@
-/* =================== Global Settings ===================== */
+:root {
+  --main-bg-color: #858FAC;
+  --second-bg-color: #819CA3;
+  --main-alt-bg-color: #D3CDD0;
+  --main-text-color: #5A5755;
+  --chatbot-bg-color: #EFEFEF;
+}
 
-/* 
-#858FAC;
-#9FBCC2
- */
-
- :root {
-    --main-bg-color: #858FAC;
-    --second-bg-color: #819CA3;
-
-    --main-alt-bg-color: #D3CDD0;
-    --main-text-color: #5A5755;
-    --chatbot-bg-color: #EFEFEF;    /* #DFDFDF;*/
-  }
 
 * {
-    font-size: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: normal;
+  font-size: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
 }
 
-
-
-
-/* =================== Writing Support Card Setting ===================== */
-
+#main-content {
+  height: 100vh;
+}
 
 #display-writing {
-    margin-top: 1%;
-    margin-bottom: 1%;
-    margin-left: 4%;
-    margin-right: 0.5%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 4%;
+  margin-right: 0.5%;
 }
-
-#display-xai {
-    margin-top: 1%;
-    margin-bottom: 1%;
-    margin-left: 0.5%;
-    margin-right: 1%;
-}
-
 
 #writing_support_card {
-    margin-top: 20px;
-    /* height: 680pt; */
-    /* height: 553pt; */
-    height: 100pt;
-  }
-  
-
-#convxai_card{
-    margin-top: 20px;
-    position:absolute;
-    width: 95%;
-    /* min-height: 600pt; */
-    height: 553pt;
-    /* min-height: 680pt; */
-    /* overflow: scroll; */
-  }
-
-
-#main-content{
-    height: 100vh;
+  margin-top: 20px;
+  height: 100pt;
 }
 
-/* =================== Buttons and Titles ===================== */
+.prediction-label {
+  font-size: 12pt;
+  font-weight: bold;
+  padding: 5px 5px 5px 5px;
+}
+
+
+
+.help-icon .help-text {
+  display: none;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.help-icon .help-text::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.help-icon:hover .help-text {
+  display: block;
+}
+
+
+
+#display-xai {
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: 0.5%;
+  margin-right: 1%;
+}
+
+#convxai_card {
+  margin-top: 20px;
+  position: absolute;
+  width: 95%;
+  height: 553pt;
+}
+
+
 
 .btn-theme {
-    border-radius: 2px;
-    border: 1px solid transparent;
-    text-align:center;
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    background-color: var(--main-bg-color);
+  border-radius: 2px;
+  border: 1px solid transparent;
+  text-align: center;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  background-color: var(--main-bg-color);
 }
+
 .btn-theme:hover {
-    background-color: var(--main-alt-bg-color);
-    color: var(--main-text-color);
+  background-color: var(--main-alt-bg-color);
+  color: var(--main-text-color);
 }
 
 .card-writing-title-theme {
-    height: 45px; /**/
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    text-align: center;
-    color: white;
-    background-color: var(--main-bg-color);
+  height: 45px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background-color: var(--main-bg-color);
 }
 
 
 .card-conv-title-theme {
-    height: 45px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    text-align: center;
-    color: white;
-    background-color: var(--second-bg-color);
+  height: 45px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  background-color: var(--second-bg-color);
 }
 
 
-/* ========== Set fonts ========== */
-.prediction-label{
-    font-size: 12pt; 
-    font-weight: bold; 
-    padding: 5px 5px 5px 5px;
-}
-
-.button-font-class{
-    font-size: 12pt; 
+.button-font-class {
+  font-size: 12pt;
 }
 
 
 p {
-font-size: 12pt;
+  font-size: 12pt;
 }
-  
+
+
 span {
-font-size: 12pt;
+  font-size: 12pt;
 }
-
-
-
-
-
-
-  .help-icon .help-text {
-    /* visibility: hidden; */
-    display: none;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 150%;
-    left: 50%;
-    margin-left: -60px;
-  }
-  
-  .help-icon .help-text::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
-  }
-  
-  .help-icon:hover .help-text {
-    /* visibility: visible; */
-    display: block;
-  }
-  
-
-
-
-
-
-
-/* =================== Writing-Model1 ===================== */
-
-
-/* =================== Help Bubble ===================== */
-/* .help-bubble {
-    position: relative;
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 16px;
-    width: 200px;
-    background: rgb(239, 239, 239);
-    border-radius: 5px;
-    padding: 7px;
-    text-align: center;
-  }
-  
-  .help-bubble-bottom-left:before {
-    content: "";
-    width: 0px;
-    height: 0px;
-    position: absolute;
-    border-left: 24px solid red;
-    border-right: 12px solid transparent;
-    border-top: 12px solid red;
-    border-bottom: 20px solid transparent;
-    left: 32px;
-    bottom: -24px;
-  } */

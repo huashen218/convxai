@@ -1,16 +1,16 @@
-import os
-import json
-import torch.nn as nn
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# This source code supports the web server of the ConvXAI system.
+# Copyright (c) Hua Shen 2022.
+#
+
 import torch
-from typing import List, Optional, Tuple
+import torch.nn as nn
+from typing import List
 from transformers import BertTokenizer, BertModel
+from convxai.utils import *
 
-# from convxai.xai_models.utils import h5_load
-
-
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-device = torch.device('cpu')
 
 
 XAI_User_Intents = ["meta-data",
@@ -21,39 +21,10 @@ XAI_User_Intents = ["meta-data",
                     "example",
                     "attribution",
                     "counterfactual",
-                    "sentence-length"
+                    "sentence-length",
+                    "ai-comment-global",
+                    "ai-comment-instance"
                 ]
-
-
-
-import os
-import torch
-import pandas as pd
-import numpy as np
-import json
-import h5py
-from transformers import BertTokenizer, BertModel
-
-
-def h5_load(filename, data_list, dtype=None, verbose=False):
-    with h5py.File(filename, 'r') as infile:
-        data = []
-        for data_name in data_list:
-            if dtype is not None:
-                temp = np.empty(infile[data_name].shape, dtype=dtype)
-            else:
-                temp = np.empty(infile[data_name].shape, dtype=infile[data_name].dtype)
-            infile[data_name].read_direct(temp)
-            data.append(temp)
-          
-        if verbose:
-            print("\n".join(
-                "{} = {} [{}]".format(data_name, str(real_data.shape), str(real_data.dtype))
-                for data_name, real_data in zip(data_list, data)
-            ))
-            print()
-        return data
-
 
 
 
@@ -64,15 +35,46 @@ class XAI_NLU_Module(nn.Module):
         super(XAI_NLU_Module, self).__init__()
         self.configs = configs
         self.nlu_algorithm = nlu_algorithm
+
         if self.nlu_algorithm == "scibert_classifier":
             self.tokenizer = BertTokenizer.from_pretrained("allenai/scibert_scivocab_uncased")
             self.model = BertModel.from_pretrained("allenai/scibert_scivocab_uncased")
-
-            self.question_embeddings, self.labels  = h5_load(self.configs['nlu_question_embedding_dir'], [
+            self.question_embeddings, self.labels  = h5_load(self.configs['conversational_xai']['nlu_question_embedding_dir'], [
                                             "question_embeddings", "labels"],  verbose=True)
-
             self.question_embeddings = torch.from_numpy(self.question_embeddings)
             self.cos = nn.CosineSimilarity(dim=1, eps=1e-6)
+
+
+        self.user_intent_keywords = {
+                    "meta-data": ["data", "dataset", "datasets"],
+                    "meta-model": ["model","models"],
+                    "quality-score": ["quality","style","scores", "score"],
+                    "aspect-distribution": ["label","labels", "aspect", "aspects", "structure", "structures"],
+                    "confidence": ["confidence","confident"],
+                    "example": ["similar", "example", "examples"],
+                    "attribution": ["important", "features", "attributions","feature", "attribution", "word", "words" ],
+                    "counterfactual": ["different", "counterfactual", "prediction", "input", "revise"],
+                    "sentence-length": ["length", "lengths"],
+                    "ai-comment-global": ["show me model and data"],
+                    "ai-comment-instance": ["explain this sentence", "explain the sentence", "explain sentence review", "explain this review", "explain the review"]
+        }
+
+
+
+    def nlu_rule_with_keyword(self, input_string, keyword_list) -> bool:
+
+        # input_string = input_string.replace("?", "") 
+        # input_list = input_string.split(" ")
+        # return len(list(set(input_list).intersection(set(keyword_list)))) > 0
+
+        input_string = input_string.replace("?", "") 
+        keyphrases = [key for key in keyword_list if input_string.split(key) > 2 ]
+        return len(keyphrases) > 0
+
+    #   arr=['iloveapple','banana','ilove','ban']
+    #   allStrings = " ".join(arr)
+    #   substring_list = [ s for s in arr if len(allStrings.split(s))>2 ]
+
 
 
 
@@ -87,15 +89,14 @@ class XAI_NLU_Module(nn.Module):
         outputs = self.model(**inputs)
         last_hidden_states = outputs.last_hidden_state[:, 0, :]
         similarity = self.cos(last_hidden_states, self.question_embeddings)
-        ### TODO: Add others ###
-        
-        ###### Strategy: choose the top one ######  
-        ###### Alternative Strategy: choose the top five and choose majority vote ######   
-        top_index = torch.argsort(similarity)[-1:]
 
+        ###### Strategy: choose the top one.   Alternative Strategy: choose the top five and choose majority vote ######  
+        top_index = torch.argsort(similarity)[-1:]
         intent = self.labels[top_index]
-        print(f"===>>> NLU Intern = {intent} <<<====")
+
         return intent.decode("utf-8") 
+
+
 
 
 
@@ -110,46 +111,38 @@ class XAI_NLU_Module(nn.Module):
         ###### Rule-based user intents ###### 
         if self.nlu_algorithm == "rule_based":
 
-            input = input.replace("?", "") 
-            input_list = input.split(" ")
+            if self.nlu_rule_with_keyword(input, self.user_intent_keywords['meta-data']):
+                return XAI_User_Intents[0]
 
-            
-            if len(list(set(input_list).intersection(set(["data", "dataset", "datasets"])))) > 0:  # "statistics"
-                user_intent = XAI_User_Intents[0]
-                return user_intent
-
-
-            elif len(list(set(input_list).intersection(set(["confidence","confident"])))) > 0:
-                return XAI_User_Intents[4]
-
-
-            elif len(list(set(input_list).intersection(set(["similar", "example", "examples"])))) > 0:
-                return XAI_User_Intents[5]
-
-
-            elif len(list(set(input_list).intersection(set(["important", "features", "attributions","feature", "attribution", "word", "words" ])))) > 0:
-                return XAI_User_Intents[6]
-
-
-            elif len(list(set(input_list).intersection(set(["different", "counterfactual", "prediction", "input", "revise"])))) > 0:
-                return XAI_User_Intents[7]
-
-
-            elif len(list(set(input_list).intersection(set(["length", "lengths"])))) > 0:
-                return XAI_User_Intents[8]
-
-
-
-            elif len(list(set(input_list).intersection(set(["model","models"])))) > 0:
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['meta-model']):
                 return XAI_User_Intents[1]
 
-
-            elif len(list(set(input_list).intersection(set(["quality","style","scores", "score"])))) > 0:
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['quality-score']):
                 return XAI_User_Intents[2]
 
-
-            elif len(list(set(input_list).intersection(set(["label","labels", "aspect", "aspects", "structure", "structures"])))) > 0:
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['aspect-distribution']):
                 return XAI_User_Intents[3]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['confidence']):
+                return XAI_User_Intents[4]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['example']):
+                return XAI_User_Intents[5]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['attribution']):
+                return XAI_User_Intents[6]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['counterfactual']):
+                return XAI_User_Intents[7]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['sentence-length']):
+                return XAI_User_Intents[8]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['ai-comment-global']):
+                return XAI_User_Intents[9]
+
+            elif self.nlu_rule_with_keyword(input, self.user_intent_keywords['ai-comment-instance']):
+                return XAI_User_Intents[10]
 
             else:
                 return "none"
@@ -159,31 +152,3 @@ class XAI_NLU_Module(nn.Module):
         if self.nlu_algorithm == "scibert_classifier":
             user_intent = self.intent_classification(input)
             return user_intent
-
-        
-
-
-
-        
-
-
-# ###### For Debug ######
-# def main():
-#     # writingInput1 = ["What would the system predict if this instance changes to ...?", "Commercial speech applications are reducing human transcription of customer data."]
-#     # writingInput2 = "Commercial speech applications are reducing human transcription of customer data."
-#     writingInput1 = "How to change one label to another?"
-
-
-#     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
-#     with open(os.path.join(root_dir, "xai_models/configs/xai_model_configs.json" ), 'r') as fp:
-#         xai_model_configs = json.load(fp)
-
-#     nlu = XAI_NLU_Module(xai_model_configs, nlu_algorithm = "scibert_classifier")
-
-#     nlu(writingInput1)
-
-# if __name__ == "__main__":
-#     main()
-
-
-

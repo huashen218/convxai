@@ -3,17 +3,13 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
-"""
-Browser Chat Runner.
-Used to run the browser chat server.
-"""
+
+
 from parlai.core.params import ParlaiParser
 import parlai.chat_service.utils.config as config_utils
 from convxai.services.websocket.mongodb_manager import MongoManager
 
-
 SERVICE_NAME = 'Browser'
-
 
 def setup_args():
     """

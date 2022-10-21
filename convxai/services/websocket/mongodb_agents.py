@@ -7,12 +7,11 @@
 import logging
 from parlai.chat_service.core.agents import ChatServiceAgent
 
-
 class MongoAgent(ChatServiceAgent):
     """
     Class for a person that can act in a ParlAI world via websockets.
     """
-    # id = receiver_id (should be mongo-ori-id)
+    
     def __init__(self, opt, manager, receiver_id, task_id):
         super().__init__(opt, manager, receiver_id, task_id)
         self.message_partners = []

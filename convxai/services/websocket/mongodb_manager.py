@@ -1,37 +1,32 @@
 #!/usr/bin/env python3
 
+# Copyright (c) Hua Shen, Chieh-Yang Huang. 2022.
 # Copyright (c) Facebook, Inc. and its affiliates.
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
-"""
-Websocket Manager Module Contains implementation of the WebsocketManager which helps run
-ParlAI via websockets.
-"""
-import json
-import asyncio
-import logging
-from parlai.core.agents import create_agent
-from parlai.chat_service.core.chat_service_manager import ChatServiceManager
 
-import parlai.chat_service.utils.logging as log_utils
-import parlai.chat_service.utils.misc as utils
-from .mongodb_agents import MongoAgent
+
+import time
+import logging
 from pymongo import MongoClient
 from datetime import datetime
 from threading import Thread, Event
-import time
 from bson.objectid import ObjectId
+from parlai.core.agents import create_agent
+from parlai.chat_service.core.chat_service_manager import ChatServiceManager
+import parlai.chat_service.utils.logging as log_utils
+import parlai.chat_service.utils.misc as utils
+from .mongodb_agents import MongoAgent
+
 
 class MongoManager(ChatServiceManager):
     """
     Manages interactions between agents on a websocket as well as direct interactions
     between agents and an overworld.
     """
-
     class MessageSender(ChatServiceManager.ChatServiceMessageSender):
         def send_read(self, receiver_id):
             pass
-
         def typing_on(self, receiver_id, persona_id=None):
             pass
 
@@ -41,24 +36,17 @@ class MongoManager(ChatServiceManager):
         """
         super().__init__(opt)
         self.opt = opt
-        #self.port = opt.get('port')
-        # self.mongo_host = "157.230.188.155"
-        # self.mongo_host = "130.203.139.47"
+        self.port = opt.get('port')
         self.mongo_host = "localhost"
-        self.db_name = "convxai_test" #"convxai" 
+        self.db_name = "convxai"
         self.mongo = MongoClient(self.mongo_host)[self.db_name]
-        
         self.mongo_lock = Event()
         self.mongo_thread = Thread()
-
         self.worker_lock = Event()
         self.worker_thread = Thread()
-
         self.debug = opt.get('is_debug', False)
-
         self.message_sender = MongoManager.MessageSender()
         self.service_reference_id = None
-
         self._parse_config(opt)
         self._complete_setup()
 
@@ -124,11 +112,11 @@ class MongoManager(ChatServiceManager):
                         log_utils.print_and_log(
                             logging.INFO, 'starting pool', should_print=True
                         )
-                        # enough agents in pool to start new conversation
+                        # *** Enough agents in pool to start new conversation *** #
                         self.conversation_index += 1
                         task_id = 't_{}'.format(self.conversation_index)
 
-                        # Add the required number of valid agents to the conv
+                        # *** Add the required number of valid agents to the conv *** #
                         agent_states = [w for w in agent_pool[:needed_agents]]
                         agents = []
                         for state in agent_states:
@@ -138,7 +126,7 @@ class MongoManager(ChatServiceManager):
                             state.assign_agent_to_task(agent, task_id)
                             state.set_active_agent(agent)
                             agents.append(agent)
-                            # reset wait message state
+                            # *** reset wait message state *** #
                             state.stored_data['seen_wait_message'] = False
                         assign_role_function = utils.get_assign_roles_fn(
                             self.world_module, self.taskworld_map[world_type]
@@ -146,10 +134,10 @@ class MongoManager(ChatServiceManager):
                         if assign_role_function is None:
                             assign_role_function = utils.default_assign_roles_fn
                         assign_role_function(agents)
-                        # Allow task creator to filter out workers and run
-                        # versions of the task that require fewer agents
+
+                        # *** Allow task creator to filter out workers and run versions of the task that require fewer agents ***#
                         for a in agents:
-                            # Remove selected workers from the agent pool
+                            # *** Remove selected workers from the agent pool ***#
                             self.remove_agent_from_pool(
                                 self.get_agent_state(a.id),
                                 world_type=world_type,
@@ -159,12 +147,10 @@ class MongoManager(ChatServiceManager):
                             partner_list = agents.copy()
                             partner_list.remove(a)
                             a.message_partners = partner_list
-
                         done_callback = self._get_done_callback_for_agents(
                             task_id, world_type, agents
                         )
-
-                        # launch task world.
+                        # *** launch task world *** #
                         future = self.world_runner.launch_task_world(
                             task_id, self.taskworld_map[world_type], agents
                         )
@@ -177,25 +163,13 @@ class MongoManager(ChatServiceManager):
         """
         self.running = True
 
-        # run mongo watch
+        # *** run mongo watch ***#
         if not self.mongo_thread.is_alive():
             self.mongo_thread = Thread(
                 name='mongo-monitoring',
                 target=self.mongo_watch,
             )
             self.mongo_thread.start()
-
-        # run manager while loop
-        # TODO: Probably send this args (callback_time = utils.THREAD_MEDIUM_SLEEP * 1000)
-        """
-        if not self.worker_thread.is_alive():
-            self.worker_thread = Thread(
-                name="worker-pool-monitoring",
-                target=self._manager_loop_fn,
-                args=(self,)
-            )
-            self.worker_thread.start()
-        """
         self._manager_loop_fn()
 
     def shutdown(self):
@@ -207,7 +181,6 @@ class MongoManager(ChatServiceManager):
             self._expire_all_conversations()
         finally:
             pass
-
         # TODO: how to terminate both of the thread elegantly?
         quit()
 
@@ -284,7 +257,7 @@ class MongoManager(ChatServiceManager):
         in the `chat_service` README.
         >> {'text': 'start', 'payload': None, 'sender': {'id': 'd6897316-d16f-4aa7-b27a-16626e3ca2ee'}, 'recipient': {'id': 0}}
         """
-        print(message)
+        logging.info(message)
         return message
 
     def _handle_bot_read(self, agent_id):
@@ -303,7 +276,7 @@ class MongoManager(ChatServiceManager):
         pipeline = [{
             "$match": {
                 "$and": [
-                    {"operationType": "insert"}, # incoming message
+                    {"operationType": "insert"},   # incoming message
                     {"fullDocument.role": "user"}, # role has to be "user"
                 ]
             }
@@ -314,17 +287,6 @@ class MongoManager(ChatServiceManager):
                 self.handle_new_message(insert_change["fullDocument"])
 
     def handle_new_message(self, message):
-        """
-        message = {
-            "_id": ObjectId("_id"),
-            "text": text-string,
-            "payload": other-json-data,
-            "conversation_id": _id for the initial conversation,
-            "init": True/False,
-            "time": timestamp,
-            "role": "user" / "agent"
-        }
-        """
 
         logging.info('websocket message from client: {}'.format(str(message)))
 
@@ -332,11 +294,9 @@ class MongoManager(ChatServiceManager):
             sender_id = str(message["_id"])
         else:
             sender_id = str(message["conversation_id"])
-
-            # add message_id to payload
             payload = message.get("payload")
             payload["message_id"] = message["_id"]
-
+            
         message_info = {
             'text': message.get('text', ''),
             'payload': message.get('payload'),
