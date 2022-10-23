@@ -1,19 +1,13 @@
 import os
+import yaml
 import h5py
 import stanza
 import logging
 import numpy as np
-
-nlp = stanza.Pipeline('en')
-
-splitPuctList = [";", "."]
-LB = ["(", "[", "{"] 
-RB = [")", "]", "}"]
-minTokenNum = 6
+from pymongo import MongoClient
 
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
-
 
 def create_folder(folder_list):
     """Create the folders if the pathes do not exist.
@@ -22,6 +16,7 @@ def create_folder(folder_list):
         if not os.path.isdir(folder):
             os.makedirs(folder)
         logging.info(f"Created folders at {folder_list}")
+
 
 
 def h5_load(filename, data_list, dtype=None, verbose=False):
@@ -45,6 +40,15 @@ def h5_load(filename, data_list, dtype=None, verbose=False):
             logging.info()
         return data
 
+
+
+
+nlp = stanza.Pipeline('en')
+
+splitPuctList = [";", "."]
+LB = ["(", "[", "{"] 
+RB = [")", "]", "}"]
+minTokenNum = 6
 
 def paragraph_segmentation(abs_text):
 

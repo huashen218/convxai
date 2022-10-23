@@ -1,54 +1,10 @@
 import torch
 import numpy as np
-
-from convxai.writing_models.models import *
+from torch import backends
 from allennlp.nn import util
 
-from torch import backends
-
-
-
-class Feature:
-    def __init__(self, pad_length=50, tokenizer=None):
-        if tokenizer is None:
-            self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
-        else:
-            self.tokenizer = tokenizer
-        self.pad_id, self.cls_id, self.sep_id = self.tokenizer.convert_tokens_to_ids(
-                [self.tokenizer.pad_token, self.tokenizer.cls_token, self.tokenizer.sep_token]
-            )
-
-    def extract(self, sents):
-        results = [self.tokenizer.encode(s, add_special_tokens=False) for s in sents]
-
-        matrix = np.ones([len(results), len(results[0])], dtype=np.int32)
-        for i, res in enumerate(results):
-            length = len(res) 
-            matrix[i, :length] = res[:length]
-
-        cls_matrix = np.ones([len(results), 1]) * self.cls_id
-        sep_matrix = np.ones([len(results), 1]) * self.sep_id
-        matrix = np.hstack([cls_matrix, matrix, sep_matrix])
-        
-        return matrix
-
-
-
-
-class PredDataset(data.Dataset):
-    """For AspectPredict Writing Model
-    """
-    def __init__(self, x, bucket_num=None):
-        self.x = x.astype(np.int64)
-
-    def __len__(self):
-        return self.x.shape[0] 
-
-    def __getitem__(self, index):
-        return self.x[index]
-
-
-
+from convxai.writing_models.models import *
+from convxai.writing_models.dataloaders import *
 
 
 class AttributionExplainer(object):
@@ -90,7 +46,7 @@ class AttributionExplainer(object):
 
 
     def batch_dataloader(self, input_string):
-        feature = Feature(tokenizer=self.temp_tokenizer)
+        feature = Feature(tokenizer=self.temp_tokenizer, pad_length = None)
         x_text = feature.extract(input_string[:])
         dataset = PredDataset(x_text)
         dataloader = data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=4)
@@ -112,13 +68,7 @@ class AttributionExplainer(object):
         Raises MaskError if tokens cannot be mapped 
             This sometimes happens due to inconsistencies in way text is 
             tokenized by different tokenizers. """
-
-        ###### ==>>predic_tok> singapore
-        ###### ==>>>>>editor_toks [▁Hospital, ization, s, ▁decreased, ▁in, ▁Australia, ▁and, ▁Singapore, ▁but, ▁increased, ▁in, ▁Taiwan, ▁, ,, ▁Republic, ▁of, ▁China, ▁, ., </s>]
-
         return_word_idx = None
-        # predic_tok_start = predic_tok.idx
-        # predic_tok_end = predic_tok.idx_end
         predic_tok_start = predic_tok_start
         predic_tok_end = predic_tok_start + 1
    
@@ -452,38 +402,6 @@ class AttributionExplainer(object):
         return all_predic_toks, ordered_predic_tok_indices
 
 
-
-
     def get_sorted_important_tokens_nonordered(self, input):
         all_predic_toks, ordered_predic_tok_indices = self.get_important_editor_tokens_nonordered(input)
         return  all_predic_toks, ordered_predic_tok_indices
-
-
-
-
-
-# ###### For Debug ######
-# def main():
-#     # writingInput1 = ["What would the system predict if this instance changes to ...?", "Commercial speech applications are reducing human transcription of customer data."]
-#     # writingInput2 = "Commercial speech applications are reducing human transcription of customer data."
-#     writingInput1 = "How to change one label to another?"
-
-#     top_k = 3
-
-#     explainer = AttributionExplainer()
-#     ordered_all_important_tokens= explainer.saliency_map(writingInput1)
-
-#     # # Get num words to return
-#     # if num_return_toks is None:
-#     #     num_return_toks = math.ceil(self.mask_frac * len(ordered_all_predic_toks))
-
-#     highest_predic_tok_indices = ordered_all_important_tokens[:top_k]
-#     return highest_predic_tok_indices
-
-
-
-# if __name__ == "__main__":
-#     main()
-
-
-

@@ -8,7 +8,6 @@
 
 import time
 import logging
-from pymongo import MongoClient
 from datetime import datetime
 from threading import Thread, Event
 from bson.objectid import ObjectId
@@ -17,6 +16,7 @@ from parlai.chat_service.core.chat_service_manager import ChatServiceManager
 import parlai.chat_service.utils.logging as log_utils
 import parlai.chat_service.utils.misc as utils
 from .mongodb_agents import MongoAgent
+from convxai.utils import *
 
 
 class MongoManager(ChatServiceManager):
@@ -37,9 +37,7 @@ class MongoManager(ChatServiceManager):
         super().__init__(opt)
         self.opt = opt
         self.port = opt.get('port')
-        self.mongo_host = "localhost"
-        self.db_name = "convxai"
-        self.mongo = MongoClient(self.mongo_host)[self.db_name]
+        self.mongo = get_mongo_connection()
         self.mongo_lock = Event()
         self.mongo_thread = Thread()
         self.worker_lock = Event()

@@ -18,8 +18,7 @@ from transformers import (
     AutoTokenizer,
 )
 from convxai.utils import *
-from convxai.writing_models.dataloaders.quality_model_data_loader import *
-
+from convxai.writing_models.dataloaders import *
 
 
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

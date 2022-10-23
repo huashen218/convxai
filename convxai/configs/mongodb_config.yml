@@ -1,0 +1,2 @@
+mongo_host: "157.230.188.155"  # (or)   "130.203.139.47"  (or) localhost
+mongo_db_name: convxai

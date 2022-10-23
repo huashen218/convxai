@@ -71,12 +71,6 @@ class XAI_NLU_Module(nn.Module):
         keyphrases = [key for key in keyword_list if input_string.split(key) > 2 ]
         return len(keyphrases) > 0
 
-    #   arr=['iloveapple','banana','ilove','ban']
-    #   allStrings = " ".join(arr)
-    #   substring_list = [ s for s in arr if len(allStrings.split(s))>2 ]
-
-
-
 
     def intent_classification(self, input):
         r"""Using an intent classifier to classify the user input into different intents.
