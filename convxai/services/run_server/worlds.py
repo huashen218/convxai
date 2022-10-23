@@ -10,6 +10,8 @@ import numpy as np
 from parlai.core.worlds import World
 from parlai.core.agents import create_agent_from_shared
 from convxai.writing_models.models import *
+from convxai.utils import *
+
 
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -31,14 +33,9 @@ class MessengerOverworld(World):
         self.episodeDone = False
         self.convai_model = bot
         self.predict_results = {}
-
-        # *** Load Diversity and Quality Models *** #
-        root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
-        with open(os.path.join(root_dir, "configs/sysconfig.json"), 'r') as fp:
-            self.configs = json.load(fp)
+        self.configs = parse_system_config_file()
         self.diversity_model = DiversityModel(self.configs['scientific_writing']["diversity_model_dir"])
         self.quality_model = QualityModel(self.configs['scientific_writing']["quality_model_dir"])
-
 
     @staticmethod
     def generate_world(opt, agents):

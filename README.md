@@ -73,3 +73,46 @@ We design our ConvXAI module to include Natural Language Understanding (NLU), AI
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Table of Contents
+=================
+
+   * [ConvXAI](#convxai)
+      * [Table of Contents](#table-of-contents)
+      * [Installation](#installation)
+      * [Tutorials](#tutorials)
+      * [Paper tests](#paper-tests)
+         * [Notebooks: how we created the tests in the paper](#notebooks-how-we-created-the-tests-in-the-paper)
+         * [Replicating paper tests, or running them with new models](#replicating-paper-tests-or-running-them-with-new-models)
+            * [Sentiment Analysis](#sentiment-analysis)
+            * [QQP](#qqp)
+            * [SQuAD](#squad)
+            * [Testing huggingface transformer pipelines](#testing-huggingface-transformer-pipelines)
+      * [Code snippets](#code-snippets)
+         * [Templates](#templates)
+         * [RoBERTa suggestions](#roberta-suggestions)
+            * [Multilingual suggestions](#multilingual-suggestions)
+         * [Lexicons (somewhat multilingual)](#lexicons-somewhat-multilingual)
+         * [Perturbing data for INVs and DIRs](#perturbing-data-for-invs-and-dirs)
+         * [Creating and running tests](#creating-and-running-tests)
+         * [Custom expectation functions](#custom-expectation-functions)
+         * [Test Suites](#test-suites)
+      * [API reference](#api-reference)
+      * [Code of Conduct](#code-of-conduct)
+

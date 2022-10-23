@@ -18,3 +18,4 @@ checkpoints
 
 ### ignore logs
 runners/logs
+runners/*.log

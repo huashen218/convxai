@@ -1,43 +1,7 @@
-# from transformers import T5Tokenizer, T5Model, T5Config
-# from transformers import T5ForConditionalGeneration, T5TokenizerFast
-# from allennlp.predictors import Predictor, TextClassifierPredictor
-# from allennlp_models.classification import StanfordSentimentTreeBankDatasetReader
-# from allennlp.data.tokenizers import PretrainedTransformerTokenizer
-# from allennlp.data.tokenizers.spacy_tokenizer import SpacyTokenizer
-
-# import csv
-# import heapq
-# import sys
-# import operator
-# from tqdm import tqdm
-# import re
-# import nltk
-# import warnings
-# import argparse
-# import pandas as pd
-# import numpy as np
-# import random
-# import time
-
-# import json
-
-
-
-import os
 import torch
-import logging
-
 from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.utils import *
 from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator, EditList
 from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.stage_two import load_models
-
-
-
-logger = logging.getLogger("my-logger")
-FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
-logger.setLevel(logging.INFO)
-
 
 
 class CounterfactualExplainer(object):
@@ -54,7 +18,6 @@ class CounterfactualExplainer(object):
                 max_search_levels=self.args.search.max_search_levels)
 
 
-
     def generate_counterfactual(self, input_text, contrast_label):
         edited_list = self.edit_finder.minimally_edit(input_text, 
                                                         contrast_pred_idx_input = contrast_label, ### contrast_pred_idx specifies which label to use as the contrast. Defaults to -2, i.e. use label with 2nd highest pred prob.
@@ -64,7 +27,6 @@ class CounterfactualExplainer(object):
 
         torch.cuda.empty_cache()
         sorted_list = edited_list.get_sorted_edits() 
-        print("===>>>counterfactual output - sorted_list:", sorted_list)
 
         if len(sorted_list) > 0:
             output = {

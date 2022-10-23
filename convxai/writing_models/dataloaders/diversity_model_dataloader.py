@@ -57,18 +57,22 @@ class Feature:
 
     def extract(self, sents):
         results = [self.tokenizer.encode(s, add_special_tokens=False) for s in sents]
-        # results = [self.tokenizer.encode(sents, add_special_tokens=False)]
 
-        # turn to matrix with padding
-        matrix = np.ones([len(results), self.pad_length], dtype=np.int32) * self.pad_id
-        for i, res in enumerate(results):
-            length = min(len(res), self.pad_length)
-            matrix[i, :length] = res[:length]
+        if self.pad_length is not None:
+            matrix = np.ones([len(results), self.pad_length], dtype=np.int32) * self.pad_id
+            for i, res in enumerate(results):
+                length = min(len(res), self.pad_length)
+                matrix[i, :length] = res[:length]
+        else:
+            matrix = np.ones([len(results), len(results[0])], dtype=np.int32)
+            for i, res in enumerate(results):
+                length = len(res) 
+                matrix[i, :length] = res[:length]
 
         cls_matrix = np.ones([len(results), 1]) * self.cls_id
         sep_matrix = np.ones([len(results), 1]) * self.sep_id
         matrix = np.hstack([cls_matrix, matrix, sep_matrix])
-        
+            
         return matrix
 
 

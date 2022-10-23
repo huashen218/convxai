@@ -15,7 +15,9 @@ from flask import (Flask, render_template, request, jsonify)
 from pymongo import MongoClient
 from threading import Thread, Event
 from datetime import datetime
-from convxai.utils import create_folder
+from convxai.utils import *
+
+
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
@@ -23,7 +25,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "liaopi6u123sdfakjb23sd"
 socketio = SocketIO(app, logger=True, engineio_logger=True,
                     async_mode="threading")
-mongo = MongoClient("localhost")["convxai"]
+mongo = get_mongo_connection()
 thread = Thread()
 thread_stop_event = Event()
 task_mapping = {}
@@ -32,14 +34,11 @@ task_mapping = {}
 ########################################
 # Set up paths to save log files
 ########################################
-root_dir = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "../../../"))
-with open(os.path.join(root_dir, 'configs/sysconfig.json')) as json_file:
-    logfilePath = json.load(json_file)['system']['logfilePath']
+system_config = parse_system_config_file()
 logFileName = "log_" + datetime.now().astimezone(pytz.timezone('US/Eastern')
                                                  ).strftime("%m%d%Y_%H%M%S") + ".txt"
-create_folder([logfilePath])
-logFile = open(os.path.join(logfilePath, logFileName), "a")
+logFile = open(os.path.join(
+    system_config['system']['logfilePath'], logFileName), "a")
 
 
 ########################################
