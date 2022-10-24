@@ -112,11 +112,10 @@ We demonstrate the architecture of ConvXAI in Figure1. ConvXAI mainly includes *
 - **Infrastructures** (e.g., [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol, [MongoDB](https://www.mongodb.com/) database) to support communication between the client and server.
 
 
-| !["assets/system_overview.jpeg"](assets/github_framework.png) | 
+<!-- | ![](assets/github_framework.png) |  -->
+| <img src="assets/github_framework.png" width="500">| 
 |:--:| 
 | **Figure1. Overview of the Infrastructure of ConvXAI** |
-<!-- <img src="assets/system_overview.jpeg" width="500"> -->
-
 
 
 
