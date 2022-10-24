@@ -1,11 +1,9 @@
-[src_logo_w/o_text]:"assets/logo_wotext.png"
-[src_logo_text]: "assets/logo_new.png"
 
 
-# ConvXAI<img src="assets/logo_wotext.png" width="36">
+# ConvXAI<img src="assets/logo_wotext.png" width="38">
 This repository includes code for the ConvXAI system as described in the paper:
 
->[“Hey ConvXAI<img src="assets/logo_wotext.png" width="18"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
+>[“Hey ConvXAI<img src="assets/logo_wotext.png" width="22"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
 > Hua Shen, Chieh-Yang Huang, Tongshuang Wu, Ting-Hao (Kenneth) Huang.
 > Arxiv, 2022.
 
