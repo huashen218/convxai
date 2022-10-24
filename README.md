@@ -2,8 +2,8 @@
 [src_logo_text]: "assets/logo_new.png"
 
 
-# ConvXAI<img src="assets/logo_wotext.png" width="33">
-This repository includes code for the [random value] ConvXAI<img src="assets/logo_wotext.png" width="18"> system as described in the paper:
+# ConvXAI<img src="assets/logo_wotext.png" width="36">
+This repository includes code for the ConvXAI system as described in the paper:
 
 >[“Hey ConvXAI<img src="assets/logo_wotext.png" width="18"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
 > Hua Shen, Chieh-Yang Huang, Tongshuang Wu, Ting-Hao (Kenneth) Huang.
@@ -39,11 +39,11 @@ Table of Contents
          * [MongoDB Setup](#mongodb-setup)
          * [Download Pretrained Data and Models](#download-pretrained-data-and-models)
          * [Config Files Setup](#config-files-setup)
-      * [How to run ConvXAI<img src="assets/logo_wotext.png" width="18">](#how-to-run-convxaiimg-srcassetslogowotextpng-width25)
+      * [How to run ConvXAI](#how-to-run-convxai)
          * [Run the server](#run-the-server)
          * [Run the client](#run-the-client)
-      * [ConvXAI<img src="assets/logo_wotext.png" width="18"> Tutorials](#convxaiimg-srcassetslogowotextpng-width25-tutorials)
-         * [1. ConvXAI<img src="assets/logo_wotext.png" width="18"> Overview](#1-covnxaiimg-srcassetslogowotextpng-width22-overview)
+      * [ConvXAI Tutorials](#convxai-tutorials)
+         * [1. ConvXAI Overview](#1-covnxai-overview)
          * [2. UI Web Service](#2-ui-web-service)
          * [3. AI Writing Models](#3-ai-writing-models)
          * [4. Conversational XAI Models](#4-conversational-xai-models)
@@ -88,7 +88,7 @@ You need to download the pretrained datasets and models for ConvXAI to generate 
    * [service_config.yml](convxai/configs/service_config.yml): In the common case, you don't need to modify this file unless you want to change the `relative paths` or the `class names` inside of `service_config.yml`.
 
 
-## How to Run ConvXAI<img src="assets/logo_wotext.png" width="25">
+## How to Run ConvXAI
 
 Open two terminals for running the server.
 ### Run the server:
@@ -108,10 +108,10 @@ Then have fun chatting with ConvXAI<img src="assets/logo_wotext.png" width="18">
 
 
 
-## ConvXAI<img src="assets/logo_wotext.png" width="25"> Tutorials
+## ConvXAI Tutorials
 
 
-### 1. CovnXAI<img src="assets/logo_wotext.png" width="22"> Overview
+### 1. CovnXAI Overview
 
 We demonstrate the architecture of ConvXAI in Figure1. ConvXAI mainly includes **four modules** summarized below. We further introduce details of each module in the following sections. 
 - **UI web service** (i.e., in **client**) using [Flask](https://flask.palletsprojects.com/en/2.2.x/) to support human-AI interactions; 
