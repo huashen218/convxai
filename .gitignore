@@ -3,7 +3,7 @@
 *.swo
 *.swp
 __pycache__
-
+.DS_Store
 
 
 ### ignore data
