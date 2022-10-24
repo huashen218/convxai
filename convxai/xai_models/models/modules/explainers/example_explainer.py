@@ -1,12 +1,8 @@
-
-
 import json
 import h5py
 import torch.nn as nn
 import numpy as np
 
-
-# conference = "ACL"
 
 class ExampleExplainer(object):
     
@@ -43,37 +39,5 @@ class ExampleExplainer(object):
             infile["perplexity"].read_direct(self.diversity_perplexity_tmp)
             self.diversity_token_counts_tmp = np.empty(infile["token_counts"].shape, dtype=infile["token_counts"].dtype)
             infile["token_counts"].read_direct(self.diversity_token_counts_tmp)
-
-
-
-
-
-
-
-
-
-
-
-        # self.quality_model_embeddings_h5dir = self.model_configs["xai_emample_embeddings_dir"][conference]
-
-        # with h5py.File(self.quality_model_embeddings_h5dir, 'r') as infile:
-        #     self.quality_x_train_embeddings_tmp = np.empty(infile["x_train_embeddings"].shape, dtype=infile["x_train_embeddings"].dtype)
-        #     infile["x_train_embeddings"].read_direct(self.quality_x_train_embeddings_tmp)
-
-        #     self.quality_x_train_text_tmp = np.empty(infile["x_train_text"].shape, dtype=infile["x_train_text"].dtype)
-        #     infile["x_train_text"].read_direct(self.quality_x_train_text_tmp)
-
-
-
-        # self.diversity_model_embeddings_h5dir = self.model_configs["xai_emample_embeddings_dir"][conference]
-
-        # with h5py.File(self.diversity_model_embeddings_h5dir, 'r') as infile:
-        #     self.diversity_x_train_embeddings_tmp = np.empty(infile["x_train_embeddings"].shape, dtype=infile["x_train_embeddings"].dtype)
-        #     infile["x_train_embeddings"].read_direct(self.diversity_x_train_embeddings_tmp)
-
-        #     self.diversity_x_train_text_tmp = np.empty(infile["x_train_text"].shape, dtype=infile["x_train_text"].dtype)
-        #     infile["x_train_text"].read_direct(self.diversity_x_train_text_tmp)
-
-
 
 

@@ -1,0 +1,25 @@
+{
+    "meta": {
+        "task": "diversity",
+        "results_dir": "results",
+        "stage1_exp": "diversity_model"
+    },
+    "mask": {
+        "mask_type": "grad",
+        "grad_type": "integrated_l1"
+    },
+    "model": {
+        "model_max_length": "512"
+    },
+    "train": {
+        "train_batch_size": 1,
+        "val_batch_size": 1,
+        "num_epochs": 20,
+        "lr": 5e-05,
+        "seed": 42,
+        "data_split_ratio": 0.75
+    },
+    "misc": {
+        "target_label": "gold"
+    }
+}
