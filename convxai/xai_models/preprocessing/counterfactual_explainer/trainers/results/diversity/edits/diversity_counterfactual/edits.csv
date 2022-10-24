@@ -1,1 +1,3 @@
-data_idx	sorted_idx	orig_pred	new_pred	contrast_pred	orig_contrast_prob_pred	new_contrast_prob_pred	orig_input	edited_input	orig_editable_seg	edited_editable_seg	minimality	num_edit_rounds	mask_frac	duration	error
+version https://git-lfs.github.com/spec/v1
+oid sha256:b56e36fc481c2f83e39d43b3cee68203d93c346b05f6a2fa6b685cf9d2faeb3e
+size 215
