@@ -1,23 +1,23 @@
 system:
-    PYTHONPATH: "/home/hqs5468/hua/workspace/projects/convxai",
-    RUN_SERVICE_DIR: "/home/huashen218/workspace/convxai/convxai/services/web_service",
-    PORT: 10020,
-    logfilePath: "/home/huashen218/workspace/convxai/runners/logs/web_service"
+    PYTHONPATH: "/home/hqs5468/hua/workspace/projects/convxai"
+    RUN_SERVICE_DIR: "/home/huashen218/workspace/convxai/convxai/services/web_service"
+    PORT: 10020
+    logfilePath: "/home/hqs5468/hua/workspace/projects/convxai/convxai/runners/logs/web_service"
 
 scientific_writing:
-    diversity_model_dir: "huashen218/convxai-diversity-model",
+    diversity_model_dir: "huashen218/convxai-diversity-model"
     quality_model_dir: "huashen218/convxai-quality-model"
 
 conversational_xai:
-    checkpoints_root_dir: "/home/huashen218/workspace/convxai/src/convxai/checkpoints/xai_models/"
+    checkpoints_root_dir: "/home/hqs5468/hua/workspace/projects/convxai/checkpoints/xai_models/"
     xai_example_dir:
         xai_emample_embeddings_dir:
-            ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5",
-            CHI: "xai_example_embeddings/diversity_model_CHI_embeddings.h5",
+            ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5"
+            CHI: "xai_example_embeddings/diversity_model_CHI_embeddings.h5"
             ICLR: "xai_example_embeddings/diversity_model_ICLR_embeddings.h5"
         xai_emample_texts_dir:
-            ACL: "xai_example_embeddings/diversity_model_ACL_texts.h5",
-            CHI: "xai_example_embeddings/diversity_model_CHI_texts.h5",
+            ACL: "xai_example_embeddings/diversity_model_ACL_texts.h5"
+            CHI: "xai_example_embeddings/diversity_model_CHI_texts.h5"
             ICLR: "xai_example_embeddings/diversity_model_ICLR_texts.h5"
-    xai_writing_aspect_prediction_dir: "/xai_writing_aspect_prediction",
-    xai_counterfactual_dir: "xai_counterfactual_explainer_models/editors/diversity_model/checkpoints"
+    xai_writing_aspect_prediction_dir: "/xai_writing_aspect_prediction"
+    xai_counterfactual_dir: "xai_writing_aspect_prediction/"

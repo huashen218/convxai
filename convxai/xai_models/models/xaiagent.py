@@ -29,10 +29,78 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
 logger.setLevel(logging.INFO)
 
 
+
+
+
 @dataclass
 class AspectPattern:
     _id: str
     aspect_sequence: List[int]
+
+
+def tokenize(x):
+    return x.split(" ")
+    
+
+class TfidfAspectModel:
+    def __init__(self, conference):
+        self.configs = parse_system_config_file()
+        model_path = self.configs['conversational_xai']['checkpoints_root_dir'] + self.configs['conversational_xai']['xai_writing_aspect_prediction_dir']+f"/{conference}"
+        self.vectorizer = joblib.load(Path(model_path, "vectorizer.joblib"))
+        self.model = joblib.load(Path(model_path, "model.joblib"))
+        with open(Path(model_path, "centers.json"), 'r', encoding='utf-8') as infile:
+            self.centers = json.load(infile)
+
+    def get_feature(self, aspect_sequence: List[int]):
+        return " ".join([
+            f"{aspect}"
+            for i, aspect in enumerate(aspect_sequence)
+        ])
+
+    def predict(self, aspect_sequence: List[int]) -> AspectPattern:
+        feature = self.get_feature(aspect_sequence)
+        vectors = self.vectorizer.transform([feature])
+        labels = self.model.predict(vectors)
+        result = AspectPattern(*self.centers[labels[0]])
+        return result
+
+
+# @dataclass
+# class AspectPattern:
+#     _id: str
+#     aspect_sequence: List[int]
+
+# def tokenize(x):
+#     return x.split(" ")
+# class TfidfAspectModel:
+#     def __init__(self, conference):
+#         self.configs = parse_system_config_file()
+#         # self.model_path = self.configs['conversational_xai']['checkpoints_root_dir'] + self.configs['conversational_xai']['xai_writing_aspect_prediction_dir']+f"/{conference}"
+        
+#         self.model_path = Path(
+#         "/home/hqs5468/hua/workspace/projects/convxai/checkpoints/xai_models/xai_writing_aspect_prediction/",
+#         f"{conference}",
+#         )
+        
+#         self.vectorizer = joblib.load(
+#             Path(self.model_path, "vectorizer.joblib"))
+#         self.model = joblib.load(Path(self.model_path, "model.joblib"))
+#         with open(Path(self.model_path, "centers.json"), 'r', encoding='utf-8') as infile:
+#             self.centers = json.load(infile)
+
+
+#     def get_feature(self, aspect_sequence: List[int]):
+#         return " ".join([
+#             f"{aspect}"
+#             for i, aspect in enumerate(aspect_sequence)
+#         ])
+
+#     def predict(self, aspect_sequence: List[int]) -> AspectPattern:
+#         feature = self.get_feature(aspect_sequence)
+#         vectors = self.vectorizer.transform([feature])
+#         labels = self.model.predict(vectors)
+#         result = AspectPattern(*self.centers[labels[0]])
+#         return result
 
 
 @register_agent("xai")
@@ -87,6 +155,7 @@ class XaiAgent(Agent):
         }
         return ai_predictions
 
+
     def observe(self, observation):
         """Receive user XAI inputs and AI predictions to be used for generating explanations.
         """
@@ -97,7 +166,8 @@ class XaiAgent(Agent):
     def act(self):
         """Generate AI explanations and send back to users.
         """
-        response_text, response_indicator = self.xai_explainer.explain(self.predictOutputs, **self.user_inputs)
+        response_text, response_indicator = self.xai_explainer.explain(self.user_inputs['explainInput'], self.user_inputs['writingInput'], self.predictOutputs, self.user_inputs['inputTexts'],self.user_inputs['writingIndex'])
+
         response = {
             "text": response_text,
             "writingIndex": response_indicator,
@@ -109,15 +179,13 @@ class XaiAgent(Agent):
 class AICommenter(object):
     """Based on AI predictions, AICommenter generate high-level AI comments that are more understandable and useful for users in practice.
     """
-
     def __init__(self, conference, writingInput, predictOutputs, inputTexts):
-        super().__init__(self)
         self.conference = conference
         self.predictOutputs = predictOutputs
         self.writingInput = writingInput
         self.inputTexts = inputTexts
         self.review_summary = {}
-        self.tfidf_aspect_model = self.TfidfAspectModel(conference)
+        self.tfidf_aspect_model = TfidfAspectModel(self.conference)
         self.revision_comment_template = {
             "shorter_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=shorter-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>too short</strong>, the average length of the sentences predicted as <strong>'{label}'</strong> labels in {conference} conference is {ave_word} words. Please rewrite it into a longer one.</p><br>",
             "longer_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=longer-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>too long</strong>, the average length of the sentences predicted as <strong>'{label}'</strong> labels in {conference} conference is {ave_word} words. Please rewrite it into a shorter one.</p><br>",
@@ -127,34 +195,6 @@ class AICommenter(object):
         with open(os.path.join('./modules/explainers/ai_comment_statistics.json')) as json_file:
             self.global_explanations_data = json.load(json_file)
             
-
-    class TfidfAspectModel:
-        def __init__(self):
-            self.configs = parse_system_config_file()
-            model_path = Path(
-                self.configs['conversational_xai']['checkpoints_root_dir'],
-                self.configs['conversational_xai']['xai_writing_aspect_prediction_dir'],
-                f"{self.conference}",
-            )
-            self.vectorizer = joblib.load(
-                Path(model_path, "vectorizer.joblib"))
-            self.model = joblib.load(Path(model_path, "model.joblib"))
-            with open(Path(model_path, "centers.json"), 'r', encoding='utf-8') as infile:
-                self.centers = json.load(infile)
-
-        def get_feature(self, aspect_sequence: List[int]):
-            return " ".join([
-                f"{aspect}"
-                for i, aspect in enumerate(aspect_sequence)
-            ])
-
-        def predict(self, aspect_sequence: List[int]) -> AspectPattern:
-            feature = self.get_feature(aspect_sequence)
-            vectors = self.vectorizer.transform([feature])
-            labels = self.model.predict(vectors)
-            result = AspectPattern(*self.centers[labels[0]])
-            return result
-
     def _ai_comment_score_classifier(self, raw_score, score_benchmark):
         if raw_score >= score_benchmark[4]:
             score_label = 1
@@ -347,11 +387,8 @@ class XAIExplainer(object):
 
     def __init__(self) -> None:
 
-        # ****** Load config file ****** #
-        root_dir = os.path.abspath(os.path.join(
-            os.path.dirname(__file__), "../../../"))
-        with open(os.path.join(root_dir, "configs/sysconfig.json"), 'r') as fp:
-            self.configs = json.load(fp)
+        # # ****** Load config file ****** #
+        self.configs = parse_system_config_file()
 
         # ****** Set up Convxai modules ****** #
         self.nlu = XAI_NLU_Module(self.configs, nlu_algorithm="rule_based")

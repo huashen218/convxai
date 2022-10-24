@@ -4,9 +4,9 @@ from .util import create_folder
 from pymongo import MongoClient
 
 
-root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 mongodb_config_path = os.path.join(root_dir, "configs/mongodb_config.yml")
-system_config_path = os.path.join(root_dir, "configs.yml")
+system_config_path = os.path.join(root_dir, "configs/configs.yml")
 
 
 def get_mongo_connection():

@@ -239,10 +239,9 @@ def load_predictor(task, predictor_folder="trained_predictors/"):
 
 
 
-def load_diversity_model(predictor_path="/home/hqs5468/hua/workspace/projects/convxai/src/convxai/writing_models/checkpoints/diversity_model/model"):
+def load_diversity_model():
 
-    # predictor_path = os.path.join(predictor_folder, task, "model/model.tar.gz")
-    # predictor_path = predictor_folder
+    predictor_path = system_configs["scientific_writing"]["diversity_model_dir"]
 
     if not os.path.exists(predictor_path):
         raise ValueError(f"Cannot find predictor path {predictor_path}")
@@ -267,13 +266,6 @@ def load_base_t5(max_length=700):
 
 def get_device():
     return 'cuda' if torch.cuda.is_available() else 'cpu'
-
-# def get_prob_pred(pred, label_idx):
-#     """ Given a prediction, gets predicted probability of label_idx. """
-
-#     for idx, prob in enumerate(pred['probs']):
-#         if idx == label_idx:
-#             return prob
 
 
 def get_prob_pred(pred, label_idx):
