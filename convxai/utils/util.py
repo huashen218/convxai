@@ -9,6 +9,25 @@ from pymongo import MongoClient
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
+
+
+
+nlp = stanza.Pipeline('en')
+
+
+
+
+def counting_tokens(abs_text):
+    ### Extract Abstracts ###
+    abs = abs_text.replace("\n", " ")
+    doc = nlp(abs)
+
+    ### Seg Sentences ###
+    tokens = [token.text for sentence in doc.sentences for token in sentence.tokens]
+    return tokens
+
+
+
 def create_folder(folder_list):
     """Create the folders if the pathes do not exist.
     """
