@@ -7,13 +7,9 @@ __pycache__
 
 
 ### ignore data
-convxai/writing_models/data
-convxai/xai_models/data
 data
 
 ### ignore models
-convxai/writing_models/checkpoints
-convxai/xai_models/checkpoints
 checkpoints
 
 ### ignore logs
