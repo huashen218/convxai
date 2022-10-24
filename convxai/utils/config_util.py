@@ -53,7 +53,6 @@ def parse_system_config_file():
             if task_name == "logfilePath":
                 create_folder([result["system"][task_name]])
 
-
         result['scientific_writing'] = {}
         scientific_writing = cfg.get("scientific_writing")
         for task_name, configuration in scientific_writing.items():
@@ -61,12 +60,25 @@ def parse_system_config_file():
             if not result["scientific_writing"][task_name]:
                 raise ValueError(f"Did not specify '{task_name}'")
 
-        # result['conversational_xai'] = {}
-        # scientific_writing = cfg.get("conversational_xai")
-        # for task_name, configuration in scientific_writing.items():
-        #     result["conversational_xai"][task_name] = configuration
-        #     if not result["conversational_xai"][task_name]:
-        #         raise ValueError(f"Did not specify '{task_name}'")
+        result['conversational_xai'] = {}
+        conversational_xai = cfg.get("conversational_xai")
+        result['conversational_xai']['checkpoints_root_dir'] = conversational_xai['checkpoints_root_dir']
+        result['conversational_xai']['xai_writing_aspect_prediction_dir'] = conversational_xai['xai_writing_aspect_prediction_dir']
+        result['conversational_xai']['xai_counterfactual_dir'] = conversational_xai['xai_counterfactual_dir']
+        result['conversational_xai']['xai_example_dir'] = {
+            'xai_emample_embeddings_dir': {},
+            'xai_emample_texts_dir': {}
+        }
+        
+        for task_name, configuration in conversational_xai['xai_example_dir']['xai_emample_embeddings_dir'].items():
+            result['conversational_xai']['xai_example_dir']['xai_emample_embeddings_dir'][task_name] = configuration
+            if not result['conversational_xai']['xai_example_dir']['xai_emample_embeddings_dir'][task_name]:
+                raise ValueError(f"Did not specify '{task_name}'")
+
+        for task_name, configuration in conversational_xai['xai_example_dir']['xai_emample_texts_dir'].items():
+            result['conversational_xai']['xai_example_dir']['xai_emample_texts_dir'][task_name] = configuration
+            if not result['conversational_xai']['xai_example_dir']['xai_emample_texts_dir'][task_name]:
+                raise ValueError(f"Did not specify '{task_name}'")
 
     return result
 

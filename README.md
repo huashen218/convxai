@@ -21,12 +21,6 @@ Bibtex for citations:
 
 
 
-
-
-
-
-
-
 Table of Contents
 =================
 
@@ -52,6 +46,7 @@ Table of Contents
 
 
 ## Prerequisites
+
 
 ### Installation
 **Create** a `convxai` virtual environment, **install** the libraries for ConvXAI as below, and **activate** the environment.
@@ -105,7 +100,6 @@ Then have fun chatting with ConvXAI<img src="assets/logo_wotext.png" width="18">
 
 
 
-
 ## ConvXAI Tutorials
 
 
@@ -118,7 +112,7 @@ We demonstrate the architecture of ConvXAI in Figure1. ConvXAI mainly includes *
 - **Infrastructures** (e.g., [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol, [MongoDB](https://www.mongodb.com/) database) to support communication between the client and server.
 
 
-| !["assets/system_overview.jpeg"](assets/system_overview.jpeg) | 
+| !["assets/system_overview.jpeg"](assets/github_framework.png) | 
 |:--:| 
 | **Figure1. Overview of the Infrastructure of ConvXAI** |
 <!-- <img src="assets/system_overview.jpeg" width="500"> -->
@@ -134,7 +128,6 @@ ConvXAI deploys UI with [Flask](https://flask.palletsprojects.com/en/2.2.x/).
 ### 3. AI Writing Models
 
 We include two AI models to support scientific writing.
-
 
 
 

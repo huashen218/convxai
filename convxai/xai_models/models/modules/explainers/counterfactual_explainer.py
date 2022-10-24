@@ -1,7 +1,7 @@
 import torch
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.utils import *
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator, EditList
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.stage_two import load_models
+from convxai.xai_models.preprocessing.counterfactual_explainer.src.utils import *
+from convxai.xai_models.preprocessing.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator, EditList
+from convxai.xai_models.preprocessing.counterfactual_explainer.src.stage_two import load_models
 
 
 class CounterfactualExplainer(object):

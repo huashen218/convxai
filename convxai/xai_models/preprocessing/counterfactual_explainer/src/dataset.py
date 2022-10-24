@@ -5,11 +5,9 @@ import numpy as np
 import random
 import logging
 
-
-
 # Local imports
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.masker import MaskError
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.utils import * 
+from .masker import MaskError
+from .utils import * 
 
 
 logger = logging.getLogger(__name__)

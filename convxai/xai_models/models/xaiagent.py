@@ -132,7 +132,8 @@ class AICommenter(object):
         def __init__(self):
             self.configs = parse_system_config_file()
             model_path = Path(
-                self.configs['conversational_xai']['xai_writing_aspect_prediction'],
+                self.configs['conversational_xai']['checkpoints_root_dir'],
+                self.configs['conversational_xai']['xai_writing_aspect_prediction_dir'],
                 f"{self.conference}",
             )
             self.vectorizer = joblib.load(
