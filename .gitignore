@@ -10,7 +10,7 @@ __pycache__
 # data
 
 ### ignore models
-checkpoints
+# checkpoints
 
 ### ignore logs
 runners/logs
