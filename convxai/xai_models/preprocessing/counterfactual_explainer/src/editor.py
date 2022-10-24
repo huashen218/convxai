@@ -11,8 +11,7 @@ import warnings
 from torch.utils import data
 
 # Local imports
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.utils import * 
-
+from .utils import * 
 from .edit_finder import Feature, PredDataset
 
 logger = logging.getLogger("my-logger")

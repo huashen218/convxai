@@ -24,17 +24,10 @@ import json
 import difflib
 from munch import Munch
 
-# local imports
-# from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.predictors.imdb.imdb_dataset_reader import ImdbDatasetReader
-# from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.predictors.newsgroups.newsgroups_dataset_reader import NewsgroupsDatasetReader
-# from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.predictors.race.race_dataset_reader import RaceDatasetReader
-# from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.predictors.diversity.diversity_model import DiversityModel
-# from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.masker import Masker, RandomMasker, GradientMasker
 
-
-###### For Diversity Model ######
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.predictors.diversity.diversity_dataset_reader import DiversityDatasetReader
 from convxai.writing_models.models import DiversityModel
+from convxai.utils import *
+from .predictors.diversity.diversity_dataset_reader import DiversityDatasetReader
 
 
 logger = logging.getLogger(__name__)
@@ -43,14 +36,9 @@ logger.setLevel(logging.INFO)
 TOKENIZERS_PARALLELISM=False
 
 
-
-
-
-RESULTS_DIR = "/data/hua/workspace/projects/convxai/src/convxai/xai_models/checkpoints/xai_counterfactual_explainer_models/diversity/editors/diversity_model/checkpoints/"
-EDITOR_PATH = "/data/hua/workspace/projects/convxai/src/convxai/xai_models/checkpoints/xai_counterfactual_explainer_models/diversity/editors/diversity_model/checkpoints/best.pth"
-
-# EDITOR_PATH = "/data/hua/workspace/projects/convxai/src/convxai/xai_models/checkpoints/xai_counterfactual_explainer_models/diversity_backup/editors/diversity_model/checkpoints_backup0626/best.pth"
-
+system_configs = parse_system_config_file()
+RESULTS_DIR = os.path.join(system_configs['conversational_xai']['checkpoints_root_dir'], system_configs['conversational_xai']['xai_counterfactual_dir'])
+EDITOR_PATH = os.path.join(RESULTS_DIR, "best.pth")
 
 
 ####################################################################

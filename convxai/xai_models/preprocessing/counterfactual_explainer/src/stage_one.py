@@ -16,9 +16,9 @@ import sys
 
 
 # Local imports
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.masker import Masker, RandomMasker, GradientMasker
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.dataset import StageOneDataset, RaceStageOneDataset, DiversityStageOneDataset
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.utils import *
+from .masker import Masker, RandomMasker, GradientMasker
+from .dataset import StageOneDataset, RaceStageOneDataset, DiversityStageOneDataset
+from .utils import *
 
 
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"

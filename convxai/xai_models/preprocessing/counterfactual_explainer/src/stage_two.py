@@ -24,10 +24,10 @@ import logging
 import json
 
 # Local imports
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.utils import *
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator, EditList
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.editor import Editor, RaceEditor
-from convxai.xai_models.trainers.explainers.counterfactual_explainer.src.masker import Masker, RandomMasker, GradientMasker
+from .utils import *
+from .edit_finder import EditFinder, EditEvaluator, EditList
+from .editor import Editor, RaceEditor
+from .masker import Masker, RandomMasker, GradientMasker
 
 logger = logging.getLogger("my-logger")
 FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"

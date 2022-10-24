@@ -1,23 +1,23 @@
 system:
-    PYTHONPATH: "/home/hqs5468/hua/workspace/projects/convxai_system",
-    RUN_SERVICE_DIR: "/home/huashen218/workspace/convxai_system/onvxai/services/web_service",
+    PYTHONPATH: "/home/hqs5468/hua/workspace/projects/convxai",
+    RUN_SERVICE_DIR: "/home/huashen218/workspace/convxai/convxai/services/web_service",
     PORT: 10020,
-    logfilePath: "/home/huashen218/workspace/convxai_system/runners/logs/web_service"
+    logfilePath: "/home/huashen218/workspace/convxai/runners/logs/web_service"
 
 scientific_writing:
     diversity_model_dir: "huashen218/convxai-diversity-model",
     quality_model_dir: "huashen218/convxai-quality-model"
 
 conversational_xai:
-    example_based:
+    checkpoints_root_dir: "/home/huashen218/workspace/convxai/src/convxai/checkpoints/xai_models/"
+    xai_example_dir:
         xai_emample_embeddings_dir:
-            ACL: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_ACL_embeddings.h5",
-            CHI: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_CHI_embeddings.h5",
-            ICLR: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_ICLR_embeddings.h5"
+            ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5",
+            CHI: "xai_example_embeddings/diversity_model_CHI_embeddings.h5",
+            ICLR: "xai_example_embeddings/diversity_model_ICLR_embeddings.h5"
         xai_emample_texts_dir:
-            ACL: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_ACL_texts.h5",
-            CHI: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_CHI_texts.h5",
-            ICLR: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_ICLR_texts.h5"
-    
-    xai_writing_aspect_prediction: "/home/huashen218/workspace/convxai_system/checkpoints/xai_models/xai_writing_aspect_prediction",
-    # nlu_question_embedding_dir: "/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/nlu/nlu_question_embedding.h5"
+            ACL: "xai_example_embeddings/diversity_model_ACL_texts.h5",
+            CHI: "xai_example_embeddings/diversity_model_CHI_texts.h5",
+            ICLR: "xai_example_embeddings/diversity_model_ICLR_texts.h5"
+    xai_writing_aspect_prediction_dir: "/xai_writing_aspect_prediction",
+    xai_counterfactual_dir: "xai_counterfactual_explainer_models/editors/diversity_model/checkpoints"
