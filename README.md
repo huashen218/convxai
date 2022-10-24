@@ -56,7 +56,6 @@ Table of Contents
 ## Prerequisites
 
 ### Installation
-1. 
 **Create** a `convxai` virtual environment, **install** the libraries for ConvXAI as below, and **activate** the environment.
 ```
 $pip install -r requirements.txt
