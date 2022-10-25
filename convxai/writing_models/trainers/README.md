@@ -1,0 +1,1 @@
+You can train the writing models from scratch using codes inside of this folder.
