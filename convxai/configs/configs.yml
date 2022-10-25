@@ -1,9 +1,3 @@
-system:
-    PYTHONPATH: "/home/hqs5468/hua/workspace/projects/convxai"
-    RUN_SERVICE_DIR: "/home/huashen218/workspace/convxai/convxai/services/web_service"
-    PORT: 10020
-    logfilePath: "/home/hqs5468/hua/workspace/projects/convxai/convxai/runners/logs/web_service"
-
 scientific_writing:
     diversity_model_dir: "huashen218/convxai-diversity-model"
     quality_model_dir: "huashen218/convxai-quality-model"
