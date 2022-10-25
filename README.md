@@ -34,14 +34,13 @@ Table of Contents
       * [How to run ConvXAI](#how-to-run-convxai)
          * [Run the server](#run-the-server)
          * [Run the client](#run-the-client)
+         * [Browse UI to interact](#browse-ui-to-interact)
       * [ConvXAI Tutorials](#convxai-tutorials)
          * [1. ConvXAI Overview](#1-covnxai-overview)
          * [2. UI Web Service](#2-ui-web-service)
          * [3. AI Writing Models](#3-ai-writing-models)
          * [4. Conversational XAI Models](#4-conversational-xai-models)
          * [5. System Infrastructure](#5-system-infrastructure)
-
-
 
 
 
@@ -87,8 +86,6 @@ mongo_db_name: convxai
 
 
    * [configs.yml](convxai/configs/configs.yml)
-
-
 
 
 
@@ -169,7 +166,7 @@ python $RUN_SERVICE_DIR/web_server.py
 ```
 
 
-
+### Browse UI to interact:
 Then check the client terminal output, such as `-  * Running on http://157.230.188.155:8080/ (Press CTRL+C to quit)`, to open the browser link to interact with ConvXAI user interface.
 
 Have fun chatting with ConvXAI<img src="assets/logo_wotext.png" width="18"> robot for improving your paper writing!
@@ -181,17 +178,18 @@ Have fun chatting with ConvXAI<img src="assets/logo_wotext.png" width="18"> robo
 
 ### 1. CovnXAI Overview
 
-We demonstrate the architecture of ConvXAI in Figure1. ConvXAI mainly includes **four modules** summarized below. We further introduce details of each module in the following sections. 
-- **UI web service** (i.e., in **client**) using [Flask](https://flask.palletsprojects.com/en/2.2.x/) to support human-AI interactions; 
-- **Deep learning AI writing models** (i.e., in **server**) to generate AI predictions;
-- **Conversational XAI models** (i.e., in **server**) to receive user questions and generate free-text XAI responses; 
+We demonstrate the architecture of ConvXAI in Figure1. ConvXAI mainly includes **four modules** summarized as below: 
+- **UI web service** (i.e., in **client**): leverages [Flask](https://flask.palletsprojects.com/en/2.2.x/) to support human-AI interactions; 
+- **Deep learning AI writing models** (i.e., in **server**)： generates instance-wise AI predictions;
+- **Conversational XAI models** (i.e., in **server**): generate human-understandable AI comments, receive user questions and generate free-text XAI responses; 
 - **System Infrastructures** (e.g., [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol, [MongoDB](https://www.mongodb.com/) database) to support communication between the client and server.
 
+We further introduce details of each module in the following sections. 
 
 <!-- | ![](assets/github_framework.png) |  -->
 | <img src="assets/github_framework.png" width="400">| 
 |:--:| 
-| **Figure1. Overview of the Architecture of ConvXAI** |
+| **Figure1. Overview of ConvXAI Architecture** |
 
 
 
