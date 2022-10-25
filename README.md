@@ -28,9 +28,9 @@ Table of Contents
       * [Table of Contents](#table-of-contents)
       * [Prerequisites](#prerequisites)
          * [Installation](#installation)
-         * [MongoDB Setup](#mongodb-setup)
-         * [Download Pretrained Data and Models](#download-pretrained-data-and-models)
-         * [Config Files Setup](#config-files-setup)
+         * [MongoDB setup](#mongodb-setup)
+         * [Config files setup](#config-files-setup)
+         * [Check pretrained data and models](#check-pretrained-data-and-models)
       * [How to run ConvXAI](#how-to-run-convxai)
          * [Run the server](#run-the-server)
          * [Run the client](#run-the-client)
@@ -75,7 +75,7 @@ pip install -e .
 ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install [MongoDB](https://www.mongodb.com/) on your node and ensure you have the database access to connect and manage the data.
 Then refer to the [Config Files Setup](#config-files-setup) section to set up [`mongodb_config.yml`](convxai/configs/mongodb_config.yml).
 
-### Config Files Setup
+### Config files setup
 Setup the  configs files of ConvXAI under path `convxai/configs`:
 
    * [mongodb_config.yml](convxai/configs/mongodb_config.yml):  You can either deploy both server and client in the **same machine** setting `mongo_host: localhost`, or you can deply them on **two machines** and set your client machine's IP address as mongo_host, e.g., `mongo_host: "157.230.188.155""`.
@@ -120,7 +120,7 @@ conversational_xai:
 
 
 ### Check pretrained data and models
-You can skip this step if you are going to use the default datasets and models of ConvXAI system. ConvXAI repository is self-contained, including:
+You can **skip this step** if you are going to **use the default datasets and models of ConvXAI system**, because ConvXAI repository is **self-contained**. It includes:
 - **Two AI writing models**: are uploaded to Huggingface Hub. One is a *SciBERT-based classification* model (i.e., `huashen218/convxai-quality-model`), the other is a *GPT-based generative* model (i.e., `huashen218/convxai-quality-model`). The models will be automatically downloaded when deploying ConvXAI.
 - **CIA dataset**: collects paper abstracts from 2018-2022 in **C**HI, **I**CLR and **A**CL conferences. CIA dataset is for finetuning *GPT-based* model to generate scientific style quality scores. Data path is: `data/CIA`.
 - **XAI models**: contains pretrained checkpoints supporting conversational XAI modules to generate AI comments and explanations on-the-fly. Particularly, the `checkpoints/` include:
