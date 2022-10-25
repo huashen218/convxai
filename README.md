@@ -76,7 +76,7 @@ ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Pleas
 Then refer to the [Config Files Setup](#config-files-setup) section to set up [`mongodb_config.yml`](convxai/configs/mongodb_config.yml).
 
 ### Config Files Setup
-Setup the  configs files of ConvXAI at `convxai/configs`:
+Setup the  configs files of ConvXAI under path `convxai/configs`:
 
    * [mongodb_config.yml](convxai/configs/mongodb_config.yml):  You can either deploy both server and client in the **same machine** setting `mongo_host: localhost`, or you can deply them on **two machines** and set your client machine's IP address as mongo_host, e.g., `mongo_host: "157.230.188.155""`.
 
@@ -93,7 +93,6 @@ mongo_db_name: convxai
 
 
 ```
-## convxai/configs/configs.yml
 scientific_writing:
     diversity_model_dir: "huashen218/convxai-diversity-model"
     quality_model_dir: "huashen218/convxai-quality-model"
@@ -126,7 +125,7 @@ You can skip this step if you are going to use the default datasets and models o
 - **CIA dataset**: collects paper abstracts from 2018-2022 in **C**HI, **I**CLR and **A**CL conferences. CIA dataset is for finetuning *GPT-based* model to generate scientific style quality scores. Data path is: `data/CIA`.
 - **XAI models**: contains pretrained checkpoints supporting conversational XAI modules to generate AI comments and explanations on-the-fly. Particularly, the `checkpoints/` include:
    * `xai_writing_aspect_prediction/`: enables xai_models to generate AI comments related to the submitted paper's apsect label distribution.
-   * `xai_example_embeddings/`: saves embeddings from CIA datasets to enable xai_models to generate example-based explanations. The method is **NN\_DOT** method described in [this paper](https://aclanthology.org/2021.naacl-main.75.pdf)
+   * `xai_example_embeddings/`: saves embeddings from CIA datasets to enable xai_models to generate example-based explanations. The method is **NN\_DOT** method described in [this paper](https://aclanthology.org/2021.naacl-main.75.pdf).
    * `xai_counterfactual_explainer_models/`: contains [MiCE](https://aclanthology.org/2021.findings-acl.336.pdf) counterfactual model pre-trained on our writing structure model.
 
 You can also train your own writing and XAI models from scratch. Please refer to the [ConvXAI Tutorial](#convxai-tutorials) for details.
@@ -134,20 +133,46 @@ You can also train your own writing and XAI models from scratch. Please refer to
 
 ## How to Run ConvXAI
 
-Open two terminals for running the server.
+You can deploy the ConvXAI **server** (i.e., deep learning server for writing and XAI models) and **client** (i.e., UI web service) either on the *same node* OR on *two different nodes*. Then please run server and client on two different terminals as described below.
+
+
 ### Run the server:
-One terminal runs the server with:
+One terminal runs the server with: `$bash path_to_convxai/convxai/runners/main_server.sh`. For example, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_server.sh`.
+
+Please specify the `path_to_convxai/` inside the [main_server.sh](convxai/runners/main_server.sh) shown below. For instance, I cloned the convxai repository under `/home/huashen/workspace/projects/` path, I will set the `path_to_convxai` as `/home/hqs5468/hua/workspace/projects/convxai`. You can also change `--port` if needed.
 ```
-$bash path_to_convxai/convxai/runners/main_server.sh
+#!/usr/bin/env bash
+set -x;
+set -e;
+export PYTHONPATH=path_to_convxai/
+RUN_SERVICE_DIR="path_to_convxai/convxai";
+CUDA_VISIBLE_DEVICES=0 python $RUN_SERVICE_DIR/services/run_server/run.py \
+                        --config-path $RUN_SERVICE_DIR/configs/service_config.yml \
+                        --port 10020;
 ```
+
+
+
 
 ### Run the client:
-The other terminal runs the client with:
+The other terminal runs the client with: `$bash path_of_convxai/convxai/runners/main_client.sh`. For instance, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_client.sh`.
+
+Similarly, please specify the `path_of_convxai/` inside the [main_client.sh](convxai/runners/main_client.sh) shown below.
+
 ```
-$bash ath_to_convxai/convxai/runners/main_client.sh
+#!/usr/bin/env bash
+set -x;
+set -e;
+export PYTHONPATH=path_of_convxai/
+RUN_SERVICE_DIR="/path_of_convxai/convxai/services/web_service";
+python $RUN_SERVICE_DIR/web_server.py
 ```
 
-Then have fun chatting with ConvXAI<img src="assets/logo_wotext.png" width="18"> robot for improving your paper writing!
+
+
+Then check the client terminal output, such as `-  * Running on http://157.230.188.155:8080/ (Press CTRL+C to quit)`, to open the browser link to interact with ConvXAI user interface.
+
+Have fun chatting with ConvXAI<img src="assets/logo_wotext.png" width="18"> robot for improving your paper writing!
 
 
 
