@@ -72,20 +72,8 @@ pip install -e .
 
 
 ### MongoDB setup
-ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install it and ensure you have the database access to connect and manage the data.
-Then refer to the [Config Files Setup](#config-files-setup) section, to set up [`mongodb_config.yml`](convxai/configs/mongodb_config.yml).
-
-### Check pretrained data and models
-You can skip this step if you are going to use the default datasets and models of ConvXAI system. ConvXAI repository is self-contained, including:
-- **Two AI writing models**: are uploaded to Huggingface Hub. One is a *SciBERT-based classification* model (i.e., `huashen218/convxai-quality-model`), the other is a *GPT-based generative* model (i.e., `huashen218/convxai-quality-model`). The models will be automatically downloaded when deploying ConvXAI.
-- **CIA dataset**: collects paper abstracts from 2018-2022 in **C**HI, **I**CLR and **A**CL conferences. CIA dataset is for finetuning *GPT-based* model to generate scientific style quality scores. Data path is: `data/CIA`.
-- **XAI models**: contains pretrained checkpoints supporting conversational XAI modules to generate AI comments and explanations on-the-fly. Particularly, the checkpoints include:
-   * `xai_writing_aspect_prediction`: enables xai_models to generate AI comments related to the submitted paper's apsect label distribution.
-   * `xai_example_embeddings`: saves embeddings from CIA datasets to enable xai_models to generate example-based explanations. The method is **NN\_DOT** method described in [this paper](#https://aclanthology.org/2021.naacl-main.75/)
-   * `xai_counterfactual_explainer_models`: contains [MiCE](https://aclanthology.org/2021.findings-acl.336.pdf) counterfactual model pre-trained on our writing structure model.
-
-You can also train your own writing and XAI models from scratch. Please refer to the [ConvXAI Tutorial](#convxai-tutorials) for details.
-
+ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install [MongoDB](https://www.mongodb.com/) on your node and ensure you have the database access to connect and manage the data.
+Then refer to the [Config Files Setup](#config-files-setup) section to set up [`mongodb_config.yml`](convxai/configs/mongodb_config.yml).
 
 ### Config Files Setup
 Setup the  configs files of ConvXAI at `convxai/configs`:
@@ -130,6 +118,18 @@ conversational_xai:
 ```
 
    * [service_config.yml](convxai/configs/service_config.yml): In the common case, you don't need to modify this file unless you want to change the `relative paths` or the `class names` inside of `service_config.yml`.
+
+
+### Check pretrained data and models
+You can skip this step if you are going to use the default datasets and models of ConvXAI system. ConvXAI repository is self-contained, including:
+- **Two AI writing models**: are uploaded to Huggingface Hub. One is a *SciBERT-based classification* model (i.e., `huashen218/convxai-quality-model`), the other is a *GPT-based generative* model (i.e., `huashen218/convxai-quality-model`). The models will be automatically downloaded when deploying ConvXAI.
+- **CIA dataset**: collects paper abstracts from 2018-2022 in **C**HI, **I**CLR and **A**CL conferences. CIA dataset is for finetuning *GPT-based* model to generate scientific style quality scores. Data path is: `data/CIA`.
+- **XAI models**: contains pretrained checkpoints supporting conversational XAI modules to generate AI comments and explanations on-the-fly. Particularly, the `checkpoints/` include:
+   * `xai_writing_aspect_prediction/`: enables xai_models to generate AI comments related to the submitted paper's apsect label distribution.
+   * `xai_example_embeddings/`: saves embeddings from CIA datasets to enable xai_models to generate example-based explanations. The method is **NN\_DOT** method described in [this paper](https://aclanthology.org/2021.naacl-main.75.pdf)
+   * `xai_counterfactual_explainer_models/`: contains [MiCE](https://aclanthology.org/2021.findings-acl.336.pdf) counterfactual model pre-trained on our writing structure model.
+
+You can also train your own writing and XAI models from scratch. Please refer to the [ConvXAI Tutorial](#convxai-tutorials) for details.
 
 
 ## How to Run ConvXAI
