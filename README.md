@@ -215,7 +215,11 @@ Specifically, ConvXAI deploys UI with [Flask](https://flask.palletsprojects.com/
 ### 3. AI Writing Models
 
 
-ConvXAI includes the pre-trained [diversity model](https://huggingface.co/huashen218/convxai-diversity-model?text=I+like+you.+I+love+you) and [quality model](https://huggingface.co/huashen218/convxai-quality-model?text=My+name+is+Merve+and+my+favorite) AI writing models, which are both accessible from the [Huggingface Hub](https://huggingface.co/models).
+Check the AI writing model specifications and data preprocessing files at `convxai/writing_models/models` and `convxai/writing_models/dataloaders`, respectively.
+
+If you want to **train the writing models from scratch**, please check the `convxai/writing_models/trainers/`.
+
+For a brief summary of writing models, ConvXAI includes the pre-trained [diversity model](https://huggingface.co/huashen218/convxai-diversity-model?text=I+like+you.+I+love+you) and [quality model](https://huggingface.co/huashen218/convxai-quality-model?text=My+name+is+Merve+and+my+favorite) AI writing models, which are both accessible from the [Huggingface Hub](https://huggingface.co/models).
 
 - **diversity model**: a SciBERT-based *writing structure model* with five classification categories fine-tuned on the [CODA-19](https://github.com/windx0303/CODA-19) dataset.
 
@@ -224,10 +228,6 @@ ConvXAI includes the pre-trained [diversity model](https://huggingface.co/huashe
 
 
 
-Check the AI writing model specifications and data preprocessing files at `convxai/writing_models/models` and `convxai/writing_models/dataloaders`, respectively.
-
-If you want to **train the writing models from scratch**, please check the `convxai/writing_models/trainers/`.
-
 
 
 
@@ -235,12 +235,15 @@ If you want to **train the writing models from scratch**, please check the `conv
 
 We design our ConvXAI module to include Natural Language Understanding (NLU), AI Explainers (XAIers), Natural Language Generation (NLG) modules.
 
-
+ConvXAI model 
 
 
 ### 5. System Infrastructure
 
-We build ConvXAI upon the [ParlAI](https://parl.ai/) platform to for the server-client architecture.
+Check the system infrastructure files at `convxai/services/`. 
+You can further check the script to host the server at `convxai/services/run_server/` and details of websocket and mongodb specifications at `convxai/services/websocket/`.
+
+Note that ConvXAI refers to the [ParlAI](https://parl.ai/) platform to build the server-client architecture.
 ConvXAI uses [PyMongo](https://pymongo.readthedocs.io/en/stable/) python package to work with MongoDB.
 
 
