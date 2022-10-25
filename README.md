@@ -49,7 +49,8 @@ Table of Contents
 
 ### Installation
 **Create** a `convxai` virtual environment, **activate** the environment, and **install** the libraries for ConvXAI as below.
-```
+
+```bash
 $conda create --name convxai python=3.7
 $conda activate convxai
 $pip install -r requirements.txt
@@ -79,7 +80,7 @@ Set up the  configs files of ConvXAI under path `convxai/configs`:
 
    * [mongodb_config.yml](convxai/configs/mongodb_config.yml):  You can either deploy both server and client in the **same machine** setting `mongo_host: localhost`, or you can deply them on **two machines** and set your *client machine's IP address* as mongo_host, e.g., `mongo_host: "157.230.188.155""`.
 
-```
+```yaml
 mongo_host: localhost
 mongo_db_name: convxai
 ```
@@ -94,7 +95,7 @@ Set up the path for both **scientific writing models** and the pre-trained check
 The [diversity model](https://huggingface.co/huashen218/convxai-diversity-model?text=I+like+you.+I+love+you) and [quality model](https://huggingface.co/huashen218/convxai-quality-model?text=My+name+is+Merve+and+my+favorite)
 are both accessible from the [Huggingface Hub](https://huggingface.co/models) and will be downloaded with below script.
 
-```
+```yaml
 scientific_writing:
     diversity_model_dir: "huashen218/convxai-diversity-model"
     quality_model_dir: "huashen218/convxai-quality-model"
@@ -104,7 +105,7 @@ scientific_writing:
 **Conversational XAI models**: Please specify the `path_of_convxai/` in the `checkpoints_root_dir` shown below. 
 For instance, a user clone the convxai repo under `/home/huashen/workspace/projects/` path, then the `path_of_convxai` is `/home/hqs5468/hua/workspace/projects/convxai`. 
 
-```
+```yaml
 conversational_xai:
     checkpoints_root_dir: "path_of_convxai/checkpoints/xai_models/"
     xai_example_dir:
@@ -144,7 +145,7 @@ You can deploy the ConvXAI **server** (i.e., deep learning server for writing an
 One terminal runs the server with: `$bash path_of_convxai/convxai/runners/main_server.sh`. For example, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_server.sh`.
 
 Please specify the `path_of_convxai/` inside the [main_server.sh](convxai/runners/main_server.sh) shown below. For instance, I cloned the convxai repository under `/home/huashen/workspace/projects/` path, I will set the `path_of_convxai` as `/home/hqs5468/hua/workspace/projects/convxai`. You can also change `--port` if needed.
-```
+```bash
 #!/usr/bin/env bash
 set -x;
 set -e;
@@ -163,7 +164,7 @@ The other terminal runs the client with: `$bash path_of_convxai/convxai/runners/
 
 Similarly, please specify the `path_of_convxai/` inside the [main_client.sh](convxai/runners/main_client.sh) shown below.
 
-```
+```bash
 #!/usr/bin/env bash
 set -x;
 set -e;
