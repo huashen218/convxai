@@ -87,7 +87,7 @@ mongo_db_name: convxai
 
    * [configs.yml](convxai/configs/configs.yml)
 
-Set up the path for both *scientific writing models* and the pre-trained checkpoints for *conversational XAI models*.
+Set up the path for both **scientific writing models** and the pre-trained checkpoints of **conversational XAI models**.
 
 **Scientific writing models**: ConvXAI involves a SciBERT-based *writing structure model* (i.e., diversity model) and a GPT-based *writing style model* (i.e., quality model). 
 
@@ -125,7 +125,7 @@ conversational_xai:
 
 ### Check pretrained data and models
 You can **skip this step** if you are going to **use the default datasets and models of ConvXAI system**, because ConvXAI repository is **self-contained**. It includes:
-- **Two AI writing models**: are uploaded to Huggingface Hub. One is a *SciBERT-based classification* model (i.e., `huashen218/convxai-quality-model`), the other is a *GPT-based generative* model (i.e., `huashen218/convxai-quality-model`). The models will be automatically downloaded when deploying ConvXAI.
+<!-- - **Two AI writing models**: are uploaded to Huggingface Hub. One is a *SciBERT-based classification* model (i.e., `huashen218/convxai-quality-model`), the other is a *GPT-based generative* model (i.e., `huashen218/convxai-quality-model`). The models will be automatically downloaded when deploying ConvXAI. -->
 - **CIA dataset**: collects paper abstracts from 2018-2022 in **C**HI, **I**CLR and **A**CL conferences. CIA dataset is for finetuning *GPT-based* model to generate scientific style quality scores. Data path is: `data/CIA`.
 - **XAI models**: contains pretrained checkpoints supporting conversational XAI modules to generate AI comments and explanations on-the-fly. Particularly, the `checkpoints/` include:
    * `xai_writing_aspect_prediction/`: enables xai_models to generate AI comments related to the submitted paper's apsect label distribution.
