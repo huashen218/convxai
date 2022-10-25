@@ -138,13 +138,16 @@ You can also train your own writing and XAI models from scratch. Please refer to
 
 ## How to Run ConvXAI
 
-You can deploy the ConvXAI **server** (i.e., deep learning server for writing and XAI models) and **client** (i.e., UI web service) either on the *same node* OR on *two different nodes*. Then please run server and client on two different terminals as described below.
+You can deploy the ConvXAI **server** (i.e., deep learning server for writing and XAI models) and **client** (i.e., UI web service) either on the *same node* OR on *two different nodes*.
+
+Then please run server and client on two different terminals as described below.
 
 
 ### Run the server:
-One terminal runs the server with: `$bash path_of_convxai/convxai/runners/main_server.sh`. For example, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_server.sh`.
+One terminal runs the server with: `$bash path_of_convxai/convxai/runners/main_server.sh`. 
 
-Please specify the `path_of_convxai/` inside the [main_server.sh](convxai/runners/main_server.sh) shown below. For instance, I cloned the convxai repository under `/home/huashen/workspace/projects/` path, I will set the `path_of_convxai` as `/home/hqs5468/hua/workspace/projects/convxai`. You can also change `--port` if needed.
+Please specify the `path_of_convxai/` inside the [main_server.sh](convxai/runners/main_server.sh) shown below. 
+You can also change `--port` if needed.
 ```bash
 #!/usr/bin/env bash
 set -x;
@@ -160,9 +163,7 @@ CUDA_VISIBLE_DEVICES=0 python $RUN_SERVICE_DIR/services/run_server/run.py \
 
 
 ### Run the client:
-The other terminal runs the client with: `$bash path_of_convxai/convxai/runners/main_client.sh`. For instance, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_client.sh`.
-
-Similarly, please specify the `path_of_convxai/` inside the [main_client.sh](convxai/runners/main_client.sh) shown below.
+The other terminal runs the client with: `$bash path_of_convxai/convxai/runners/main_client.sh`. Please specify the `path_of_convxai/` similarly.
 
 ```bash
 #!/usr/bin/env bash
