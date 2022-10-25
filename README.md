@@ -75,9 +75,9 @@ ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Pleas
 Then refer to the [Config Files Setup](#config-files-setup) section to set up [`mongodb_config.yml`](convxai/configs/mongodb_config.yml).
 
 ### Config files setup
-Setup the  configs files of ConvXAI under path `convxai/configs`:
+Set up the  configs files of ConvXAI under path `convxai/configs`:
 
-   * [mongodb_config.yml](convxai/configs/mongodb_config.yml):  You can either deploy both server and client in the **same machine** setting `mongo_host: localhost`, or you can deply them on **two machines** and set your client machine's IP address as mongo_host, e.g., `mongo_host: "157.230.188.155""`.
+   * [mongodb_config.yml](convxai/configs/mongodb_config.yml):  You can either deploy both server and client in the **same machine** setting `mongo_host: localhost`, or you can deply them on **two machines** and set your *client machine's IP address* as mongo_host, e.g., `mongo_host: "157.230.188.155""`.
 
 ```
 mongo_host: localhost
@@ -87,7 +87,12 @@ mongo_db_name: convxai
 
    * [configs.yml](convxai/configs/configs.yml)
 
+Set up the path for both *scientific writing models* and the pre-trained checkpoints for *conversational XAI models*.
 
+**Scientific writing models**: ConvXAI involves a SciBERT-based *writing structure model* (i.e., diversity model) and a GPT-based *writing style model* (i.e., quality model). 
+
+The [diversity model](https://huggingface.co/huashen218/convxai-diversity-model?text=I+like+you.+I+love+you) and [quality model](https://huggingface.co/huashen218/convxai-quality-model?text=My+name+is+Merve+and+my+favorite)
+are both accessible from the [Huggingface Hub](https://huggingface.co/models) and will be downloaded with below script.
 
 ```
 scientific_writing:
@@ -96,10 +101,12 @@ scientific_writing:
 ```
 
 
-```
+**Conversational XAI models**: Please specify the `path_of_convxai/` in the `checkpoints_root_dir` shown below. 
+For instance, a user clone the convxai repo under `/home/huashen/workspace/projects/` path, then the `path_of_convxai` is `/home/hqs5468/hua/workspace/projects/convxai`. 
 
+```
 conversational_xai:
-    checkpoints_root_dir: "/home/hqs5468/hua/workspace/projects/convxai/checkpoints/xai_models/"
+    checkpoints_root_dir: "path_of_convxai/checkpoints/xai_models/"
     xai_example_dir:
         xai_emample_embeddings_dir:
             ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5"
@@ -113,7 +120,7 @@ conversational_xai:
     xai_counterfactual_dir: "xai_writing_aspect_prediction/"
 ```
 
-   * [service_config.yml](convxai/configs/service_config.yml): In the common case, you don't need to modify this file unless you want to change the `relative paths` or the `class names` inside of `service_config.yml`.
+   * [service_config.yml](convxai/configs/service_config.yml): You can keep this file unchanged unless you want to change the `relative paths` or the `class names` inside of `service_config.yml`.
 
 
 ### Check pretrained data and models
@@ -134,15 +141,15 @@ You can deploy the ConvXAI **server** (i.e., deep learning server for writing an
 
 
 ### Run the server:
-One terminal runs the server with: `$bash path_to_convxai/convxai/runners/main_server.sh`. For example, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_server.sh`.
+One terminal runs the server with: `$bash path_of_convxai/convxai/runners/main_server.sh`. For example, `$bash /home/huashen/workspace/projects/convxai/convxai/runners/main_server.sh`.
 
-Please specify the `path_to_convxai/` inside the [main_server.sh](convxai/runners/main_server.sh) shown below. For instance, I cloned the convxai repository under `/home/huashen/workspace/projects/` path, I will set the `path_to_convxai` as `/home/hqs5468/hua/workspace/projects/convxai`. You can also change `--port` if needed.
+Please specify the `path_of_convxai/` inside the [main_server.sh](convxai/runners/main_server.sh) shown below. For instance, I cloned the convxai repository under `/home/huashen/workspace/projects/` path, I will set the `path_of_convxai` as `/home/hqs5468/hua/workspace/projects/convxai`. You can also change `--port` if needed.
 ```
 #!/usr/bin/env bash
 set -x;
 set -e;
-export PYTHONPATH=path_to_convxai/
-RUN_SERVICE_DIR="path_to_convxai/convxai";
+export PYTHONPATH=path_of_convxai/
+RUN_SERVICE_DIR="path_of_convxai/convxai";
 CUDA_VISIBLE_DEVICES=0 python $RUN_SERVICE_DIR/services/run_server/run.py \
                         --config-path $RUN_SERVICE_DIR/configs/service_config.yml \
                         --port 10020;
