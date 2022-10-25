@@ -49,23 +49,43 @@ Table of Contents
 
 
 ### Installation
-**Create** a `convxai` virtual environment, **install** the libraries for ConvXAI as below, and **activate** the environment.
+**Create** a `convxai` virtual environment, **activate** the environment, and **install** the libraries for ConvXAI as below.
 ```
+$conda create --name convxai python=3.7
+$conda activate convxai
 $pip install -r requirements.txt
 ```
 
-### MongoDB Setup
-ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install it and setup the configs (as described in `4` below).
+<!-- TODO
+From Pypi:
+```bash
+pip install convxai
+```
+
+From source:
+```bash
+git clone git@github.com:huashen218/convxai.git
+cd convxai
+pip install -e .
+```
+ -->
 
 
-### Check Pretrained Data and Models
+### MongoDB setup
+ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install it and ensure you have the database access to connect and manage the data.
+Then refer to the [Config Files Setup](#config-files-setup) section, to set up [`mongodb_config.yml`](convxai/configs/mongodb_config.yml).
 
-You need to download the pretrained datasets and models for ConvXAI to generate AI predictions and AI explanations. You can also train your own models from scratch, the detailed instructions are described in the [ConvXAI Tutorial](#convxai-tutorials).
+### Check pretrained data and models
+You can skip this step if you are going to use the default datasets and models of ConvXAI system. ConvXAI repository is self-contained, including:
+- **Two AI writing models**: are uploaded to Huggingface Hub. One is a *SciBERT-based classification* model (i.e., `huashen218/convxai-quality-model`), the other is a *GPT-based generative* model (i.e., `huashen218/convxai-quality-model`). The models will be automatically downloaded when deploying ConvXAI.
+- **CIA dataset**: collects paper abstracts from 2018-2022 in **C**HI, **I**CLR and **A**CL conferences. CIA dataset is for finetuning *GPT-based* model to generate scientific style quality scores. Data path is: `data/CIA`.
+- **XAI models**: contains pretrained checkpoints supporting conversational XAI modules to generate AI comments and explanations on-the-fly. Particularly, the checkpoints include:
+   * `xai_writing_aspect_prediction`: enables xai_models to generate AI comments related to the submitted paper's apsect label distribution.
+   * `xai_example_embeddings`: saves embeddings from CIA datasets to enable xai_models to generate example-based explanations. The method is **NN\_DOT** method described in [this paper](#https://aclanthology.org/2021.naacl-main.75/)
+   * `xai_counterfactual_explainer_models`: contains [MiCE](https://aclanthology.org/2021.findings-acl.336.pdf) counterfactual model pre-trained on our writing structure model.
 
-   * Writing models: 
+You can also train your own writing and XAI models from scratch. Please refer to the [ConvXAI Tutorial](#convxai-tutorials) for details.
 
-
-   * XAI models:
 
 ### Config Files Setup
 Setup the  configs files of ConvXAI at `convxai/configs`:
