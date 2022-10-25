@@ -241,8 +241,6 @@ We design our ConvXAI module to include Natural Language Understanding (NLU), AI
 ### 5. System Infrastructure
 
 We build ConvXAI upon the [ParlAI](https://parl.ai/) platform to for the server-client architecture.
-
-
 ConvXAI uses [PyMongo](https://pymongo.readthedocs.io/en/stable/) python package to work with MongoDB.
 
 
