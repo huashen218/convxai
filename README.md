@@ -233,15 +233,19 @@ For a brief summary of writing models, ConvXAI includes the pre-trained [diversi
 
 ### 4. Conversational XAI Models
 
-We design our ConvXAI module to include Natural Language Understanding (NLU), AI Explainers (XAIers), Natural Language Generation (NLG) modules.
+Please check the conversational XAI models at [convxai/xai_models/](convxai/xai_models/). ConvXAI specifies the `XaiAgent`, `XAIExplainer` and `AICommenter` in the `convxai/xai_models/xaiagent.py` file.
 
-ConvXAI model 
+Further, referring to the cutting-edge dialog systems, the ConvXAI explanation process also include three modules:
+- [Natural Language Understanding (NLU)](convxai/xai_models/models/modules/nlu.py)
+- [AI Explainers (XAIers)](convxai/xai_models/models/modules/explainer.py)
+- [ Natural Language Generation (NLG)](convxai/xai_models/models/modules/nlg.py)
+
 
 
 ### 5. System Infrastructure
 
-Check the system infrastructure files at `convxai/services/`. 
-You can further check the script to host the server at `convxai/services/run_server/` and details of websocket and mongodb specifications at `convxai/services/websocket/`.
+Check the system infrastructure files at [convxai/services/](convxai/services/). 
+You can further check the script to host the server at [convxai/services/run_server/](convxai/services/run_server/) and details of websocket and mongodb specifications at [convxai/services/websocket/](convxai/services/websocket/).
 
 Note that ConvXAI refers to the [ParlAI](https://parl.ai/) platform to build the server-client architecture.
 ConvXAI uses [PyMongo](https://pymongo.readthedocs.io/en/stable/) python package to work with MongoDB.
