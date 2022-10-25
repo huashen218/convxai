@@ -3,7 +3,7 @@
 # ConvXAI<img src="assets/logo_wotext.png" width="38">
 This repository includes code for the ConvXAI system as described in the paper:
 
->[“Hey ConvXAI<img src="assets/logo_wotext.png" width="20"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
+>[“Hey ConvXAI<img src="assets/logo_wotext.png" width="21"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
 > Hua Shen, Chieh-Yang Huang, Tongshuang Wu, Ting-Hao (Kenneth) Huang.
 > Arxiv, 2022.
 
@@ -55,28 +55,59 @@ $pip install -r requirements.txt
 ```
 
 ### MongoDB Setup
-2. Besides, ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install it and setup the configs (as described in `4` below).
+ConvXAI system is built upon [MongoDB](https://www.mongodb.com/) database. Please install it and setup the configs (as described in `4` below).
 
 
-### Download Pretrained Data and Models
-3. `Download` the [datasets]() and [pre-trained models]().
+### Check Pretrained Data and Models
 
 You need to download the pretrained datasets and models for ConvXAI to generate AI predictions and AI explanations. You can also train your own models from scratch, the detailed instructions are described in the [ConvXAI Tutorial](#convxai-tutorials).
 
    * Writing models: 
 
+
    * XAI models:
 
-```$wget https://www.dropbox.com/sh/9qv9bixnj0xl3dm/AACK-G19UBv4aGIW2aqO9YEJa?dl=0```
-
-
-
 ### Config Files Setup
-4. Setup the  configs files of ConvXAI at `convxai/configs`:
+Setup the  configs files of ConvXAI at `convxai/configs`:
 
    * [mongodb_config.yml](convxai/configs/mongodb_config.yml):  You can either deploy both server and client in the **same machine** setting `mongo_host: localhost`, or you can deply them on **two machines** and set your client machine's IP address as mongo_host, e.g., `mongo_host: "157.230.188.155""`.
 
+```
+mongo_host: localhost
+mongo_db_name: convxai
+```
+
+
    * [configs.yml](convxai/configs/configs.yml)
+
+
+
+
+
+```
+## convxai/configs/configs.yml
+scientific_writing:
+    diversity_model_dir: "huashen218/convxai-diversity-model"
+    quality_model_dir: "huashen218/convxai-quality-model"
+```
+
+
+```
+
+conversational_xai:
+    checkpoints_root_dir: "/home/hqs5468/hua/workspace/projects/convxai/checkpoints/xai_models/"
+    xai_example_dir:
+        xai_emample_embeddings_dir:
+            ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5"
+            CHI: "xai_example_embeddings/diversity_model_CHI_embeddings.h5"
+            ICLR: "xai_example_embeddings/diversity_model_ICLR_embeddings.h5"
+        xai_emample_texts_dir:
+            ACL: "xai_example_embeddings/diversity_model_ACL_texts.h5"
+            CHI: "xai_example_embeddings/diversity_model_CHI_texts.h5"
+            ICLR: "xai_example_embeddings/diversity_model_ICLR_texts.h5"
+    xai_writing_aspect_prediction_dir: "/xai_writing_aspect_prediction"
+    xai_counterfactual_dir: "xai_writing_aspect_prediction/"
+```
 
    * [service_config.yml](convxai/configs/service_config.yml): In the common case, you don't need to modify this file unless you want to change the `relative paths` or the `class names` inside of `service_config.yml`.
 
@@ -109,13 +140,13 @@ We demonstrate the architecture of ConvXAI in Figure1. ConvXAI mainly includes *
 - **UI web service** (i.e., in **client**) using [Flask](https://flask.palletsprojects.com/en/2.2.x/) to support human-AI interactions; 
 - **Deep learning AI writing models** (i.e., in **server**) to generate AI predictions;
 - **Conversational XAI models** (i.e., in **server**) to receive user questions and generate free-text XAI responses; 
-- **Infrastructures** (e.g., [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol, [MongoDB](https://www.mongodb.com/) database) to support communication between the client and server.
+- **System Infrastructures** (e.g., [WebSocket](https://en.wikipedia.org/wiki/WebSocket) protocol, [MongoDB](https://www.mongodb.com/) database) to support communication between the client and server.
 
 
 <!-- | ![](assets/github_framework.png) |  -->
-| <img src="assets/github_framework.png" width="500">| 
+| <img src="assets/github_framework.png" width="400">| 
 |:--:| 
-| **Figure1. Overview of the Infrastructure of ConvXAI** |
+| **Figure1. Overview of the Architecture of ConvXAI** |
 
 
 
