@@ -44,14 +44,14 @@ def parse_system_config_file():
     with open(system_config_path) as f:
         cfg = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
-        result['system'] = {}
-        convxai_system = cfg.get("system")
-        for task_name, configuration in convxai_system.items():
-            result["system"][task_name] = configuration
-            if not result["system"][task_name]:
-                raise ValueError(f"Did not specify '{task_name}'")
-            if task_name == "logfilePath":
-                create_folder([result["system"][task_name]])
+        # result['system'] = {}
+        # convxai_system = cfg.get("system")
+        # for task_name, configuration in convxai_system.items():
+        #     result["system"][task_name] = configuration
+        #     if not result["system"][task_name]:
+        #         raise ValueError(f"Did not specify '{task_name}'")
+        #     if task_name == "logfilePath":
+        #         create_folder([result["system"][task_name]])
 
         result['scientific_writing'] = {}
         scientific_writing = cfg.get("scientific_writing")
