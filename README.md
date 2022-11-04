@@ -5,7 +5,6 @@ This repository includes code for the ConvXAI system as described in the paper:
 
 >[“Hey ConvXAI<img src="assets/logo_wotext.png" width="21"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
 > Hua Shen, Chieh-Yang Huang, Tongshuang Wu, Ting-Hao (Kenneth) Huang.
-> Arxiv, 2022.
 
 
 
@@ -13,9 +12,7 @@ Bibtex for citations:
 ```bibtex
  @inproceedings{convxai:arxiv:2022,  
  author = {Hua Shen and Chieh-Yang Huang and Tongshuang Wu and Ting-Hao (Kenneth) Huang},  
- title = {“Hey ConvXAI, how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing},  
- booktitle = {Arxiv},  
- year = {2022}
+ title = {“Hey ConvXAI, how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing}
  }
 ```
 
