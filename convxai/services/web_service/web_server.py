@@ -31,14 +31,14 @@ thread_stop_event = Event()
 task_mapping = {}
 
 
-########################################
-# Set up paths to save log files
-########################################
-system_config = parse_system_config_file()
-logFileName = "log_" + datetime.now().astimezone(pytz.timezone('US/Eastern')
-                                                 ).strftime("%m%d%Y_%H%M%S") + ".txt"
-logFile = open(os.path.join(
-    system_config['system']['logfilePath'], logFileName), "a")
+# ########################################
+# # Set up paths to save log files
+# ########################################
+# system_config = parse_system_config_file()
+# logFileName = "log_" + datetime.now().astimezone(pytz.timezone('US/Eastern')
+#                                                  ).strftime("%m%d%Y_%H%M%S") + ".txt"
+# logFile = open(os.path.join(
+#     system_config['system']['logfilePath'], logFileName), "a")
 
 
 ########################################
@@ -180,11 +180,11 @@ def interact_socket(body):
     responseMessageType = body["message_type"]
     responseWritingModel = body.get("writing_model", None)
 
-    logEntry = responseTime + "  Text: " + responseText + "  \n\t\tMessageType:" + \
-        responseMessageType + "  \n\t\tWritingModel: " + responseWritingModel + "\n"
-    logFile.write(logEntry+"\n")
-    logFile.close()
-    logging.info("Written to file" + logEntry)
+    # logEntry = responseTime + "  Text: " + responseText + "  \n\t\tMessageType:" + \
+    #     responseMessageType + "  \n\t\tWritingModel: " + responseWritingModel + "\n"
+    # logFile.write(logEntry+"\n")
+    # logFile.close()
+    # logging.info("Written to file" + logEntry)
 
 
 ########################################

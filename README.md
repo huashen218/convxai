@@ -54,6 +54,7 @@ Table of Contents
 $conda create --name convxai python=3.7
 $conda activate convxai
 $pip install -r requirements.txt
+$conda install -c conda-forge git-lfs
 ```
 
 <!-- TODO
@@ -235,7 +236,7 @@ For a brief summary of writing models, ConvXAI includes the pre-trained [diversi
 
 Please check the conversational XAI models at [convxai/xai_models/](convxai/xai_models/). ConvXAI specifies the `XaiAgent`, `XAIExplainer` and `AICommenter` in the `convxai/xai_models/xaiagent.py` file.
 
-Further, referring to the cutting-edge dialog systems, the ConvXAI explanation process also include three modules:
+Further, referring to the cutting-edge dialog systems, the ConvXAI explanation process also include **three modules**:
 - [Natural Language Understanding (NLU)](convxai/xai_models/models/modules/nlu.py)
 - [AI Explainers (XAIers)](convxai/xai_models/models/modules/explainer.py)
 - [ Natural Language Generation (NLG)](convxai/xai_models/models/modules/nlg.py)
