@@ -8,8 +8,7 @@
 from parlai.core.params import ParlaiParser
 import parlai.chat_service.utils.config as config_utils
 from convxai.services.websocket.mongodb_manager import MongoManager
-from convxai.utils.util import tokenize
-
+from convxai.utils import *
 
 SERVICE_NAME = 'Browser'
 
