@@ -9,6 +9,7 @@ from parlai.core.params import ParlaiParser
 import parlai.chat_service.utils.config as config_utils
 from convxai.services.websocket.mongodb_manager import MongoManager
 
+
 SERVICE_NAME = 'Browser'
 
 def setup_args():
