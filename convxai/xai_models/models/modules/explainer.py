@@ -23,10 +23,8 @@ logger.setLevel(logging.INFO)
 
 
 
-# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-device = torch.device('cpu')
-
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device('cpu')
 
 
 class Model_Explainer(object):
@@ -351,6 +349,13 @@ class Model_Explainer(object):
         else:
             response = f"Sorry that I currently can't find counterfactual examples for this sentence, please try other explanations on it : )"
         return response
+
+
+
+
+
+
+
 
 
 

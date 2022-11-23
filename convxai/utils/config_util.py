@@ -1,6 +1,6 @@
 import os
 import yaml
-from .util import create_folder
+from .utils import create_folder
 from pymongo import MongoClient
 
 
