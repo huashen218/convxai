@@ -11,7 +11,7 @@ class ExampleExplainer(object):
         super().__init__()
 
         self.system_config = parse_system_config_file()
-        self.model_configs = self.system_configs['conversational_xai']['checkpoints_root_dir']
+        self.model_configs = self.system_config['conversational_xai']['checkpoints_root_dir']
 
         self.diversity_model_embeddings_h5dir = os.path.join(self.model_configs, self.system_config['conversational_xai']['xai_example_dir']["xai_emample_embeddings_dir"][conference])
         self.diversity_model_texts_h5dir = os.path.join(self.model_configs, self.system_config['conversational_xai']['xai_example_dir']["xai_emample_texts_dir"][conference])

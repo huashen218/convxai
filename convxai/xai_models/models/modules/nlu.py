@@ -52,24 +52,27 @@ class XAI_NLU_Module(nn.Module):
                     "aspect-distribution": ["label","labels", "aspect", "aspects", "structure", "structures"],
                     "confidence": ["confidence","confident"],
                     "example": ["similar", "example", "examples"],
-                    "attribution": ["important", "features", "attributions","feature", "attribution", "word", "words" ],
+                    "attribution": ["important", "features", "attributions", "feature", "attribution", "word", "words" ],
                     "counterfactual": ["different", "counterfactual", "prediction", "input", "revise"],
                     "sentence-length": ["length", "lengths"],
                     "ai-comment-global": ["show me model and data"],
-                    "ai-comment-instance": ["explain this sentence", "explain the sentence", "explain sentence review", "explain this review", "explain the review"]
+                    "ai-comment-instance": ["explain", "sentence", "review"]
         }
 
 
 
     def nlu_rule_with_keyword(self, input_string, keyword_list) -> bool:
 
-        # input_string = input_string.replace("?", "") 
-        # input_list = input_string.split(" ")
-        # return len(list(set(input_list).intersection(set(keyword_list)))) > 0
-
         input_string = input_string.replace("?", "") 
-        keyphrases = [key for key in keyword_list if input_string.split(key) > 2 ]
-        return len(keyphrases) > 0
+        input_list = input_string.split(" ")
+        return len(list(set(input_list).intersection(set(keyword_list)))) > 0
+
+        # input_string = input_string.replace("?", "")
+        # print("keyword_list:", keyword_list)
+        # print("===?>>input_string.split(key)", input_string.split(keyword_list[0]))
+        # keyphrases = [key for key in keyword_list if len(input_string.split(key)) > 2 ]
+        # print("keyphrases:", keyphrases)
+        # return len(keyphrases) > 0
 
 
     def intent_classification(self, input):
