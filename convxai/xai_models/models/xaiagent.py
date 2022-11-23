@@ -28,9 +28,7 @@ FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
 logger.setLevel(logging.INFO)
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 @register_agent("xai")
 class XaiAgent(Agent):
