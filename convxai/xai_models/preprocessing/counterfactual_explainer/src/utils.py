@@ -25,7 +25,8 @@ import difflib
 from munch import Munch
 
 
-from convxai.writing_models.models import DiversityModel
+# from convxai.writing_models.models import DiversityModel
+from convxai.writing_models.models import *
 from convxai.utils import *
 from .predictors.diversity.diversity_dataset_reader import DiversityDatasetReader
 
@@ -242,11 +243,6 @@ def load_predictor(task, predictor_folder="trained_predictors/"):
 def load_diversity_model():
 
     predictor_path = system_configs["scientific_writing"]["diversity_model_dir"]
-
-    if not os.path.exists(predictor_path):
-        raise ValueError(f"Cannot find predictor path {predictor_path}")
-    logger.info(f"Loading Predictor from: {predictor_path}")
-
     predictor  = DiversityModel(saved_model_dir=predictor_path)
 
     logger.info("Done loading predictor.")
