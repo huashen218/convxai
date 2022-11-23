@@ -14,4 +14,4 @@ conversational_xai:
             CHI: "xai_example_embeddings/diversity_model_CHI_texts.h5"
             ICLR: "xai_example_embeddings/diversity_model_ICLR_texts.h5"
     xai_writing_aspect_prediction_dir: "/xai_writing_aspect_prediction"
-    xai_counterfactual_dir: "xai_writing_aspect_prediction/"
+    xai_counterfactual_dir: "xai_counterfactual_explainer_models/editors/diversity_model/checkpoints"
