@@ -10,15 +10,11 @@ from pymongo import MongoClient
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
-
-
 nlp = stanza.Pipeline('en')
 
 
 def tokenize(x):
     return x.split(" ")
-    
-
 
 def counting_tokens(abs_text):
     ### Extract Abstracts ###
@@ -28,7 +24,6 @@ def counting_tokens(abs_text):
     ### Seg Sentences ###
     tokens = [token.text for sentence in doc.sentences for token in sentence.tokens]
     return tokens
-
 
 
 def create_folder(folder_list):
