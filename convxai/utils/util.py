@@ -58,10 +58,6 @@ def h5_load(filename, data_list, dtype=None, verbose=False):
         return data
 
 
-
-
-nlp = stanza.Pipeline('en')
-
 splitPuctList = [";", "."]
 LB = ["(", "[", "{"] 
 RB = [")", "]", "}"]
@@ -119,8 +115,6 @@ def paragraph_segmentation(abs_text):
             sentences_content[sent_id].append(frag_content)
             fragment_content.append(text_fragments[sent_id][frag_id])
     return fragment_content
-
-
 
 
 class EarlyStop:
