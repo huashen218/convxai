@@ -15,6 +15,9 @@ logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 nlp = stanza.Pipeline('en')
 
 
+def tokenize(x):
+    return x.split(" ")
+    
 
 
 def counting_tokens(abs_text):
