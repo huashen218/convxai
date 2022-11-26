@@ -54,7 +54,6 @@ def h5_load(filename, data_list, dtype=None, verbose=False):
                 "{} = {} [{}]".format(data_name, str(real_data.shape), str(real_data.dtype))
                 for data_name, real_data in zip(data_list, data)
             ))
-            logging.info()
         return data
 
 

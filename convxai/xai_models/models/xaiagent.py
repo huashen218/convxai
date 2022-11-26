@@ -496,6 +496,7 @@ class XAIExplainer(object):
 
             if user_intent == "ai-comment-instance":
                 response = self.ai_commenter.explaining_ai_comment_instance(list(set(writingIndex)), self.convxai_global_status_track)
+                
                 self.convxai_intent_round += 1
                 return response, 4
 

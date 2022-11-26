@@ -65,6 +65,7 @@ def parse_system_config_file():
         result['conversational_xai']['checkpoints_root_dir'] = conversational_xai['checkpoints_root_dir']
         result['conversational_xai']['xai_writing_aspect_prediction_dir'] = conversational_xai['xai_writing_aspect_prediction_dir']
         result['conversational_xai']['xai_counterfactual_dir'] = conversational_xai['xai_counterfactual_dir']
+        result['conversational_xai']['nlu_question_embedding_dir'] = conversational_xai['nlu_question_embedding_dir']
         result['conversational_xai']['xai_example_dir'] = {
             'xai_emample_embeddings_dir': {},
             'xai_emample_texts_dir': {}
