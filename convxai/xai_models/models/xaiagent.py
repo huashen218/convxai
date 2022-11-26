@@ -111,7 +111,6 @@ class AICommenter(object):
         self.writingInput = writingInput
         self.inputTexts = inputTexts
         self.review_summary = {}
-        # self.tfidf_aspect_model = TfidfAspectModel(self.conference)
         self.aspect_model = TfidfAspectModel(self.conference)
         self.revision_comment_template = {
             "shorter_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=shorter-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>too short</strong>, the average length of the sentences predicted as <strong>'{label}'</strong> labels in {conference} conference is {ave_word} words. Please rewrite it into a longer one.</p><br>",
