@@ -256,7 +256,6 @@ class Model_Explainer(object):
         return response
 
 
-
     def explain_example(self, input, predictLabel, conference, **kwargs):
         """XAI Algorithm - Confidence: 
             Paper: An Empirical Comparison of Instance Attribution Methods for NLP (https://aclanthology.org/2021.naacl-main.75.pdf)
