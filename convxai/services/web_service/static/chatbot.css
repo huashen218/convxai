@@ -510,6 +510,9 @@
         font-family: "Font Awesome 6 Free" !important;
 }
 
+.help-icon:hover {
+        cursor: pointer;
+    }
 
 .overall-score {
         background-color: #6D589B;
