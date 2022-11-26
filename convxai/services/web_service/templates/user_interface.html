@@ -286,10 +286,9 @@
                             <div class="card" style="margin-top: 30px; margin-bottom: 10px;">
                                 <div class="card-header select-sentence">
                                     <div class="select-sentence-hover">
-                                        <strong>You can ask below XAI questions for the selected sentence:</strong>
-                                        <i class="help-icon fa-regular fa-circle-question"
-                                            id="sentence-select-help"></i>
-                                        <div id="sentence-select-help-text" class="help-text" style="display:none;">
+                                        <i class="help-icon" id="sentence-select-help"><strong id="sentence-select-help">You can ask below XAI questions for the selected sentence👇👇:</strong></i>
+                                        <!-- <i class="help-icon fa-regular fa-circle-question" id="sentence-select-help"></i> -->
+                                        <div class="help-text" id="sentence-select-help-text" style="display:none;">
                                             <p>Explain <span class='text-danger font-weight-bold'>General
                                                     Information</span>:</p>
                                             <ul class="a">
@@ -299,7 +298,7 @@
                                                         description</span>] What kind of models are used?</li>
                                                 <li> &nbsp;&nbsp;&nbsp;- [<span
                                                         class="text-info quality-score-question">quality score</span>]
-                                                    What's the range of the style quality scores?</li>
+                                                        What's the range of the style quality scores?</li>
                                                 <li> &nbsp;&nbsp;&nbsp;- [<span
                                                         class="text-info label-distribution-question">label
                                                         distribution</span>] How are the structure labels distributed?
@@ -321,25 +320,24 @@
                                             <ul class="b">
                                                 <li> &nbsp;&nbsp;&nbsp;- [<span
                                                         class="text-info confidence-question">prediction
-                                                        confidence</span>] How confident is the model for this
-                                                    prediction?</li>
+                                                        confidence</span>] How confident is this prediction?</li>
                                                 <li> &nbsp;&nbsp;&nbsp;- [<span
-                                                        class="text-info example-question">similar examples</span>] What
-                                                    are some published sentences that look similar to mine semantically?
+                                                        class="text-info example-question">similar examples</span>] What are some published sentences that look similar to mine semantically?
                                                 </li>
                                                 <li> &nbsp;&nbsp;&nbsp;- [<span
                                                         class="text-info attribution-question">important words</span>]
-                                                    Which words in this sentence are most important for this prediction?
+                                                        Which words in this sentence are most important for this prediction?
                                                 </li>
                                                 <li> &nbsp;&nbsp;&nbsp;- [<span
                                                         class="text-info counterfactual-question">conterfactual
-                                                        prediction</span>] How can I revise the input to get a different
-                                                    prediction label?</li>
+                                                        prediction</span>] How can I revise the input to get a different prediction?</li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
-
+                            </div>
+                            
+                            <div>
                                 <!-- Selected Sentences Demonstration -->
                                 <div class="card-body">
                                     <div class="selected-sentences">

@@ -677,7 +677,8 @@ function handleExplanationButtonClicked(e) {
 /*****************************************/
 // Help Icon Functions
 /*****************************************/
-$(".help-icon").hover(function () {
+
+$(".help-icon").click(function () {
     $(document).find("#" + this.id + "-text").toggle()
 })
 
