@@ -1,7 +1,7 @@
 import torch
-from convxai.xai_models.preprocessing.counterfactual_explainer.src.utils import *
-from convxai.xai_models.preprocessing.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator, EditList
-from convxai.xai_models.preprocessing.counterfactual_explainer.src.stage_two import load_models
+from .srcs.counterfactual_explainer_src.edit_finder import EditFinder, EditEvaluator, EditList
+from .srcs.counterfactual_explainer_src.utils import get_args
+from .srcs.counterfactual_explainer_src.stage_two import load_models
 
 
 class CounterfactualExplainer(object):
@@ -17,13 +17,14 @@ class CounterfactualExplainer(object):
                 search_method=self.args.search.search_method,
                 max_search_levels=self.args.search.max_search_levels)
 
-
     def generate_counterfactual(self, input_text, contrast_label):
         edited_list = self.edit_finder.minimally_edit(input_text, 
                                                         contrast_pred_idx_input = contrast_label, ### contrast_pred_idx specifies which label to use as the contrast. Defaults to -2, i.e. use label with 2nd highest pred prob.
                                                         max_edit_rounds=self.args.search.max_edit_rounds, 
                                                         edit_evaluator=self.edit_evaluator, 
                                                         max_length = int(self.args.model.model_max_length))
+
+
 
         torch.cuda.empty_cache()
         sorted_list = edited_list.get_sorted_edits() 
