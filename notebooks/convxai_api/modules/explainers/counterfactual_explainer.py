@@ -1,5 +1,5 @@
 import torch
-from .srcs.counterfactual_explainer_src.edit_finder import EditFinder, EditEvaluator, EditList
+from .srcs.counterfactual_explainer_src.edit_finder import EditFinder, EditEvaluator
 from .srcs.counterfactual_explainer_src.utils import get_args
 from .srcs.counterfactual_explainer_src.stage_two import load_models
 
