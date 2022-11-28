@@ -13,9 +13,9 @@ class AttributionExplainer(object):
             self, 
             diversity_model, 
             max_tokens=512, 
-            grad_type = "normal_l2", 
+            grad_type = "integrated_l2", 
             sign_direction = None,
-            num_integrated_grad_steps = 10
+            num_integrated_grad_steps = 20
     ):
         super().__init__()
         self.predictor  = diversity_model
@@ -38,11 +38,6 @@ class AttributionExplainer(object):
 
 
 
-    def get_sorted_important_tokens(self, input):
-        ordered_all_important_tokens = self.get_important_editor_tokens(input)
-        return  ordered_all_important_tokens
-
-
 
     def batch_dataloader(self, input_string):
         feature = Feature(tokenizer=self.temp_tokenizer, pad_length = None)
@@ -51,14 +46,6 @@ class AttributionExplainer(object):
         dataloader = data.DataLoader(dataset, batch_size=1, shuffle=False, num_workers=4)
         return dataloader
 
-
-
-    def _register_embedding_gradient_hooks(self, model, embeddings_gradients):
-        def hook_layers(module, grad_in, grad_out):
-            embeddings_gradients.append(grad_out[0])
-        embedding_layer = model.bert.embeddings.word_embeddings
-        hook = embedding_layer.register_backward_hook(hook_layers)
-        return hook
 
 
     def _get_word_positions(self, predic_tok, predic_tok_start, editor_toks):
@@ -133,13 +120,17 @@ class AttributionExplainer(object):
                             [editor_toks[return_word_idx].idx], 
                             [editor_toks[return_word_idx].idx_end])
         return return_tuple
-        
 
 
+    def _register_embedding_gradient_hooks(self, model, embeddings_gradients):
+        def hook_layers(module, grad_in, grad_out):
+            embeddings_gradients.append(grad_out[0])
+        embedding_layer = model.bert.embeddings.word_embeddings
+        hook = embedding_layer.register_backward_hook(hook_layers)
+        return hook
 
 
-
-    def _get_gradients_by_prob(self, instance, pred_idx=None):
+    def _get_gradients_by_prob(self, instance, pred_idx):
         """ Helper function to get gradient values of predicted logit 
         Largely copied from Predictor class of AllenNLP """
 
@@ -149,10 +140,8 @@ class AttributionExplainer(object):
                     param.requires_grad
             param.requires_grad = True
 
-        embedding_gradients: List[Tensor] = []
-
-        hooks: List[RemovableHandle] = self._register_embedding_gradient_hooks(self.predictor.model, embedding_gradients)
-
+        embeddings_gradients: List[Tensor] = []
+        hooks: List[RemovableHandle] = self._register_embedding_gradient_hooks(self.predictor.model, embeddings_gradients)
 
         ###### instance = ["Hospitalizations decreased in Australia and Singapore but increased in Taiwan , Republic of China ."]
         dataloader = self.batch_dataloader([instance])
@@ -166,20 +155,15 @@ class AttributionExplainer(object):
             loss, y_pred = outputs[0:2]
 
             pred_idx = torch.argmax(y_pred, dim=1) if pred_idx is None else pred_idx
-
-            # prob = torch.max(softmax(y_pred), dim=1)[0]
-            prob = outputs[1][0][int(pred_idx)] ###### outputs[1] tensor([[-0.1297, -0.9615,  0.0416,  1.8316,  0.0538]]
+            prob = outputs[1][0][int(pred_idx)]
 
             self.predictor.model.zero_grad()
             prob.backward()
 
-
-        # for hook in hooks:
-        #     hook.remove()
         hooks.remove()
 
         grad_dict = dict()
-        for idx, grad in enumerate(embedding_gradients):     ###### len = 1, [0].shape = embedding_gradients torch.Size([1, 18, 768])
+        for idx, grad in enumerate(embeddings_gradients):
             key = "grad_input_" + str(idx + 1)
             grad_dict[key] = grad.detach().cpu().numpy()
 
@@ -187,13 +171,9 @@ class AttributionExplainer(object):
         for param_name, param in self.predictor.model.named_parameters():
             param.requires_grad = original_param_name_to_requires_grad_dict[param_name]
 
-        # del dataset_tensor_dict
+        del x_batch, y_batch
         torch.cuda.empty_cache()
         return grad_dict, outputs
-    
-    
-
-
 
 
     # Copied from AllenNLP integrated gradient
@@ -207,13 +187,9 @@ class AttributionExplainer(object):
 
             output.mul_(alpha)
 
-        # embedding_layer = util.find_embedding_layer(self.predictor._model)
         embedding_layer = util.find_embedding_layer(self.predictor.model)
         handle = embedding_layer.register_forward_hook(forward_hook)
-        ###### embedding_layer, Embedding(31090, 768, padding_idx=0)
-        ###### handle <torch.utils.hooks.RemovableHandle object at 0x7f0d32d8a410>
         return handle
-
 
 
 
@@ -225,6 +201,7 @@ class AttributionExplainer(object):
 
         # List of Embedding inputs
         embeddings_list: List[np.ndarray] = []
+
 
         # Exclude the endpoint because we do a left point integral approx 
         for alpha in np.linspace(0, 1.0, num=steps, endpoint=False):
@@ -252,7 +229,6 @@ class AttributionExplainer(object):
         for idx, input_embedding in enumerate(embeddings_list):
             key = "grad_input_" + str(idx + 1)
             ig_grads[key] *= input_embedding
-
         return ig_grads    
 
 
@@ -297,110 +273,83 @@ class AttributionExplainer(object):
         # max_length = self.predictor._dataset_reader._tokenizer._max_length
         max_length = max_length
         temp_tokenizer = self.predictor.tokenizer
+        all_predic_dis = temp_tokenizer.encode(editable_seg)
+        all_predic_toks = temp_tokenizer.convert_ids_to_tokens(all_predic_dis)
 
-        all_predic_dis = temp_tokenizer.encode(editable_seg)   ###### all_predic_dis [102, 13972, 30113, 2664, 121, 7266, 137, 15252, 563, 1175, 121, 11338, 422, 9789, 131, 3640, 205, 103]
-        all_predic_toks = temp_tokenizer.convert_ids_to_tokens(all_predic_dis)  ###### all_predic_toks = ['[CLS]', 'hospitalization', '##s', 'decreased', 'in', 'australia', 'and', 'singapore', 'but', 'increased', 'in', 'taiwan', ',', 'republic', 'of', 'china', '.', '[SEP]']
- 
-        grad_type_options = ["integrated_l1", "integrated_signed", "normal_l1",  "normal_signed", "normal_l2", "integrated_l2"]
+        grad_type_options = ["integrated_l1", "integrated_signed", "normal_l1", 
+                "normal_signed", "normal_l2", "integrated_l2"]
         if self.grad_type not in grad_type_options:
             raise ValueError("Invalid value for grad_type")
 
+
         # Grad_magnitudes is used for sorting; highest values ordered first. 
         # -> For signed, to only mask most neg values, multiply by -1
+
         labeled_instance = editable_seg
-
-        # if self.grad_type == "integrated_l1":
-        grads = self._get_integrated_gradients(
-                labeled_instance, pred_idx, steps = integrated_grad_steps)
-        grad = grads["grad_input_1"][0]
-        grad_signed = np.sum(abs(grad), axis = 1) 
-        grad_magnitudes = grad_signed.copy()
-
-        # Order Predictor tokens from largest to smallest gradient values 
-        ordered_predic_tok_indices = np.argsort(grad_magnitudes)[::-1]    ###### grad_magnitudes shape= (18,)
-        ordered_all_predic_toks = [all_predic_toks[idx] for idx in ordered_predic_tok_indices]
-
-
-        return ordered_all_predic_toks
-
-
-
-
+        if self.grad_type == "integrated_l1":
+            grads = self._get_integrated_gradients(
+                    labeled_instance, pred_idx, steps = integrated_grad_steps)
+            grad = grads["grad_input_1"][0]
+            grad_signed = np.sum(abs(grad), axis = 1) 
+            grad_magnitudes = grad_signed.copy()
         
-    def get_important_editor_tokens_nonordered(
-            self, editable_seg, pred_idx=None, editor_toks=None, 
-            labeled_instance=None, 
-            predic_tok_start_idx=None, 
-            predic_tok_end_idx=None, 
-            num_return_toks=None,
-            max_length = None):
-        """ Gets Editor tokens that correspond to Predictor toks 
-        with highest gradient values (with respect to pred_idx).
+        elif self.grad_type == "integrated_signed":
+            grads = self._get_integrated_gradients(
+                    labeled_instance, pred_idx, steps = integrated_grad_steps)
+            grad = grads["grad_input_1"][0]
+            grad_signed = np.sum(grad, axis = 1)
+            grad_magnitudes = self.sign_direction * grad_signed
+        
+        elif self.grad_type == "integrated_l2":
+            grads = self._get_integrated_gradients(
+                    labeled_instance, pred_idx, steps = integrated_grad_steps)
+            grad = grads["grad_input_1"][0]
+            grad_signed = [g.dot(g) for g in grad]
+            grad_magnitudes = grad_signed.copy()
 
-        editable_seg:
-            Original inp to mask.
-        pred_idx:
-            Index of label (in Predictor label space) to take gradient of. 
-        editor_toks: 
-            Tokenized words using Editor tokenizer
-        labeled_instance:
-            Instance object for Predictor
-        predic_tok_start_idx:
-            Start index of Predictor tokens to consider masking. 
-            Helpful for when we only want to mask part of the input, 
-                as in RACE (only mask article). In this case, editable_seg 
-                will contain a subinp of the original input, but the 
-                labeled_instance used to get gradient values will correspond 
-                to the whole original input, and so predic_tok_start_idx
-                is used to line up gradient values with tokens of editable_seg.
-        predic_tok_end_idx:
-            End index of Predictor tokens to consider masking. 
-            Similar to predic_tok_start_idx.
-        num_return_toks: int
-            If set to value k, return k Editor tokens that correspond to 
-                Predictor tokens with highest gradients. 
-            If not supplied, use self.mask_frac to calculate # tokens to return
-        """
+        elif self.grad_type == "normal_l1":
+            grads = self._get_gradients_by_prob(labeled_instance, pred_idx)[0]
+            grad = grads["grad_input_1"][0]
+            grad_signed = np.sum(abs(grad), axis = 1) 
+            grad_magnitudes = grad_signed.copy()
 
-        integrated_grad_steps = self.num_integrated_grad_steps
+        elif self.grad_type == "normal_signed":
+            grads = self._get_gradients_by_prob(labeled_instance, pred_idx)[0]
+            grad = grads["grad_input_1"][0]
+            grad_signed = np.sum(grad, axis = 1)
+            grad_magnitudes = self.sign_direction * grad_signed
 
-        # max_length = self.predictor._dataset_reader._tokenizer._max_length
-        max_length = max_length
-        temp_tokenizer = self.predictor.tokenizer
+        elif self.grad_type == "normal_l2":
+            grads = self._get_gradients_by_prob(labeled_instance, pred_idx)[0]
+            grad = grads["grad_input_1"][0]
+            grad_signed = [g.dot(g) for g in grad]
+            grad_magnitudes = grad_signed.copy()
 
-        all_predic_dis = temp_tokenizer.encode(editable_seg)   ###### all_predic_dis [102, 13972, 30113, 2664, 121, 7266, 137, 15252, 563, 1175, 121, 11338, 422, 9789, 131, 3640, 205, 103]
-        all_predic_toks = temp_tokenizer.convert_ids_to_tokens(all_predic_dis)  ###### all_predic_toks = ['[CLS]', 'hospitalization', '##s', 'decreased', 'in', 'australia', 'and', 'singapore', 'but', 'increased', 'in', 'taiwan', ',', 'republic', 'of', 'china', '.', '[SEP]']
- 
-        grad_type_options = ["integrated_l1", "integrated_signed", "normal_l1",  "normal_signed", "normal_l2", "integrated_l2"]
-        if self.grad_type not in grad_type_options:
-            raise ValueError("Invalid value for grad_type")
+        # Include only gradient values for editable parts of the inp
+        if predic_tok_end_idx is not None:
+            if predic_tok_start_idx is not None:
+                grad_magnitudes = grad_magnitudes[
+                        predic_tok_start_idx:predic_tok_end_idx]
+                grad_signed = grad_signed[
+                        predic_tok_start_idx:predic_tok_end_idx]
+            else:
+                grad_magnitudes = grad_magnitudes[:predic_tok_end_idx]
+                grad_signed = grad_signed[:predic_tok_end_idx]
 
-        # Grad_magnitudes is used for sorting; highest values ordered first. 
-        # -> For signed, to only mask most neg values, multiply by -1
-        labeled_instance = editable_seg
-
-        # if self.grad_type == "integrated_l1":
-        grads = self._get_integrated_gradients(
-                labeled_instance, pred_idx, steps = integrated_grad_steps)
-        grad = grads["grad_input_1"][0]
-        grad_signed = np.sum(abs(grad), axis = 1) 
-        grad_magnitudes = grad_signed.copy()
+        ### remove the [CLS] and [SEP] token.
+        grad_magnitudes = grad_magnitudes[1:-1]
+        all_predic_toks = all_predic_toks[1:-1]
 
         # Order Predictor tokens from largest to smallest gradient values 
         ordered_predic_tok_indices = np.argsort(grad_magnitudes)[::-1]    ###### grad_magnitudes shape= (18,)
         
-
-
-        # print("==>>>grad_magnitudes", grad_magnitudes)
-        # print("===>>>ordered_predic_tok_indices", ordered_predic_tok_indices)
-        # print(f"all_predic_toks length = { len(all_predic_toks)}, len = {len(ordered_predic_tok_indices)}")
-        # print("=====>>>>sorted_all_predic_toks", ordered_all_predic_toks)
-
-
+        assert (len(all_predic_toks) == (len(ordered_predic_tok_indices)))
+        assert(len(all_predic_toks) == (len(grad_magnitudes)))
 
         return all_predic_toks, ordered_predic_tok_indices
 
 
-    def get_sorted_important_tokens_nonordered(self, input):
-        all_predic_toks, ordered_predic_tok_indices = self.get_important_editor_tokens_nonordered(input)
+
+    def get_sorted_important_tokens(self, input, pred_idx):
+        all_predic_toks, ordered_predic_tok_indices = self.get_important_editor_tokens(input, pred_idx)
         return  all_predic_toks, ordered_predic_tok_indices
