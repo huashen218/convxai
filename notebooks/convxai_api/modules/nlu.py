@@ -23,7 +23,6 @@ XAI_User_Intents = ["meta-data",
                     "sentence-length",
                 ]
 
-
 class XAI_NLU_Module(nn.Module):
     """Construct the Natural Language Understanding module for user explanation requests."""
     def __init__(self, configs, intent_detection_algorithm = "rule_based"):

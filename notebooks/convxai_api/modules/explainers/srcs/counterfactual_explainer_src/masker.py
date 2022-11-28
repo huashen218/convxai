@@ -3,10 +3,7 @@ import logging
 import random
 import math
 import numpy as np
-from torch.utils import data
-from transformers import (
-    BertTokenizerFast
-)
+
 from allennlp.data.batch import Batch
 from allennlp.nn import util
 
@@ -18,12 +15,11 @@ FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(format=FORMAT)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-TOKENIZERS_PARALLELISM=False
 
-class MaskError(Exception):
-    pass
-
-
+from torch.utils import data
+from transformers import (
+    BertTokenizerFast
+)
 
 class Feature:
     def __init__(self, pad_length=50, tokenizer=None):
@@ -73,6 +69,8 @@ class PredDataset(data.Dataset):
 
 
 
+class MaskError(Exception):
+    pass
 
 class Masker():
     """ 
@@ -126,6 +124,7 @@ class Masker():
 
         return "<extra_id_" + str(idx) + ">"
 
+
     def _get_grouped_mask_indices(
             self, editable_seg, pred_idx, editor_mask_indices, 
             editor_toks, **kwargs):
@@ -137,7 +136,8 @@ class Masker():
         """
 
         if editor_mask_indices is None:
-            editor_mask_indices = self._get_mask_indices(editable_seg, editor_toks, pred_idx, **kwargs)
+            editor_mask_indices = self._get_mask_indices(
+                    editable_seg, editor_toks, pred_idx, **kwargs)
 
         new_editor_mask_indices = set(editor_mask_indices)
         grouped_editor_mask_indices = [list(group) for group in \
@@ -164,17 +164,18 @@ class Masker():
         grouped_editor_mask_indices = grouped_editor_mask_indices[:99]
         return grouped_editor_mask_indices
 
+
+
+
+
     def get_masked_string(
             self, editable_seg, pred_idx, 
             editor_mask_indices = None, **kwargs):
         """ Gets masked string masking tokens w highest predictor gradients.
         Requires mapping predictor tokens to Editor tokens because edits are
         made on Editor tokens. """
-        editor_toks = self.editor_tok_wrapper.tokenize(editable_seg)
 
-        ####### editable_seg = Hospitalizations decreased in Australia and Singapore but increased in Taiwan , Republic of China .
-        ####### editor_toks = [▁Hospital, ization, s, ▁decreased, ▁in, ▁Australia, ▁and, ▁Singapore, ▁but, ▁increased, ▁in, ▁Taiwan, ▁, ,, ▁Republic, ▁of, ▁China, ▁, ., </s>]
-        ####### editor_mask_indices = None
+        editor_toks = self.editor_tok_wrapper.tokenize(editable_seg)
 
         grpd_editor_mask_indices = self._get_grouped_mask_indices(
                 editable_seg, pred_idx, editor_mask_indices, 
@@ -203,13 +204,30 @@ class Masker():
             masked_seg = masked_seg[:span_char_start] + \
                     Masker._get_sentinel_token(span_idx) + \
                     masked_seg[span_char_end:]
-            span_idx -= 1    
+            span_idx -= 1
 
         return grpd_editor_mask_indices, editor_mask_indices, masked_seg, label
-            
 
-            
 
+
+class RandomMasker(Masker):
+    """ Masks randomly chosen spans. """ 
+    
+    def __init__(
+            self, 
+            mask_frac, 
+            editor_tok_wrapper, 
+            max_tokens
+        ):
+        super().__init__(mask_frac, editor_tok_wrapper, max_tokens)
+   
+    def _get_mask_indices(self, editable_seg, editor_toks, pred_idx, **kwargs):
+        """ Helper function to get indices of Editor tokens to mask. """
+        
+        num_tokens = min(self.max_tokens, len(editor_toks))
+        return random.sample(
+                range(num_tokens), math.ceil(self.mask_frac * num_tokens))
+    
 class GradientMasker(Masker):
     """ Masks spans based on gradients of Predictor wrt. given predicted label.
 
@@ -251,7 +269,7 @@ class GradientMasker(Masker):
             editor_tok_wrapper, 
             predictor, 
             max_tokens, 
-            grad_type = "normal_l2", 
+            grad_type = "integrated_l2", 
             sign_direction = None,
             num_integrated_grad_steps = 10
         ):
@@ -272,19 +290,10 @@ class GradientMasker(Masker):
             raise ValueError(error_msg)
         
 
-        # temp_tokenizer = self.predictor._dataset_reader._tokenizer
-
-        # # Used later to avoid skipping special tokens like <s>
-        # self.predictor_special_toks = \
-        #         temp_tokenizer.sequence_pair_start_tokens + \
-        #         temp_tokenizer.sequence_pair_mid_tokens + \
-        #         temp_tokenizer.sequence_pair_end_tokens + \
-        #         temp_tokenizer.single_sequence_start_tokens + \
-        #         temp_tokenizer.single_sequence_end_tokens
-
         self.temp_tokenizer = self.predictor.tokenizer
 
         self.predictor_special_toks = self.temp_tokenizer.all_special_tokens
+
 
     def batch_dataloader(self, input_string):
         feature = Feature(tokenizer=self.temp_tokenizer)
@@ -306,61 +315,34 @@ class GradientMasker(Masker):
         """ Helper function to get gradient values of predicted logit 
         Largely copied from Predictor class of AllenNLP """
 
-
         original_param_name_to_requires_grad_dict = {}
-        # for param_name, param in self.predictor._model.named_parameters():
-        #     original_param_name_to_requires_grad_dict[param_name] = \
-        #             param.requires_grad
-        #     param.requires_grad = True
         for param_name, param in self.predictor.model.named_parameters():
             original_param_name_to_requires_grad_dict[param_name] = \
                     param.requires_grad
             param.requires_grad = True
 
-
-
-        embedding_gradients: List[Tensor] = []
-
-        ###### Reference: https://stackoverflow.com/questions/67142267/gradient-based-saliency-of-input-words-in-a-pytorch-model-from-transformers-libr
-        # hooks: List[RemovableHandle] = self.predictor.model._register_embedding_gradient_hooks([embedding_gradients)
-        hooks: List[RemovableHandle] = self._register_embedding_gradient_hooks(self.predictor.model, embedding_gradients)
-        # hooks  = self._register_embedding_gradient_hooks(self.predictor.model, embedding_gradients)
-        # print("-====>>>>>hooks", hooks)
-        # exit()
-
-        # instances = [instance]
-        # dataset = Batch(instances)
-        # dataset.index_instances(self.predictor._model.vocab)
-        # dataset_tensor_dict = util.move_to_device(
-        #         dataset.as_tensor_dict(), self.predictor.cuda_device)
-
+        embeddings_gradients: List[Tensor] = []
+        hooks: List[RemovableHandle] = self._register_embedding_gradient_hooks(self.predictor.model, embeddings_gradients)
 
         ###### instance = ["Hospitalizations decreased in Australia and Singapore but increased in Taiwan , Republic of China ."]
         dataloader = self.batch_dataloader([instance])
         x_batch = next(iter(dataloader)).to(device)
 
         with backends.cudnn.flags(enabled=False):
-            # outputs = self.predictor._model.make_output_human_readable(
-            #     self.predictor._model.forward(**dataset_tensor_dict) 
-            # )
-
             y_batch = torch.tensor([1]*x_batch.size(0)).to(device)
             outputs = self.predictor.model(x_batch, labels=y_batch)
+            loss, y_pred = outputs[0:2]
 
-            # Differs here
-            # prob = outputs["logits"][0][pred_idx] 
-            prob = outputs[1][0][int(pred_idx)] ###### outputs[1] tensor([[-0.1297, -0.9615,  0.0416,  1.8316,  0.0538]]
+            pred_idx = torch.argmax(y_pred, dim=1) if pred_idx is None else pred_idx
+            prob = outputs[1][0][int(pred_idx)]
 
             self.predictor.model.zero_grad()
             prob.backward()
 
-
-        # for hook in hooks:
-        #     hook.remove()
         hooks.remove()
 
         grad_dict = dict()
-        for idx, grad in enumerate(embedding_gradients):     ###### len = 1, [0].shape = embedding_gradients torch.Size([1, 18, 768])
+        for idx, grad in enumerate(embeddings_gradients):
             key = "grad_input_" + str(idx + 1)
             grad_dict[key] = grad.detach().cpu().numpy()
 
@@ -368,46 +350,23 @@ class GradientMasker(Masker):
         for param_name, param in self.predictor.model.named_parameters():
             param.requires_grad = original_param_name_to_requires_grad_dict[param_name]
 
-
-        ######
-        """
-        grad_dict = {'grad_input_1': array([[[-0.00725925,  0.04185553, -0.02047579, ..., -0.01079098,                                                                                                                                 
-                -0.00394276,  0.01109453],                                                                                                                                                                                              
-                [-0.01863867,  0.13642767, -0.04722746, ..., -0.13016962,                                                                                                                                                                
-                -0.00461602,  0.10560728],                                                                                                                                                                                              
-                [-0.00047336,  0.03735472, -0.00956504, ..., -0.04319321,                                                                                                                                                                
-                0.00550868,  0.01700047],                                                                                                                                                                                              
-                ...,                                                                                                                                                                                                                     
-                [ 0.04194318, -0.00398021, -0.01697866, ...,  0.00703355,                                                                                                                                                                
-                -0.00270116,  0.0241398 ],                                                                                                                                                                                              
-                [ 0.02588669,  0.00276013,  0.00086447, ...,  0.00280573,                                                                                                                                                                
-                0.0006188 , -0.03371754],                                                                                                                                                                                              
-                [ 0.03003237, -0.00248498,  0.01639194, ..., -0.04627804,                                                                                                                                                                
-                0.01179953,  0.06639014]]], dtype=float32)} 
-        """
-
-        # del dataset_tensor_dict
+        del x_batch, y_batch
         torch.cuda.empty_cache()
         return grad_dict, outputs
-    
-    
-    def _get_word_positions(self, predic_tok, predic_tok_start, editor_toks):
+
+
+
+
+    def _get_word_positions(self, predic_tok, predic_tok_idx, editor_toks):
         """ Helper function to map from (sub)tokens of Predictor to 
         token indices of Editor tokenizer. Assumes the tokens are in order.
         Raises MaskError if tokens cannot be mapped 
             This sometimes happens due to inconsistencies in way text is 
             tokenized by different tokenizers. """
 
-        ###### ==>>predic_tok> singapore
-        ###### ==>>>>>editor_toks [▁Hospital, ization, s, ▁decreased, ▁in, ▁Australia, ▁and, ▁Singapore, ▁but, ▁increased, ▁in, ▁Taiwan, ▁, ,, ▁Republic, ▁of, ▁China, ▁, ., </s>]
-
-
         return_word_idx = None
-        # predic_tok_start = predic_tok.idx
-        # predic_tok_end = predic_tok.idx_end
-        predic_tok_start = predic_tok_start
-        predic_tok_end = predic_tok_start + 1
-   
+        predic_tok_start = predic_tok_idx
+        predic_tok_end = predic_tok_idx + 1
 
         if predic_tok_start is None or predic_tok_end is None:
            return [], [], [] 
@@ -471,6 +430,7 @@ class GradientMasker(Masker):
                             [editor_toks[return_word_idx].idx_end])
         return return_tuple
         
+    
     # Copied from AllenNLP integrated gradient
     def _integrated_register_forward_hook(self, alpha, embeddings_list):
         """ Helper function for integrated gradients """
@@ -482,20 +442,9 @@ class GradientMasker(Masker):
 
             output.mul_(alpha)
 
-        # embedding_layer = util.find_embedding_layer(self.predictor._model)
         embedding_layer = util.find_embedding_layer(self.predictor.model)
         handle = embedding_layer.register_forward_hook(forward_hook)
-        ###### embedding_layer, Embedding(31090, 768, padding_idx=0)
-        ###### handle <torch.utils.hooks.RemovableHandle object at 0x7f0d32d8a410>
         return handle
-
-
-    # def _register_embedding_list_hook(self, model, embeddings_list):
-    #     def forward_hook(module, inputs, output):
-    #         embeddings_list.append(output.squeeze(0).clone().cpu().detach().numpy())
-    #     embedding_layer = model.bert.embeddings.word_embeddings
-    #     handle = embedding_layer.register_forward_hook(forward_hook)
-    #     return handle
 
 
     # Copied from AllenNLP integrated gradient
@@ -506,6 +455,7 @@ class GradientMasker(Masker):
 
         # List of Embedding inputs
         embeddings_list: List[np.ndarray] = []
+
 
         # Exclude the endpoint because we do a left point integral approx 
         for alpha in np.linspace(0, 1.0, num=steps, endpoint=False):
@@ -533,10 +483,9 @@ class GradientMasker(Masker):
         for idx, input_embedding in enumerate(embeddings_list):
             key = "grad_input_" + str(idx + 1)
             ig_grads[key] *= input_embedding
-
         return ig_grads    
-        
-        
+
+
     def get_important_editor_tokens(
             self, editable_seg, pred_idx, editor_toks, 
             labeled_instance=None, 
@@ -575,41 +524,30 @@ class GradientMasker(Masker):
         integrated_grad_steps = self.num_integrated_grad_steps
 
         # max_length = self.predictor._dataset_reader._tokenizer._max_length
+        # temp_tokenizer = self.predictor._dataset_reader._tokenizer
+        # all_predic_toks = temp_tokenizer.tokenize(editable_seg)
+
         max_length = max_length
         temp_tokenizer = self.predictor.tokenizer
+        all_predic_dis = temp_tokenizer.encode(editable_seg)
+        all_predic_toks = temp_tokenizer.convert_ids_to_tokens(all_predic_dis)
 
-        all_predic_dis = temp_tokenizer.encode(editable_seg)   ###### all_predic_dis [102, 13972, 30113, 2664, 121, 7266, 137, 15252, 563, 1175, 121, 11338, 422, 9789, 131, 3640, 205, 103]
-        # all_predic_toks = temp_tokenizer.tokenize(editable_seg)   ###### all_predic_toks = ['hospitalization', '##s', 'decreased', 'in', 'australia', 'and', 'singapore', 'but', 'increased', 'in', 'taiwan', ',', 'republic', 'of', 'china', '.']
-        all_predic_toks = temp_tokenizer.convert_ids_to_tokens(all_predic_dis)  ###### all_predic_toks = ['[CLS]', 'hospitalization', '##s', 'decreased', 'in', 'australia', 'and', 'singapore', 'but', 'increased', 'in', 'taiwan', ',', 'republic', 'of', 'china', '.', '[SEP]']
-        ###### editor_toks = [▁Hospital, ization, s, ▁decreased, ▁in, ▁Australia, ▁and, ▁Singapore, ▁but, ▁increased, ▁in, ▁Taiwan, ▁, ,, ▁Republic, ▁of, ▁China, ▁, ., </s>]
-
-
-        # # TODO: Does NOT work for RACE
-        # # If labeled_instance is not supplied, create one
-        # if labeled_instance is None:
-        #     labeled_instance = self.predictor.json_to_labeled_instances(
-        #             {"sentence": editable_seg})[0]
-
-        grad_type_options = ["integrated_l1", "integrated_signed", "normal_l1",  "normal_signed", "normal_l2", "integrated_l2"]
+        grad_type_options = ["integrated_l1", "integrated_signed", "normal_l1", 
+                "normal_signed", "normal_l2", "integrated_l2"]
         if self.grad_type not in grad_type_options:
             raise ValueError("Invalid value for grad_type")
 
         # Grad_magnitudes is used for sorting; highest values ordered first. 
         # -> For signed, to only mask most neg values, multiply by -1
+
         labeled_instance = editable_seg
-
         if self.grad_type == "integrated_l1":
-            # grads = self._get_integrated_gradients(editable_seg, pred_idx, steps = integrated_grad_steps)
-            # grad = grads["grad_input_1"][0]
-            # grad_signed = np.sum(abs(grad), axis = 1) 
-            # grad_magnitudes = grad_signed.copy()
-
             grads = self._get_integrated_gradients(
                     labeled_instance, pred_idx, steps = integrated_grad_steps)
             grad = grads["grad_input_1"][0]
             grad_signed = np.sum(abs(grad), axis = 1) 
             grad_magnitudes = grad_signed.copy()
-
+        
         elif self.grad_type == "integrated_signed":
             grads = self._get_integrated_gradients(
                     labeled_instance, pred_idx, steps = integrated_grad_steps)
@@ -653,24 +591,24 @@ class GradientMasker(Masker):
                 grad_magnitudes = grad_magnitudes[:predic_tok_end_idx]
                 grad_signed = grad_signed[:predic_tok_end_idx]
         
-
         # Order Predictor tokens from largest to smallest gradient values 
-        ordered_predic_tok_indices = np.argsort(grad_magnitudes)[::-1]    ###### grad_magnitudes shape= (18,)
-        """
-        grad_magnitudes [0.35318244 1.7696457  0.9514374  1.3205127  0.66492414 1.3386885
-                        0.6169287  1.7747654  1.1276003  1.1889602  0.742771   1.5146408
-                        0.55210245 1.6286447  0.65258837 1.1351242  0.46439698 0.6163024 ]
-        ordered_predic_tok_indices: [ 7  1 13 11  5  3  9 15  8  2 10  4 14  6 17 12 16  0]
-        """
+        ordered_predic_tok_indices = np.argsort(grad_magnitudes)[::-1]
 
-        # List of tuples of (start, end) positions in the original inp to mask
+        assert (len(all_predic_toks) == (len(ordered_predic_tok_indices)))
+
+        # # List of tuples of (start, end) positions in the original inp to mask
+        # ordered_word_indices_by_grad = [self._get_word_positions(
+        #     all_predic_toks[idx], editor_toks)[0] \
+        #             for idx in ordered_predic_tok_indices \
+        #             if all_predic_toks[idx] not in self.predictor_special_toks]
+
         ordered_word_indices_by_grad = [self._get_word_positions(
             all_predic_toks[idx], idx, editor_toks)[0] \
                     for idx in ordered_predic_tok_indices \
-                    if all_predic_toks[idx] not in self.predictor_special_toks]    ###### all_predic_toks: 18   ### ordered_word_indices_by_grad: [[0], [0], [1], [1], [0], [0], [1], [2], [1], [0], [1], [0], [1], [0], [1], [2, 3]]
+                    if all_predic_toks[idx] not in self.predictor_special_toks]
 
         ordered_word_indices_by_grad = [item for sublist in \
-                ordered_word_indices_by_grad for item in sublist]   ###### ordered_word_indices_by_grad: [2, 1, 0, 1, 1, 0, 1, 0, 1, 1, 2]   
+                ordered_word_indices_by_grad for item in sublist]
 
         # Sanity checks
         if predic_tok_end_idx is not None:
@@ -684,6 +622,7 @@ class GradientMasker(Masker):
         else:
             assert(len(all_predic_toks) == (len(grad_magnitudes)))
         
+
         # Get num words to return
         if num_return_toks is None:
             num_return_toks = math.ceil(
@@ -694,10 +633,11 @@ class GradientMasker(Masker):
                 highest_editor_tok_indices.append(idx)
                 if len(highest_editor_tok_indices) == num_return_toks:
                     break
-        
+
         highest_predic_tok_indices = ordered_predic_tok_indices[:num_return_toks]
         return highest_editor_tok_indices
     
+
 
 
     def _get_mask_indices(self, editable_seg, editor_toks, pred_idx, **kwargs):
@@ -706,28 +646,3 @@ class GradientMasker(Masker):
         editor_mask_indices = self.get_important_editor_tokens(
                 editable_seg, pred_idx, editor_toks, **kwargs)
         return editor_mask_indices 
-
-
-
-
-
-
-# class RandomMasker(Masker):
-#     """ Masks randomly chosen spans. """ 
-    
-#     def __init__(
-#             self, 
-#             mask_frac, 
-#             editor_tok_wrapper, 
-#             max_tokens
-#         ):
-#         super().__init__(mask_frac, editor_tok_wrapper, max_tokens)
-   
-#     def _get_mask_indices(self, editable_seg, editor_toks, pred_idx, **kwargs):
-#         """ Helper function to get indices of Editor tokens to mask. """
-        
-#         num_tokens = min(self.max_tokens, len(editor_toks))
-
-#         return random.sample(
-#                 range(num_tokens), math.ceil(self.mask_frac * num_tokens))
-    

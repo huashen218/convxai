@@ -34,7 +34,6 @@ class Model_Explainer(object):
         self.global_explanations_data = global_explanations_data
         
 
-
     def generate_explanation(self, user_intent_detection, writingInput, predictLabel, conference, **kwargs):
         """writingInput: List[str]. A list of all input text.
                 writingInput = ' '.join(writingInput)
@@ -66,10 +65,10 @@ class Model_Explainer(object):
             explanations = self.explain_example(writingInput, predictLabel, conference, **kwargs)
         
         elif user_intent_detection == XAI_User_Intents[6]:
-            explanations = self.explain_attribution(writingInput, **kwargs)
+            explanations = self.explain_attribution(writingInput, predictLabel, **kwargs)
 
         elif user_intent_detection == XAI_User_Intents[7]:
-            explanations = self.explain_counterfactual(writingInput, **kwargs)
+            explanations = self.explain_counterfactual(writingInput, predictLabel, **kwargs)
 
 
         else:
@@ -117,9 +116,7 @@ class Model_Explainer(object):
 
 
     def explain_sentence_length(self, conference):
-        # explanation = f"""
-        # The [20th, 40th, 50th, 60th, 80th] percentiles of the sentence lengths in the {conference} conference are <strong>{self.global_explanations_data[conference]["sentence_length"]}</strong> words. 
-        # """
+        """The [20th, 40th, 50th, 60th, 80th] percentiles of the sentence lengths in the conference are words. """
         explanation_dict = {
             "conference": conference,
             "global_explanations_data": self.global_explanations_data
@@ -159,12 +156,12 @@ class Model_Explainer(object):
         embeddings = self.diversity_model.generate_embeddings(input)
 
         if kwargs and kwargs["attributes"]["aspect"] is not None:
-            label = label_mapping[kwargs["attributes"]["aspect"]]
+            label_idx = label_mapping[kwargs["attributes"]["aspect"]]
         else:
             # label = predictLabel
-            label = label_mapping[predictLabel]
+            label_idx = label_mapping[predictLabel]
 
-        filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label_idx)[0]
         self.example_explainer.diversity_x_train_embeddings_tmp = np.array(self.example_explainer.diversity_x_train_embeddings_tmp)[filter_index]
         similarity_scores = np.matmul(embeddings, np.transpose(self.example_explainer.diversity_x_train_embeddings_tmp, (1,0)))[0]    ###### train_emb = torch.Size(137171, 768)  
 
@@ -174,15 +171,15 @@ class Model_Explainer(object):
             final_top_index =  np.argsort(similarity_scores)[::-1][:top_k]
 
         top_text = np.array(self.example_explainer.diversity_x_train_text_tmp)
-        top_title = np.array(self.example_explainer.diversity_x_train_title_tmp)
+        # top_title = np.array(self.example_explainer.diversity_x_train_title_tmp)
         top_link = np.array(self.example_explainer.diversity_x_train_link_tmp)
-        top_aspect = np.array(self.example_explainer.diversity_aspect_list_tmp)
+        # top_aspect = np.array(self.example_explainer.diversity_aspect_list_tmp)
 
         explanation_dict = {
             "top_k": top_k,
             "input": input,
             "conference": conference,
-            "label": label,
+            "label": label_idx,
             "final_top_index": final_top_index,
             "top_link": top_link,
             "top_text": top_text
@@ -190,16 +187,19 @@ class Model_Explainer(object):
         return explanation_dict
 
 
-        
-
-
-    def explain_attribution(self, input, **kwargs):
+    def explain_attribution(self, input, predictLabel, **kwargs):
         """XAI Algorithm - Attribution: 
             Implementation Reference: https://stackoverflow.com/questions/67142267/gradient-based-saliency-of-input-words-in-a-pytorch-model-from-transformers-libr
         """
         top_k = kwargs["attributes"]["top_k"] if kwargs and kwargs["attributes"]["top_k"] is not None else 3
+        
+        if kwargs and kwargs["attributes"]["aspect"] is not None:
+            label_idx = label_mapping[kwargs["attributes"]["aspect"]]
+        else:
+            label_idx = label_mapping[predictLabel]
+
         self.attribution_explainer = AttributionExplainer(self.diversity_model)
-        all_predic_toks, ordered_predic_tok_indices = self.attribution_explainer.get_sorted_important_tokens_nonordered(input)
+        all_predic_toks, ordered_predic_tok_indices = self.attribution_explainer.get_sorted_important_tokens(input, label_idx)
         important_indices = ordered_predic_tok_indices[:top_k]
         
         explanation_dict = {
@@ -212,7 +212,7 @@ class Model_Explainer(object):
 
 
 
-    def explain_counterfactual(self, input, **kwargs):
+    def explain_counterfactual(self, input, predictLabel=None, **kwargs):
         """XAI Algorithm #6: MICE
         Reference paper: Explaining NLP Models via Minimal Contrastive Editing (MICE)
         """
@@ -241,7 +241,7 @@ class Model_Explainer(object):
             explanation_dict = {
                 "counterfactual_exists": False,
                 "output": output,
-                "counterfactual_output": counterfactual_output
+                "counterfactual_output": None
             }
         return explanation_dict
 
