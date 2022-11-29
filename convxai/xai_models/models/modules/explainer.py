@@ -29,18 +29,12 @@ class Model_Explainer(object):
 
     def __init__(self, configs):
         super(Model_Explainer, self).__init__()
-        self.configs = configs
         logging.info("\nLoading writing models to be explained......")
-        self.diversity_model  = DiversityModel(saved_model_dir=self.configs["scientific_writing"]["diversity_model_dir"])
-        self.quality_model = QualityModel(saved_model_dir=self.configs["scientific_writing"]["quality_model_dir"])
-        self.attribution_explainer = AttributionExplainer(configs)
-
-
+        self.diversity_model  = DiversityModel(saved_model_dir=configs["scientific_writing"]["diversity_model_dir"])
+        self.quality_model = QualityModel(saved_model_dir=configs["scientific_writing"]["quality_model_dir"])
 
     def generate_explanation(self, user_intent_detection, writingInput, predictLabel, conference, global_explanations_data, **kwargs):
-        """writingInput: List[str]. A list of all input text.
-                writingInput = ' '.join(writingInput)
-        """
+        """The unified function of generating explanations."""
 
         ############ Global Explanations ############
         if user_intent_detection == XAI_User_Intents[0]:
@@ -67,7 +61,7 @@ class Model_Explainer(object):
             explanations = self.explain_example(writingInput, predictLabel, conference, **kwargs)
         
         elif user_intent_detection == XAI_User_Intents[6]:
-            explanations = self.explain_attribution(writingInput, **kwargs)
+            explanations = self.explain_attribution(writingInput, predictLabel, **kwargs)
 
         elif user_intent_detection == XAI_User_Intents[7]:
             explanations = self.explain_counterfactual(writingInput, **kwargs)
@@ -104,9 +98,13 @@ class Model_Explainer(object):
         """
         
         explanation1 = f"""
-        We use each sentence's <strong>Perplexity</strong> value (predicted by the GPT-2 model) to derive the <strong>Quality Score</strong>. Lower perplexity means your writing is more similar to the {conference} papers.
+        We use each sentence's <strong>Perplexity</strong> value (predicted by the GPT-2 model) to compute the <strong>Quality Style Score</strong>. Lower perplexity score means better quality for {conference}.
         <br>
-        We divide into five levels as below based on [20-th, 40-th, 60-th, 80-th] percentiles of the {conference} papers' perplexity scores (i.e., [{global_explanations_data[conference]['abstract_score_range'][0]}, {global_explanations_data[conference]['abstract_score_range'][1]}, {global_explanations_data[conference]['abstract_score_range'][3]}, {global_explanations_data[conference]['abstract_score_range'][4]}]).
+        <br>
+        We set the criteria by dividing into five levels based on [20-th, 40-th, 60-th, 80-th] percentiles of all the {conference} papers' perplexity scores.
+        <br>
+        <br>
+        For example, the percentiles = [{global_explanations_data[conference]['abstract_score_range'][0]}, {global_explanations_data[conference]['abstract_score_range'][1]}, {global_explanations_data[conference]['abstract_score_range'][3]}, {global_explanations_data[conference]['abstract_score_range'][4]}]), resulting in the criterion:
         """
 
         explanation2 = """
@@ -206,23 +204,23 @@ class Model_Explainer(object):
             <tbody>
             <tr>
                 <td>Pattern1</td>
-                <td>{global_explanations_data[f'Aspect_Patterns-{conference}'][0]}</td>
+                <td>{list(global_explanations_data[conference]['Aspect_Patterns_dict'].values())[0]}</td>
             </tr>
             <tr>
                 <td>Pattern2&nbsp;</td>
-                <td>{global_explanations_data[f'Aspect_Patterns-{conference}'][1]}</td>
+                <td>{list(global_explanations_data[conference]['Aspect_Patterns_dict'].values())[1]}</td>
             </tr>
             <tr>
                 <td>Pattern3&nbsp;</td>
-                <td>{global_explanations_data[f'Aspect_Patterns-{conference}'][2]}</td>
+                <td>{list(global_explanations_data[conference]['Aspect_Patterns_dict'].values())[2]}</td>
             </tr>
             <tr>
                 <td>Pattern4</td>
-                <td>{global_explanations_data[f'Aspect_Patterns-{conference}'][3]}</td>
+                <td>{list(global_explanations_data[conference]['Aspect_Patterns_dict'].values())[3]}</td>
             </tr>
             <tr>
                 <td>Pattern5</td>
-                <td>{global_explanations_data[f'Aspect_Patterns-{conference}'][4]}</td>
+                <td>{list(global_explanations_data[conference]['Aspect_Patterns_dict'].values())[4]}</td>
             </tr>
             <tbody>
         </table>
@@ -232,12 +230,12 @@ class Model_Explainer(object):
 
 
     def explain_sentence_length(self, conference, global_explanations_data):
-        # explanation = f"""
-        # The [20th, 40th, 50th, 60th, 80th] percentiles of the sentence lengths in the {conference} conference are <strong>{global_explanations_data[conference]["sentence_length"]}</strong> words. 
-        # """
         explanation = f"""
-        The [mean-2*std, mean-std, mean, mean+std, mean+2*std] percentiles of the sentence lengths in the {conference} conference are <strong>{global_explanations_data[conference]["sentence_length"]}</strong> words. 
+        The [20th, 40th, 50th, 60th, 80th] percentiles of the sentence lengths in the {conference} conference are <strong>{global_explanations_data[conference]["sentence_length"]}</strong> words. 
         """
+        # explanation = f"""
+        # The [mean-2*std, mean-std, mean, mean+std, mean+2*std] percentiles of the sentence lengths in the {conference} conference are <strong>{global_explanations_data[conference]["sentence_length"]}</strong> words. 
+        # """
         return explanation
 
 
@@ -272,14 +270,23 @@ class Model_Explainer(object):
         else:
             label = predictLabel
 
-        filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        ### add keywords
+        # keyword = None
+        keyword = kwargs["attributes"]["keyword"]
+        print(f"++++++ Example keyword = {keyword}")
+        if keyword is not None:
+            keyword_filter_index = []
+            for idx, text in enumerate(self.example_explainer.diversity_x_train_text_tmp):
+                if keyword in text.decode("utf-8"):
+                    keyword_filter_index.append(idx)
+            label_filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+            filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(label_filter_index)))))
+        else:
+            filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+
         self.example_explainer.diversity_x_train_embeddings_tmp = np.array(self.example_explainer.diversity_x_train_embeddings_tmp)[filter_index]
         similarity_scores = np.matmul(embeddings, np.transpose(self.example_explainer.diversity_x_train_embeddings_tmp, (1,0)))[0]    ###### train_emb = torch.Size(137171, 768)  
-
-        if kwargs["attributes"]["aspect"] is not None:
-            final_top_index = filter_index[np.argsort(similarity_scores)[::-1][:top_k]]
-        else:
-            final_top_index =  np.argsort(similarity_scores)[::-1][:top_k]
+        final_top_index = filter_index[np.argsort(similarity_scores)[::-1][:top_k]]
 
         top_text = np.array(self.example_explainer.diversity_x_train_text_tmp)
         top_title = np.array(self.example_explainer.diversity_x_train_title_tmp)
@@ -306,18 +313,25 @@ class Model_Explainer(object):
 
         
 
-
-    def explain_attribution(self, input, **kwargs):
+    def explain_attribution(self, input, predictLabel, **kwargs):
         """XAI Algorithm - Attribution: 
             Implementation Reference: https://stackoverflow.com/questions/67142267/gradient-based-saliency-of-input-words-in-a-pytorch-model-from-transformers-libr
         """
-        top_k = kwargs["attributes"]["top_k"] if kwargs["attributes"]["top_k"] is not None else 3
-        all_predic_toks, ordered_predic_tok_indices = self.attribution_explainer.get_sorted_important_tokens_nonordered(input)
+        top_k = kwargs["attributes"]["top_k"] if kwargs and kwargs["attributes"]["top_k"] is not None else 3
+        if kwargs and kwargs["attributes"]["aspect"] is not None:
+            label_idx = label_mapping[kwargs["attributes"]["aspect"]]
+        else:
+            label_idx = predictLabel
+
+
+        self.attribution_explainer = AttributionExplainer(self.diversity_model)
+        all_predic_toks, ordered_predic_tok_indices = self.attribution_explainer.get_sorted_important_tokens(input, label_idx)
         important_indices = ordered_predic_tok_indices[:top_k]
-        nlg_template = f"The <strong>TOP-{top_k}</strong> important words are highlighted as below: <br><br>"
+        nlg_template = f"The <strong>TOP-{top_k}</strong> important words (Conditioned on <strong>label={diversity_model_label_mapping[label_idx]}</strong>) are highlighted as below: <br><br>"
         html_text = self._attribution_visualize(all_predic_toks, important_indices)
         response = nlg_template + html_text
         return response
+
 
 
 
