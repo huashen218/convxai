@@ -20,11 +20,11 @@ import heapq
 import difflib
 
 from transformers import T5Tokenizer, T5Model, T5Config
-from transformers import T5ForConditionalGeneration
+from transformers import T5ForConditionalGeneration, BertTokenizerFast
 
 from .masker import Masker, RandomMasker, GradientMasker
 from .utils import *
-from .masker import Feature, PredDataset
+from .masker import PredDataset
 from torch.utils import data
 
 
@@ -33,9 +33,43 @@ FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
 logger.setLevel(logging.INFO)
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 ####################################################################
 ############################## Utils ###############################
 ####################################################################
+
+
+
+
+
+class Feature:
+    def __init__(self, pad_length=100, tokenizer=None):
+        self.pad_length = pad_length
+        if tokenizer is None:
+            self.tokenizer = BertTokenizerFast.from_pretrained('bert-base-uncased')
+        else:
+            self.tokenizer = tokenizer
+        self.pad_id, self.cls_id, self.sep_id = self.tokenizer.convert_tokens_to_ids(
+                [self.tokenizer.pad_token, self.tokenizer.cls_token, self.tokenizer.sep_token]
+            )
+
+    def extract(self, sents):
+        results = [self.tokenizer.encode(s, add_special_tokens=False) for s in sents]
+
+        # turn to matrix with padding
+        matrix = np.ones([len(results), self.pad_length], dtype=np.int32) * self.pad_id
+        for i, res in enumerate(results):
+            length = min(len(res), self.pad_length)
+            matrix[i, :length] = res[:length]
+
+        cls_matrix = np.ones([len(results), 1]) * self.cls_id
+        sep_matrix = np.ones([len(results), 1]) * self.sep_id
+        matrix = np.hstack([cls_matrix, matrix, sep_matrix])
+        
+        return matrix
+
+
 
 def get_max_instance(instance_candidates, contrast_pred_idx):
     """ Returns candidate with highest predicted prob of contrast_pred_idx. """
@@ -102,20 +136,44 @@ def sort_instances_by_score(scores, *args):
     zipped.sort(reverse = True)
     return list(zipped)
 
+
+
+def batch_dataloader(predictor, input_string):
+    feature = Feature(tokenizer=predictor.tokenizer)
+    # x_text = feature.extract(input_string[:], padding=True)
+    x_text = feature.extract(input_string[:])
+    dataset = PredDataset(x_text)
+    dataloader = data.DataLoader(dataset, batch_size=len(x_text), shuffle=False, num_workers=4)
+    return dataloader
+
+
+
 def get_scores(predictor, instance_candidates, contrast_pred_idx, k = None):
     """ Gets (top k) predicted probs of contrast_pred_idx on candidates. """
 
     # Get predictions
     with torch.no_grad():
-        cuda_device = predictor._model._get_prediction_device()
-        dataset = Batch(instance_candidates)
-        dataset.index_instances(predictor._model.vocab)
-        model_input = allennlp.nn.util.move_to_device(
-                dataset.as_tensor_dict(), cuda_device)
-        outputs = predictor._model.make_output_human_readable(
-                predictor._model(**model_input))
-        outputs = add_probs(outputs)
+
+        # cuda_device = predictor._model._get_prediction_device()
+        # dataset = Batch(instance_candidates)
+        # dataset.index_instances(predictor._model.vocab)
+        # model_input = allennlp.nn.util.move_to_device(
+        #         dataset.as_tensor_dict(), cuda_device)
+        # outputs = predictor._model.make_output_human_readable(
+        #         predictor._model(**model_input))
+        # outputs = add_probs(outputs)
+        # probs = outputs['probs']
+
+
+        dataloader = batch_dataloader(predictor, instance_candidates)
+        x_batch = next(iter(dataloader)).to(device) 
+        y_batch = torch.tensor([1]*x_batch.size(0)).to(device)
+        outputs = predictor.model(x_batch, labels=y_batch)
+        outputs = {
+            "probs": torch.nn.functional.softmax(outputs[1])
+        }
         probs = outputs['probs']
+
 
     if k != None:
         pred_indices = torch.argmax(probs, dim=1)

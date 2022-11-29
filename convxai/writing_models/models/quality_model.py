@@ -22,10 +22,10 @@ from convxai.writing_models.dataloaders import *
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+# device = 'cpu'
 
 ###### Quality Model Output Mapping ######
-levels = [35, 52, 74, 116]
+levels = [27.6981, 40.9609, 57.8652, 85.9444]
 
 def quality_model_label_mapping(x): return \
     "quality1" if x > levels[3] else (

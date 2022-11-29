@@ -10,7 +10,7 @@ from pymongo import MongoClient
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
-# nlp = stanza.Pipeline('en')
+nlp = stanza.Pipeline('en')
 
 
 def tokenize(x):
