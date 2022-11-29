@@ -41,7 +41,7 @@ var chatBotReply = ""
 var inputMessage = ""
 var typeOfContainer = ""
 var ButtonID = ""
-var chatBotInitiateMessage = "Hi there, I am <strong>Omni</strong> 👩🏻‍🎓, an <strong>AI Explainer Assistant</strong> to help understand and improve your scientific writing! I'm <strong>generating a review</strong> for your reference. Please wait..."
+var chatBotInitiateMessage = "Hi there, I am <strong>ConvXAI</strong> 👩🏻‍🎓, an <strong>AI Explainer Assistant</strong> to help improve your scientific writing! I'm <strong>generating a review</strong> for your reference. Please wait..."
 var chatBotInitiateButtonMessage = "I have seen over <strong>9335 scientific paper abstracts</strong> in ACL, CHI and ICLR conferences published from 2018 to 2022. I'd love to provide some basic feedback to <strong>help improve your abstract writing</strong>. If needed, please share with me which conference you are most interested in?"
 var chatBotAskForXAIButtonMessage = ""
 var chatBotInitXAIButtonMessage = ""
@@ -55,8 +55,6 @@ var chatBotTextArea = document.querySelector(".chatBot .chatForm #chatTextBox")
 var chatBotSendButton = document.querySelector(".chatBot .chatForm #sendButton")
 var instance_ButtonID = ["[InstanceWhy]", "[Prediction Confidence]", "[Similar Examples]", "[Important Words]", "[Counterfactual Explanation]"]
 var userHasScrolled = false;
-
-
 
 function validateMessage() {
     // ********** Validate there're contents in the TextArea ********** //
@@ -709,6 +707,7 @@ chatBotSession.addEventListener("wheel", (event) => {                           
         userHasScrolled = false;
     }
 })
+
 
 
 

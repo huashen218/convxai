@@ -103,8 +103,7 @@ class XaiAgent(Agent):
         return response
 
 class AICommenter(object):
-    """Based on AI predictions, AICommenter generate high-level AI comments that are more understandable and useful for users in practice.
-    """
+    """Based on AI predictions, AICommenter generate high-level AI comments that are more understandable and useful for users in practice."""
     def __init__(self, conference, writingInput, predictOutputs, inputTexts):
         self.conference = conference
         self.predictOutputs = predictOutputs
@@ -113,14 +112,15 @@ class AICommenter(object):
         self.review_summary = {}
         self.aspect_model = TfidfAspectModel(self.conference)
         self.revision_comment_template = {
-            "shorter_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=shorter-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>too short</strong>, the average length of the sentences predicted as <strong>'{label}'</strong> labels in {conference} conference is {ave_word} words. Please rewrite it into a longer one.</p><br>",
-            "longer_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=longer-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>too long</strong>, the average length of the sentences predicted as <strong>'{label}'</strong> labels in {conference} conference is {ave_word} words. Please rewrite it into a shorter one.</p><br>",
-            "label_change": "&nbsp;&nbsp;<p class='comments' id={id} class-id=label-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: Based on the sentence <strong>labels' percentage and order</strong> in your abstract, it is suggested to write your <strong>{aspect_new}</strong> at this sentence, rather than describing <strong>{aspect_origin}</strong> here.</p><br>",
-            "low_score": "&nbsp;&nbsp;<p class='comments' id={id} class-id=score-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The writing style quality score of {sentence} is a bit <strong>lower</strong> than <strong>'{label}'</strong>-labeled sentences in the {conference} conference. This indicate the writing style might not match well with this conference.<br>"
+            "shorter_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=shorter-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>short than 20%</strong> of the published <strong>'{label}'</strong>-labeled sentences in {conference} conference. The average length is {ave_word} words.</p><br>",
+            "longer_length": "&nbsp;&nbsp;<p class='comments' id={id} class-id=longer-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The sentence is <strong>longer than 80%</strong> of the published <strong>'{label}'</strong>-labeled sentences in {conference} conference. The average length is {ave_word} words.</p><br>",
+            "label_change": "&nbsp;&nbsp;<p class='comments' id={id} class-id=label-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: Based on the aspect <strong>labels' percentage and order</strong> of your abstract, it is suggested to write your <strong>{aspect_new}</strong> at this sentence, rather than describing <strong>{aspect_origin}</strong> here.</p><br>",
+            "low_score": "&nbsp;&nbsp;<p class='comments' id={id} class-id=score-{id}><strong>-</strong> <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'><strong>{sentence}</strong></span>: The style quality score of {sentence} is <strong>lower than 20%</strong> of the published <strong>'{label}'</strong>-labeled sentences in {conference} conference. Indicating the writing style might not match well with this conference.<br>"
         }
         self.global_explanations_data = global_explanations_data
             
     def _ai_comment_score_classifier(self, raw_score, score_benchmark):
+        """The lower scores get higher labels."""
         if raw_score >= score_benchmark[4]:
             score_label = 1
         if raw_score >= score_benchmark[3] and raw_score < score_benchmark[4]:
@@ -134,8 +134,6 @@ class AICommenter(object):
         return score_label
 
     def _ai_comment_analyzer(self):
-
-        structure_score, quality_score = 5, 0
 
         ###### Benchmark Scores ######
         abstract_score_benchmark = self.global_explanations_data[self.conference]['abstract_score_range']
@@ -155,7 +153,9 @@ class AICommenter(object):
         structure_revision = ""
         style_revision = ""
 
-        # Aspects Labels Analysis ######: DTW algorithm: https://dtaidistance.readthedocs.io/en/latest/usage/dtw.html#dtw-distance-measure-between-two-time-series;   https://towardsdatascience.com/an-illustrative-introduction-to-dynamic-time-warping-36aa98513b98
+        # Aspects Labels Analysis ######: 
+        # DTW algorithm: https://dtaidistance.readthedocs.io/en/latest/usage/dtw.html#dtw-distance-measure-between-two-time-series;
+        # https://towardsdatascience.com/an-illustrative-introduction-to-dynamic-time-warping-36aa98513b98
         distance, paths = dtw.warping_paths(
             aspect_list, aspect_distribution_benchmark)
         best_path = dtw.best_path(paths)
@@ -164,10 +164,12 @@ class AICommenter(object):
             if aspect_list[path[0]] != aspect_distribution_benchmark[path[1]]:
                 change_label_dict[path[0]] = path[1]
 
+        quality_score = 0
         ###### Length and Score Analysis ######
         for n in range(len(sentence_raw_score)):
             sentence_score = self._ai_comment_score_classifier(
                 sentence_raw_score[n], sentence_score_benchmark[diversity_model_label_mapping[aspect_list[n]]])
+            ### _ai_comment_score_classifier is 'lower score indicates longer sentence'.
             sentence_length = self._ai_comment_score_classifier(len(counting_tokens(
                 self.inputTexts[n])), sentence_length_benchmark[diversity_model_label_mapping[aspect_list[n]]])
 
@@ -197,6 +199,7 @@ class AICommenter(object):
                     f"long-{len(counting_tokens(self.inputTexts[n]))}")
 
             quality_score += sentence_score
+        abstract_quality_score = quality_score / len(sentence_raw_score)
 
         self.review_summary["abstract_score_benchmark"] = self.global_explanations_data[self.conference]['abstract_score_range']
         self.review_summary["sentence_score_benchmark"] = self.global_explanations_data[
@@ -219,12 +222,13 @@ class AICommenter(object):
         feedback_improvement = f"<br> <p style='color:#1B5AA2;font-weight:bold'> Structure Suggestions:</p> {structure_revision}" + \
                                f"<br> <p style='color:#1B5AA2;font-weight:bold'> Style Suggestions:</p> {style_revision} {length_revision}"
 
-        structure_score = 5 - 0.5 * len(change_label_dict.keys())
-        overall_score = (structure_score + quality_score /
-                         len(sentence_raw_score)) / 2
-
+        abstract_structure_score = 5 - 0.5 * len(change_label_dict.keys())
+        overall_score = (abstract_structure_score + abstract_quality_score) / 2
+        print(f"===>>> The overall_score = {overall_score}, with abstract_structure_score = {abstract_structure_score} and abstract_quality_score = {abstract_quality_score}.")
         analysis_outputs = {
             "abstract_score": overall_score,
+            "abstract_structure_score": abstract_structure_score,
+            "abstract_quality_score": abstract_quality_score,
             "instance_results": feedback_improvement
         }
 
@@ -237,8 +241,8 @@ class AICommenter(object):
         3) how to improvement for specific sentences.
         """
         analysis_outputs = self._ai_comment_analyzer()
-        comment_conference_intro = f"Nice! I'm comparing your submission with {self.global_explanations_data[self.conference]['paper_count']} {self.conference} paper abstracts."
-        comment_overall_score = f"<br><br><p class='overall-score'> Your <strong>Overall Score</strong> of Structure and Style = <strong>{analysis_outputs['abstract_score']:0.0f}</strong> (out of 5).</p> "
+        comment_conference_intro = f"Nice! I'm comparing your abstract with <strong>{self.global_explanations_data[self.conference]['paper_count']} published {self.conference}</strong> abstracts."
+        comment_overall_score = f"<br><br><p class='overall-score'> Your <strong>Overall Score</strong>=<strong>{analysis_outputs['abstract_score']:0.2f}</strong> (out of 5) by averaging: <br> Structure Score = {analysis_outputs['abstract_structure_score']:0.2f} and Style Score = {analysis_outputs['abstract_quality_score']:0.2f}. </p> "
         comment_improvements = "<br>" + analysis_outputs['instance_results'] if len(analysis_outputs['instance_results']) > 0 else "Your current writing looks good to me. Great job!"
         return comment_conference_intro + comment_overall_score + comment_improvements
 
@@ -249,37 +253,40 @@ class AICommenter(object):
         if review_type == "long":
 
             response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
-            Your sentence has <strong>{review.split("-")[1]} words</strong>, which is longer than 80% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
+            This sentence has <strong>{review.split("-")[1]} words</strong>, longer than 80% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
             <br><br>
             <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
             <br><br>
-            To see the more details of sentence length statistics, please click the question below:<br><br>
+            See more details of sentence length statistics, please click the question below:<br><br>
             """
 
         elif review_type == "short":
             response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
-            This sentence has <strong>{review.split("-")[1]} words</strong>, which is shorter than 80% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
+            This sentence has <strong>{review.split("-")[1]} words</strong>, shorter than 20% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
             <br><br>
             <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
             <br><br>
-            To see the more details of sentence length statistics, please click the question below:<br><br>
+            See the more details of sentence length statistics, please click the question below:<br><br>
             """
 
         elif review_type == "quality":
             response = f"""
             <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: the <strong>Writing Style Model</strong> can generate a quality score, indicating <strong>how well the sentence can match with the {convxai_global_status_track["conference"]} conference</strong>, with <strong>lower the better</strong> style quality.
             <br><br>
-            This sentence gets <strong>{float(review.split("-")[1]):.2f}</strong> points, which is larger than <strong>80%</strong> of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference. This indicates the sentence' writing style might not match well with published {convxai_global_status_track["conference"]} sentences. 
+            This sentence gets <strong>{float(review.split("-")[1]):.2f}</strong> points, which is larger than <strong>80%</strong> of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference. Indicating the sentence may not match well with the {convxai_global_status_track["conference"]} conference. 
             <br><br>
-            <strong>To improve</strong>, you can check {convxai_global_status_track["conference"]} similar sentences for reference. Please click the question below:<br><br>
+            <strong>To improve</strong>, you can check similar sentences in {convxai_global_status_track["conference"]} to rewrite. Please click the question below:<br><br>
             """
 
         elif review_type == "aspect":
             response = f"""
-            <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we summarized all the collected {convxai_global_status_track["conference"]} abstracts into <strong>five structural patterns</strong>, where we found your submission is closest to the pattern of <span class='text-danger font-weight-bold'>{self.review_summary["aspect_distribution_benchmark"]}</span>. By using <a class='post-link' href='https://en.wikipedia.org/wiki/Dynamic_time_warping' target='_blank'><strong>Dynamic Time Warping</strong></a> algorithm to analyze <strong> how to revise your submission to fit this style pattern</strong>,
-            the result suggested to describe <strong>{review.split("-")[2]}</strong> aspect but not <strong>{review.split("-")[1]}</strong> in this sentence.
+            <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we summarized five <strong>five structural patterns</strong> in {convxai_global_status_track["conference"]}, and found this abstract is closest to the pattern: <span class='text-danger font-weight-bold'>{self.review_summary["aspect_distribution_benchmark"]}</span>. 
+            <br>
+            <br>
+            By comparing this abstract pattern with the closest benchmark using <a class='post-link' href='https://en.wikipedia.org/wiki/Dynamic_time_warping' target='_blank'><strong>Dynamic Time Warping</strong></a> algorithm,
+            we suggest you to describe <strong>{review.split("-")[2]}</strong> aspect but <strong>not {review.split("-")[1]}</strong> in this sentence to improve the structure.
             <br><br>
-            <strong>To improve</strong>, you can check the <strong> most important words </strong> resulting in the prediction and further check <strong> how to revise input into another label</strong> . See XAI questions below:<br><br>
+            <strong>To improve</strong>, you can check the <strong> most important words </strong> for the label and further check <strong> how to revise input into another label</strong> . See XAI questions below:<br><br>
             """
 
         return [review_type, response]
@@ -320,7 +327,7 @@ class XAIExplainer(object):
         self.explainer = Model_Explainer(self.configs)
         self.nlg = XAI_NLG_Module()
 
-        # ****** Set up convxai_global_status_track ****** #
+        # ****** Set up convxai_global_status_track to track the multi-turn variables ****** #
         self.convxai_global_status_track = defaultdict()
         self.convxai_intent_round = 0
         self.multi_turn_required_intent_list = [
@@ -339,8 +346,8 @@ class XAIExplainer(object):
                         self.convxai_global_status_track[
                             f"intent_round_{self.convxai_intent_round}"]["binded"] = True
                         self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
-                            "top_k": 3, "aspect": None}
-                        check_response = "Would you like to <span class='text-danger font-weight-bold'>see more or less examples</span>, and meanwhile conditioned on an aspect? If you need, please type the <span class='text-danger font-weight-bold'>word number + aspect (e.g., 6 + method)</span>, otherwise, please reply 'No'."
+                            "top_k": 3, "aspect": None, "keyword": None}
+                        check_response = "Want to check <span class='text-danger font-weight-bold'>more examples of another label</span>? Please type <span class='text-danger font-weight-bold'>'word number + label'</span> (e.g., '6 + method'). <br><br> Or want to find <span class='text-danger font-weight-bold'>examples with keyword?</span>, please start with <span class='text-danger font-weight-bold'>'keyword:'</span> (e.g., 'keyword: robotics')</span>. <br><br>Otherwise, please reply '<span class='text-danger font-weight-bold'>No</span>'."
                         return check_response
 
                 if user_intent == "attribution":
@@ -348,8 +355,8 @@ class XAIExplainer(object):
                         self.convxai_global_status_track[
                             f"intent_round_{self.convxai_intent_round}"]["binded"] = True
                         self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
-                            "top_k": 3}
-                        check_response = "Would you like to <span class='text-danger font-weight-bold'>highlight more or less important words</span>? If you need, please type the word number (e.g., 6), otherwise, please reply 'No'."
+                            "top_k": 3, "aspect": None}
+                        check_response = "Want to highlight <span class='text-danger font-weight-bold'>more important words for another label</span>? Please type <span class='text-danger font-weight-bold'>'word number + label'</span> (e.g., '6 + method'), <br><br> Or just say '<span class='text-danger font-weight-bold'>No</span>' if you don't need more examples : )."
                         return check_response
 
                 if user_intent == "counterfactual":
@@ -378,27 +385,49 @@ class XAIExplainer(object):
                                 check_response = "Your input is not in correct format, please type the word number + aspect (e.g., 6 + method), otherwise, please reply 'No'."
                                 return check_response
                         else:
-                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
-                                "top_k": int(user_input), "aspect": aspect}
-                            self.convxai_global_status_track[
-                                f"intent_round_{self.convxai_intent_round}"]["binded"] = False
-                            return None
+                            # self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
+                            #     "top_k": int(user_input), "aspect": aspect, "keyword": None}
+                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["top_k"] = int(user_input)
+                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["aspect"] = aspect
+
+                            # self.convxai_global_status_track[
+                            #     f"intent_round_{self.convxai_intent_round}"]["binded"] = False
+                            # return None
+                            return "continue"
+
+                    ####### Add keywords.
+                    elif user_input[:7].lower() == "keyword":
+                        keyword = user_input.split(":")[1]
+                        keyword = keyword.strip()
+                        # self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
+                        #     "top_k": 3, "aspect": None, "keyword": keyword}
+                        self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["keyword"] = keyword
+                        # self.convxai_global_status_track[
+                        #     f"intent_round_{self.convxai_intent_round}"]["binded"] = False
+                        # return None
+                        return "continue"
+                    ##############
 
                 if user_intent == "attribution":
-                    if not user_input.isdigit():
-                        if user_input in ["no", "NO", "No"]:
-                            response = [
-                                "no", "OK, great! It seems you are satisfied with current results. Please feel free to ask more questions : )"]
-                            return response
+                    if "+" in user_input:
+                        user_input, aspect = user_input.split("+")
+                        if not user_input.isdigit() or aspect not in ["background", "purpose", "method", "finding", "other"]:
+                            if user_input in ["no", "NO", "No"]:
+                                response = [
+                                    "no", "OK, great! It seems you are satisfied with current results. Please feel free to ask more questions : )"]
+                                return response
+                            else:
+                                check_response = "Your input is not in correct format, please type only one number (e.g., 6) or 'No' as your input."
+                                return check_response
                         else:
-                            check_response = "Your input is not in correct format, please type only one number (e.g., 6) or 'No' as your input."
-                            return check_response
-                    else:
-                        self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
-                            "top_k": int(user_input)}
-                        self.convxai_global_status_track[
-                            f"intent_round_{self.convxai_intent_round}"]["binded"] = False
-                        return None
+                            # self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"] = {
+                            #     "top_k": int(user_input), "aspect": aspect}
+                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["top_k"] = int(user_input)
+                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["aspect"] = aspect
+                            # self.convxai_global_status_track[
+                            #     f"intent_round_{self.convxai_intent_round}"]["binded"] = False
+                            # return None
+                            return "continue"
 
                 if user_intent == "counterfactual":
                     if user_input not in ["background", "purpose", "method", "finding", "other"]:
@@ -419,7 +448,9 @@ class XAIExplainer(object):
         elif user_intent not in self.multi_turn_required_intent_list:
             return None
 
+
     def explain(self, explainInput, writingInput, predictOutputs, inputTexts, writingIndex, response_indicator=1, check_response=None, **kwargs):
+
 
         ####################################################################
         # ****** [Init-Conversation]: welcome sentences + Generate AI Comments ****** #
@@ -431,8 +462,6 @@ class XAIExplainer(object):
             response = self.ai_commenter.ai_comment_generation()
             response_init_xai = "Do you need <strong>some explanations</strong> of the above reviews?"
             return [response, response_init_xai], 2
-
-
 
 
         ####################################################################
@@ -459,13 +488,16 @@ class XAIExplainer(object):
                         "binded": False,
                         "attributes": None
                     }
+                    ### NEW Added
+                    self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["binded"] = False
+                    ###
             else:
                 user_intent = self.convxai_global_status_track[
                     f"intent_round_{self.convxai_intent_round}"]['user_intent']
         else:
             user_intent = self.nlu(explainInput)
 
-
+        print(f"===> Detected User Intent = {user_intent}")
 
         ####################################################################
         # ****** [Generating AI Explanations] ****** #
@@ -485,7 +517,6 @@ class XAIExplainer(object):
             self.convxai_intent_round += 1
             return [response], response_indicator
 
-
         ###### Generating Local AI Explanations ######
         elif user_intent in ["ai-comment-instance", "confidence", "example", "attribution", "counterfactual"]:
 
@@ -494,27 +525,25 @@ class XAIExplainer(object):
                 response = "You are asking for <strong>instance-wise explanations</strong>, and <strong>please select (double click) one sentence</strong> to be explained."
                 return [response], response_indicator
 
+            ###### Explaining the AI comments. ######
             if user_intent == "ai-comment-instance":
                 response = self.ai_commenter.explaining_ai_comment_instance(list(set(writingIndex)), self.convxai_global_status_track)
-                
                 self.convxai_intent_round += 1
                 return response, 4
 
-
             ###### Collect the variables to generate explanations. ######
             check_response = self._check_multi_turn_input_variables(user_intent, explainInput)
-
             responses = []
             for k in range(len(writingInput)):
-
-                ###### Stage3: Generating Explanations ######
                 explanations = self.explainer.generate_explanation(user_intent, writingInput[k], predictLabel[k], self.convxai_global_status_track[
                                                                     "conference"], self.global_explanations_data, **self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"])
                 response = self.nlg(explanations)
                 responses.append(response)
 
             if check_response is not None:
-                if len(check_response) == 2:
+                if check_response == "continue":
+                    return responses, response_indicator
+                elif len(check_response) == 2:
                     return [check_response[1]], response_indicator
                 else:
                     return [responses, check_response], 6

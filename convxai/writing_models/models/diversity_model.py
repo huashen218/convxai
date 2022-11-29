@@ -25,7 +25,7 @@ from convxai.writing_models.dataloaders import *
 
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+# device = 'cpu'
 
 ###### Diversity Model Output Mapping ######
 diversity_model_label_mapping = {
@@ -47,7 +47,7 @@ label_mapping = {
 
 class DiversityModel(object):
     def __init__(self, saved_model_dir=None):
-        super(DiversityModel, self).__init__()
+        super(DiversityModel, self).__init__()        
         if saved_model_dir is not None:
             config = AutoConfig.from_pretrained(saved_model_dir)
             config.num_labels = 5
