@@ -13,8 +13,6 @@ from parlai.core.agents import create_agent_from_shared
 from convxai.writing_models.models import *
 from convxai.utils import *
 
-
-
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # logger = logging.getLogger("my-logger")
 # FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"

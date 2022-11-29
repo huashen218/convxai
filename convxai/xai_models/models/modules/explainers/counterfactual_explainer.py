@@ -1,7 +1,11 @@
 import torch
-from convxai.xai_models.preprocessing.counterfactual_explainer.src.utils import *
-from convxai.xai_models.preprocessing.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator, EditList
+from convxai.xai_models.preprocessing.counterfactual_explainer.src.utils import get_args
+from convxai.xai_models.preprocessing.counterfactual_explainer.src.edit_finder import EditFinder, EditEvaluator
 from convxai.xai_models.preprocessing.counterfactual_explainer.src.stage_two import load_models
+
+# from .srcs.counterfactual_explainer_src.edit_finder import EditFinder, EditEvaluator
+# from .srcs.counterfactual_explainer_src.utils import get_args
+# from .srcs.counterfactual_explainer_src.stage_two import load_models
 
 
 class CounterfactualExplainer(object):
