@@ -29,6 +29,7 @@ class CounterfactualExplainer(object):
                                                         edit_evaluator=self.edit_evaluator, 
                                                         max_length = int(self.args.model.model_max_length))
 
+        
         torch.cuda.empty_cache()
         sorted_list = edited_list.get_sorted_edits() 
 

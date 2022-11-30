@@ -279,10 +279,18 @@ class Model_Explainer(object):
             for idx, text in enumerate(self.example_explainer.diversity_x_train_text_tmp):
                 if keyword in text.decode("utf-8"):
                     keyword_filter_index.append(idx)
-            label_filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
-            filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(label_filter_index)))))
+            if len(keyword_filter_index)>0:
+                label_filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+                filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(label_filter_index)))))
+                find_keyword = True
+            else:
+                filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+                find_keyword = False
         else:
             filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+            find_keyword = True
+        
+        print("===>>filter_index",filter_index)
 
         self.example_explainer.diversity_x_train_embeddings_tmp = np.array(self.example_explainer.diversity_x_train_embeddings_tmp)[filter_index]
         similarity_scores = np.matmul(embeddings, np.transpose(self.example_explainer.diversity_x_train_embeddings_tmp, (1,0)))[0]    ###### train_emb = torch.Size(137171, 768)  
@@ -293,10 +301,13 @@ class Model_Explainer(object):
         top_link = np.array(self.example_explainer.diversity_x_train_link_tmp)
         top_aspect = np.array(self.example_explainer.diversity_aspect_list_tmp)
 
-        nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (Conditioned on <strong>label={diversity_model_label_mapping[label]}</strong>):"
+        if find_keyword:
+            nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (Conditioned on <strong>label={diversity_model_label_mapping[label]}</strong>):"
+            for t in final_top_index:
+                nlg_template += f"<br> <strong>sample-{t+1}</strong> - <a class='post-link' href='{top_link[t].decode('UTF-8')}' target='_blank'>{top_text[t].decode('UTF-8')}</a>."
+        else:
+            nlg_template = f"We didn't find <strong>keyword={keyword}</strong> with <strong>label={diversity_model_label_mapping[label]}</strong> in the dataset. Please try with other keywords or labels to find the similar examples again."
 
-        for t in final_top_index:
-            nlg_template += f"<br> <strong>sample-{t+1}</strong> - <a class='post-link' href='{top_link[t].decode('UTF-8')}' target='_blank'>{top_text[t].decode('UTF-8')}</a>."
         response = nlg_template
         return response
 
