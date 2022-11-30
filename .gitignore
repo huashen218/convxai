@@ -10,6 +10,7 @@ __pycache__
 
 ### ignore data
 # data
+temp
 
 ### ignore models
 # checkpoints
