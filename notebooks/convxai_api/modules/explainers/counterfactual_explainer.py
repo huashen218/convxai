@@ -72,13 +72,13 @@ class GPT3():
             "frequency_penalty": 0.5,
             "presence_penalty": 0.5,
         }
-    
+
     def generate(self, prompt:str):
+        openai.api_key = os.getenv("OPENAI_API_KEY")
         response = openai.Completion.create(
             prompt=prompt,
             **self.parameters,
         )
-
         return response
 
 class CounterfactualExplainer():
@@ -87,7 +87,7 @@ class CounterfactualExplainer():
         sentence_model_name="all-MiniLM-L6-v2",
     ):
         # settings
-        data_folder = "/home/appleternity/workspace/convxai/convxai/xai_models/preprocessing/global_xai_statistics"
+        data_folder = "/home/hqs5468/hua/workspace/projects/convxai/convxai/xai_models/preprocessing/global_xai_statistics"
         
         # load data
         self.embeddings = joblib.load(Path(data_folder, f"embeddings_{sentence_model_name}.joblib"))
