@@ -90,8 +90,7 @@ class CounterfactualExplainer():
         # settings
         self.system_config = parse_system_config_file()
         data_folder = os.path.join(self.system_config['conversational_xai']['checkpoints_root_dir'], self.system_config['conversational_xai']['xai_counterfactual_dir'])
-        # data_folder = "/home/hqs5468/hua/workspace/projects/convxai/convxai/xai_models/preprocessing/global_xai_statistics"
-        
+
         # load data
         self.embeddings = joblib.load(Path(data_folder, f"embeddings_{sentence_model_name}.joblib"))
         self.text_info = self.load_json(Path(data_folder, "text_info.json"))
@@ -156,13 +155,15 @@ class CounterfactualExplainer():
         )
         return prompt
 
+
+
     def generate_counterfactual(
         self, 
         input_text:str, 
         contrast_label:int,
         conference:Optional[str] = None
     ):
-        contrast_label = (contrast_label + len(label_mapping)) % len(label_mapping)
+        # contrast_label = (contrast_label + len(label_mapping)) % len(label_mapping)
 
         prompt = self.build_prompt(
             input_text, 

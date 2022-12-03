@@ -22,7 +22,8 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
 logger.setLevel(logging.INFO)
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
 
 
 class Model_Explainer(object):
@@ -32,6 +33,8 @@ class Model_Explainer(object):
         logging.info("\nLoading writing models to be explained......")
         self.diversity_model  = DiversityModel(saved_model_dir=configs["scientific_writing"]["diversity_model_dir"])
         self.quality_model = QualityModel(saved_model_dir=configs["scientific_writing"]["quality_model_dir"])
+        # y_preds = self.diversity_model.get_probability("This is a text scientific_writing quality_model_dir scientific_writing scientific_writing scientific_writing")
+        # print("==>convxai .y_preds",y_preds)
 
     def generate_explanation(self, user_intent_detection, writingInput, predictLabel, conference, global_explanations_data, **kwargs):
         """The unified function of generating explanations."""
@@ -258,58 +261,166 @@ class Model_Explainer(object):
         """XAI Algorithm - Confidence: 
             Paper: An Empirical Comparison of Instance Attribution Methods for NLP (https://aclanthology.org/2021.naacl-main.75.pdf)
         """
+        print("==>>kwargs", kwargs)
         ######### User Input Variable #########
         top_k = kwargs["attributes"]["top_k"] if kwargs["attributes"]["top_k"] is not None else 3
+        label = label_mapping[kwargs["attributes"]["aspect"]] if kwargs["attributes"]["aspect"] is not None else predictLabel
+        keyword = kwargs["attributes"]["keyword"] if kwargs["attributes"]["keyword"] is not None else None
+        rank    = kwargs["attributes"]["rank"] if kwargs["attributes"]["rank"] is not None else None
 
         ######### Explaining #########
         self.example_explainer = ExampleExplainer(conference)
         embeddings = self.diversity_model.generate_embeddings(input)
+        filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        find_examples = True
 
-        if kwargs["attributes"]["aspect"] is not None:
-            label = label_mapping[kwargs["attributes"]["aspect"]]
-        else:
-            label = predictLabel
-
-        ### add keywords
-        # keyword = None
-        keyword = kwargs["attributes"]["keyword"]
-        print(f"++++++ Example keyword = {keyword}")
         if keyword is not None:
             keyword_filter_index = []
             for idx, text in enumerate(self.example_explainer.diversity_x_train_text_tmp):
                 if keyword in text.decode("utf-8"):
                     keyword_filter_index.append(idx)
             if len(keyword_filter_index)>0:
-                label_filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
-                filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(label_filter_index)))))
-                find_keyword = True
+                filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(filter_index)))))
             else:
-                filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
-                find_keyword = False
-        else:
-            filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
-            find_keyword = True
-        
-        print("===>>filter_index",filter_index)
+                find_examples = False
+
+        if rank is not None:
+            rank_filter_index = []
+            rank_top = int(len(self.example_explainer.diversity_token_counts_tmp) * 0.5)
+            if rank == 'quality':
+                rank_filter_index = np.argsort(self.example_explainer.diversity_perplexity_tmp)[:rank_top]
+            elif rank == 'short':
+                rank_filter_index = np.argsort(self.example_explainer.diversity_token_counts_tmp)[:rank_top]
+            elif rank == 'long':
+                rank_filter_index = np.argsort(self.example_explainer.diversity_token_counts_tmp)[::-1][:rank_top]
+
+            if len(rank_filter_index)>0:
+                filter_index = np.array(list(set(rank_filter_index).intersection(set(list(filter_index)))))
+            else:
+                find_examples = False
 
         self.example_explainer.diversity_x_train_embeddings_tmp = np.array(self.example_explainer.diversity_x_train_embeddings_tmp)[filter_index]
         similarity_scores = np.matmul(embeddings, np.transpose(self.example_explainer.diversity_x_train_embeddings_tmp, (1,0)))[0]    ###### train_emb = torch.Size(137171, 768)  
         final_top_index = filter_index[np.argsort(similarity_scores)[::-1][:top_k]]
 
         top_text = np.array(self.example_explainer.diversity_x_train_text_tmp)
-        top_title = np.array(self.example_explainer.diversity_x_train_title_tmp)
         top_link = np.array(self.example_explainer.diversity_x_train_link_tmp)
-        top_aspect = np.array(self.example_explainer.diversity_aspect_list_tmp)
 
-        if find_keyword:
-            nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (Conditioned on <strong>label={diversity_model_label_mapping[label]}</strong>):"
+        if find_examples:
+            nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (<strong>label={diversity_model_label_mapping[label]}, rank={rank}</strong>):"
             for t in final_top_index:
                 nlg_template += f"<br> <strong>sample-{t+1}</strong> - <a class='post-link' href='{top_link[t].decode('UTF-8')}' target='_blank'>{top_text[t].decode('UTF-8')}</a>."
         else:
-            nlg_template = f"We didn't find <strong>keyword={keyword}</strong> with <strong>label={diversity_model_label_mapping[label]}</strong> in the dataset. Please try with other keywords or labels to find the similar examples again."
+            nlg_template = f"We didn't find <strong>keyword={keyword}</strong>, <strong>label={diversity_model_label_mapping[label]}</strong>, and <strong>rank={rank}</strong> in the dataset. Please try with other keywords or labels to find the similar examples again."
 
         response = nlg_template
         return response
+
+
+
+
+        # # label = label_mapping[kwargs["attributes"]["aspect"]] if kwargs["attributes"]["aspect"] is not None else predictLabel
+
+        # ### add keywords
+        # # keyword = None
+        # # keyword = kwargs["attributes"]["keyword"]
+        # if keyword is not None:
+        #     keyword_filter_index = []
+        #     for idx, text in enumerate(self.example_explainer.diversity_x_train_text_tmp):
+        #         if keyword in text.decode("utf-8"):
+        #             keyword_filter_index.append(idx)
+        #     if len(keyword_filter_index)>0:
+        #         label_filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        #         filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(label_filter_index)))))
+        #         find_keyword = True
+        #     else:
+        #         filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        #         find_keyword = False
+        # else:
+        #     filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        #     find_keyword = True
+        
+
+
+        # self.example_explainer.diversity_x_train_embeddings_tmp = np.array(self.example_explainer.diversity_x_train_embeddings_tmp)[filter_index]
+        # similarity_scores = np.matmul(embeddings, np.transpose(self.example_explainer.diversity_x_train_embeddings_tmp, (1,0)))[0]    ###### train_emb = torch.Size(137171, 768)  
+        # final_top_index = filter_index[np.argsort(similarity_scores)[::-1][:top_k]]
+
+        # top_text = np.array(self.example_explainer.diversity_x_train_text_tmp)
+        # top_title = np.array(self.example_explainer.diversity_x_train_title_tmp)
+        # top_link = np.array(self.example_explainer.diversity_x_train_link_tmp)
+        # top_aspect = np.array(self.example_explainer.diversity_aspect_list_tmp)
+
+        # if find_keyword:
+        #     nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (Conditioned on <strong>label={diversity_model_label_mapping[label]}</strong>):"
+        #     for t in final_top_index:
+        #         nlg_template += f"<br> <strong>sample-{t+1}</strong> - <a class='post-link' href='{top_link[t].decode('UTF-8')}' target='_blank'>{top_text[t].decode('UTF-8')}</a>."
+        # else:
+        #     nlg_template = f"We didn't find <strong>keyword={keyword}</strong> with <strong>label={diversity_model_label_mapping[label]}</strong> in the dataset. Please try with other keywords or labels to find the similar examples again."
+
+        # response = nlg_template
+        # return response
+
+
+
+
+
+
+
+
+
+
+
+        # ######### User Input Variable #########
+        # top_k = kwargs["attributes"]["top_k"] if kwargs["attributes"]["top_k"] is not None else 3
+
+        # ######### Explaining #########
+        # self.example_explainer = ExampleExplainer(conference)
+        # embeddings = self.diversity_model.generate_embeddings(input)
+
+        # if kwargs["attributes"]["aspect"] is not None:
+        #     label = label_mapping[kwargs["attributes"]["aspect"]]
+        # else:
+        #     label = predictLabel
+
+        # ### add keywords
+        # # keyword = None
+        # keyword = kwargs["attributes"]["keyword"]
+        # print(f"++++++ Example keyword = {keyword}")
+        # if keyword is not None:
+        #     keyword_filter_index = []
+        #     for idx, text in enumerate(self.example_explainer.diversity_x_train_text_tmp):
+        #         if keyword in text.decode("utf-8"):
+        #             keyword_filter_index.append(idx)
+        #     if len(keyword_filter_index)>0:
+        #         label_filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        #         filter_index = np.array(list(set(keyword_filter_index).intersection(set(list(label_filter_index)))))
+        #         find_keyword = True
+        #     else:
+        #         filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        #         find_keyword = False
+        # else:
+        #     filter_index = np.where(self.example_explainer.diversity_aspect_list_tmp == label)[0]
+        #     find_keyword = True
+        
+        # self.example_explainer.diversity_x_train_embeddings_tmp = np.array(self.example_explainer.diversity_x_train_embeddings_tmp)[filter_index]
+        # similarity_scores = np.matmul(embeddings, np.transpose(self.example_explainer.diversity_x_train_embeddings_tmp, (1,0)))[0]    ###### train_emb = torch.Size(137171, 768)  
+        # final_top_index = filter_index[np.argsort(similarity_scores)[::-1][:top_k]]
+
+        # top_text = np.array(self.example_explainer.diversity_x_train_text_tmp)
+        # top_title = np.array(self.example_explainer.diversity_x_train_title_tmp)
+        # top_link = np.array(self.example_explainer.diversity_x_train_link_tmp)
+        # top_aspect = np.array(self.example_explainer.diversity_aspect_list_tmp)
+
+        # if find_keyword:
+        #     nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (Conditioned on <strong>label={diversity_model_label_mapping[label]}</strong>):"
+        #     for t in final_top_index:
+        #         nlg_template += f"<br> <strong>sample-{t+1}</strong> - <a class='post-link' href='{top_link[t].decode('UTF-8')}' target='_blank'>{top_text[t].decode('UTF-8')}</a>."
+        # else:
+        #     nlg_template = f"We didn't find <strong>keyword={keyword}</strong> with <strong>label={diversity_model_label_mapping[label]}</strong> in the dataset. Please try with other keywords or labels to find the similar examples again."
+
+        # response = nlg_template
+        # return response
 
 
 
@@ -350,7 +461,11 @@ class Model_Explainer(object):
         """XAI Algorithm #6: MICE
         Reference paper: Explaining NLP Models via Minimal Contrastive Editing (MICE)
         """
-        contrast_label_idx_input = label_mapping[kwargs["attributes"]["contrast_label"]] if kwargs["attributes"]["contrast_label"] is not None else -2
+        
+        y_pred_prob = self.diversity_model.get_probability(input)
+        default_contrast_label_idx_input = np.argsort(y_pred_prob[0][0])[-2]
+
+        contrast_label_idx_input = label_mapping[kwargs["attributes"]["contrast_label"]] if kwargs["attributes"]["contrast_label"] is not None else default_contrast_label_idx_input
         self.counterfactual_explainer = CounterfactualExplainer()
         output = self.counterfactual_explainer.generate_counterfactual(input, contrast_label_idx_input)
         if len(output) > 0:
