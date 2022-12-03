@@ -24,8 +24,8 @@ from convxai.utils import *
 from convxai.writing_models.dataloaders import *
 
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# device = 'cpu'
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
 
 ###### Diversity Model Output Mapping ######
 diversity_model_label_mapping = {
@@ -76,6 +76,27 @@ class DiversityModel(object):
             "outputs": pred_outs  # pred_outs = (predict, probability)
         }
         return outputs
+
+
+    def get_probability(self, inputs):
+        """Generate Predictions for Users' Writing Inputs.
+        """
+        inputs = paragraph_segmentation(
+            inputs)  # convert inputs into fragments
+        eval_dataloader = self.load_infer_data(
+            inputs)  # convert inputs into dataloader
+        self.model.eval()
+        y_preds = []
+        softmax = nn.Softmax(dim=1)
+        # with torch.no_grad():
+        for _, (x_batch) in enumerate(eval_dataloader):  # why start from 1?
+            x_batch = x_batch.to(device)
+            y_batch = torch.tensor([1]*x_batch.size(0)).to(device)
+            outputs = self.model(x_batch, labels=y_batch)
+            loss, y_pred = outputs[0:2]
+            y_preds.append(list(softmax(y_pred).detach().cpu().numpy()))
+        return y_preds
+
 
     def load_infer_data(self, x_text, batch_size=32):
         feature = Feature(tokenizer=self.tokenizer)

@@ -7,6 +7,10 @@ from convxai.writing_models.models import *
 from convxai.writing_models.dataloaders import *
 
 
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cpu')
+
+
 class AttributionExplainer(object):
     
     def __init__(
