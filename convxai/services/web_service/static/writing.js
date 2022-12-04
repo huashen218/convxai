@@ -74,9 +74,20 @@ var quill = new Quill('#editor', {
 
 
 
+
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download=fileName;
+    a.click();
+}
+
+
 /*****************************************/
 // Submit Writing and Update Visualization
 /*****************************************/
+writing_artifacts = {}
 document.getElementById("editor-form").addEventListener("submit", function (event) {
     event.preventDefault();
     $('.btn-submit-loader').css({ "display": "block" });    // Adding waiting logo;
@@ -90,6 +101,14 @@ document.getElementById("editor-form").addEventListener("submit", function (even
             "conversation_id": $("#conversation_id").val(),
         }
     );
+
+
+    const start = Date.now()
+    console.log('file', 'writing'+start+'.txt');
+    writing_artifacts['text'] = quill.getText()
+    var jsonData = JSON.stringify(writing_artifacts);
+    download(jsonData, 'convxai_writing_log_'+start+'.txt', 'text/plain');
+
     return;
 });
 
