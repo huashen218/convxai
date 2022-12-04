@@ -355,11 +355,11 @@ class XAIExplainer(object):
                         You can specify:
                         <br> -<span class='text-danger font-weight-bold'>label:your_label</span>.  The selected examples are all predicted as this label.
                         <br> -<span class='text-danger font-weight-bold'>keyword:your_keyword</span>.  All selected exampls contain this keyword.
-                        <br> -<span class='text-danger font-weight-bold'>rank:your_rank_method</span>. The selected examples are also ranked by quality score ('quality'), or longer length ('long'), or shorter length ('short').
+                        <br> -<span class='text-danger font-weight-bold'>rank:your_rank_method</span>. The selected examples are also ranked by quality score ('quality_score'), or longer length ('long'), or shorter length ('short').
                         <br> -<span class='text-danger font-weight-bold'>count:your_top_k</span>. How many examples to be shown.
                         <br><br> Please specify ONE or MORE of them by
                         <span class='font-weight-bold'>'label:your_label, keyword:your_keyword, rank:your_rank_method, count:your_top_k'</span>
-                        <br>(e.g., <span class='text-danger font-weight-bold'>'count:8'</span>, or <span class='text-danger font-weight-bold'>'label:background, keyword:time, rank:quality, count:6'</span>).
+                        <br>(e.g., <span class='text-danger font-weight-bold'>'count:8'</span>, or <span class='text-danger font-weight-bold'>'label:background, keyword:time, rank:quality_score, count:6'</span>).
                         """
                         return check_response
                         
