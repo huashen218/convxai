@@ -287,7 +287,7 @@ class Model_Explainer(object):
         if rank is not None:
             rank_filter_index = []
             rank_top = int(len(self.example_explainer.diversity_token_counts_tmp) * 0.5)
-            if rank == 'quality':
+            if rank == 'quality_score':
                 rank_filter_index = np.argsort(self.example_explainer.diversity_perplexity_tmp)[:rank_top]
             elif rank == 'short':
                 rank_filter_index = np.argsort(self.example_explainer.diversity_token_counts_tmp)[:rank_top]
@@ -315,8 +315,6 @@ class Model_Explainer(object):
 
         response = nlg_template
         return response
-
-
 
 
         # # label = label_mapping[kwargs["attributes"]["aspect"]] if kwargs["attributes"]["aspect"] is not None else predictLabel
@@ -360,12 +358,6 @@ class Model_Explainer(object):
 
         # response = nlg_template
         # return response
-
-
-
-
-
-
 
 
 
@@ -481,7 +473,7 @@ class Model_Explainer(object):
                 if d[:2] == "  ":
                     counterfactual_output += d[2:]
                     counterfactual_output += " "
-            nlg_template = "The most likely counterfactual label is <strong>'{}'</strong>. You can get this label by revising from \n'<span class='text-info'>{}</span>\n' into: \n <br>'<em><span class='text-secondary'>{}</span></em>'. <br>I'm confident with this revision with <strong>confidence score={:.4f}</strong>."
+            nlg_template = "The most likely counterfactual label is <strong>'{}'</strong>. You can get this label by revising from \n'<span class='text-info'>{}</span>\n' into: \n <br>'<em><span class='text-secondary'>{}</span></em>'."
             response = nlg_template.format(output['counterfactual_label'], output['original_input'], counterfactual_output, output['counterfactual_confidence'])
         else:
             response = f"Sorry that I currently can't find counterfactual examples for this sentence, please try other explanations on it : )"
