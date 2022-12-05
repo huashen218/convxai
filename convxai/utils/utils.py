@@ -57,7 +57,8 @@ def h5_load(filename, data_list, dtype=None, verbose=False):
         return data
 
 
-splitPuctList = [";", "."]
+# splitPuctList = [";", "."]
+splitPuctList = ["."]
 LB = ["(", "[", "{"] 
 RB = [")", "]", "}"]
 minTokenNum = 6

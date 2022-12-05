@@ -67,7 +67,7 @@ class Model_Explainer(object):
             explanations = self.explain_attribution(writingInput, predictLabel, **kwargs)
 
         elif user_intent_detection == XAI_User_Intents[7]:
-            explanations = self.explain_counterfactual(writingInput, **kwargs)
+            explanations = self.explain_counterfactual(writingInput, predictLabel, **kwargs)
 
 
         else:
@@ -449,7 +449,7 @@ class Model_Explainer(object):
 
 
 
-    def explain_counterfactual(self, input, **kwargs):
+    def explain_counterfactual(self, input, predictLabel=None, **kwargs):
         """XAI Algorithm #6: MICE
         Reference paper: Explaining NLP Models via Minimal Contrastive Editing (MICE)
         """
