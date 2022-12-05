@@ -211,12 +211,13 @@ class Model_Explainer(object):
 
 
 
-
     def explain_counterfactual(self, input, predictLabel=None, **kwargs):
         """XAI Algorithm #6: MICE
         Reference paper: Explaining NLP Models via Minimal Contrastive Editing (MICE)
         """
-        contrast_label_idx_input = label_mapping[kwargs["attributes"]["contrast_label"]] if kwargs and kwargs["attributes"]["contrast_label"] is not None else -2
+        y_pred_prob = self.diversity_model.get_probability(input)
+        default_contrast_label_idx_input = np.argsort(y_pred_prob[0][0])[-2]
+        contrast_label_idx_input = default_contrast_label_idx_input
         self.counterfactual_explainer = CounterfactualExplainer()
         output = self.counterfactual_explainer.generate_counterfactual(input, contrast_label_idx_input)
         if len(output) > 0:
@@ -244,4 +245,44 @@ class Model_Explainer(object):
                 "counterfactual_output": None
             }
         return explanation_dict
+
+
+
+
+
+
+    # def explain_counterfactual(self, input, predictLabel=None, **kwargs):
+    #     """XAI Algorithm #6: MICE
+    #     Reference paper: Explaining NLP Models via Minimal Contrastive Editing (MICE)
+    #     """
+    #     contrast_label_idx_input = label_mapping[kwargs["attributes"]["contrast_label"]] if kwargs and kwargs["attributes"]["contrast_label"] is not None else -2
+    #     self.counterfactual_explainer = CounterfactualExplainer()
+    #     output = self.counterfactual_explainer.generate_counterfactual(input, contrast_label_idx_input)
+    #     if len(output) > 0:
+    #         d = difflib.Differ()
+    #         original = output['original_input'].replace(".", " ")
+    #         edited = output['counterfactual_input'].replace(".", " ")
+    #         diff = list(d.compare(original.split(), edited.split()))
+    #         counterfactual_output = ""
+    #         for d in diff:
+    #             if d[:2] == "+ ":
+    #                 counterfactual_output += f"<b><span style='font-weight: bold; background-color: #F9B261; border-radius: 5px;'>{d[2:]}</span></b>"
+    #                 counterfactual_output += " "
+    #             if d[:2] == "  ":
+    #                 counterfactual_output += d[2:]
+    #                 counterfactual_output += " "
+    #         explanation_dict = {
+    #             "counterfactual_exists": True,
+    #             "output": output,
+    #             "counterfactual_output": counterfactual_output
+    #         }
+    #     else:
+    #         explanation_dict = {
+    #             "counterfactual_exists": False,
+    #             "output": output,
+    #             "counterfactual_output": None
+    #         }
+    #     return explanation_dict
+
+
 

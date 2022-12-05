@@ -399,7 +399,10 @@ class XAIExplainer(object):
                                 "no", "OK, great! It seems you are satisfied with current results. Please feel free to ask more questions : )"]
                             return response
                         else:
-                            check_response = "Your input is not in correct format, please type the word number + aspect (e.g., 6 + method), otherwise, please reply 'No'."
+                            check_response = """Your input is not in correct format, 
+                                <br><br> Please specify ONE or MORE of them by
+                                <span class='font-weight-bold'>'label:your_label, keyword:your_keyword, rank:your_rank_method, count:your_top_k'</span>
+                                <br>(e.g., <span class='text-danger font-weight-bold'>'count:8'</span>, or <span class='text-danger font-weight-bold'>'label:background, keyword:time, rank:quality_score, count:6'</span>)."""
                             return check_response
                     else:
                         ### Add key values into variable dictionary.
@@ -412,38 +415,22 @@ class XAIExplainer(object):
                             if all_tokens[t] in ['rank', 'count', 'label', 'keyword']:
                                 value = all_tokens[t+1]
                                 user_input_dict[all_tokens[t]] = value
-                        if 'count' in user_input_dict.keys():
-                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["top_k"] = int(user_input_dict['count'])
-                        if 'label' in user_input_dict.keys():
-                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["aspect"] = user_input_dict['label']
-                        if 'keyword' in user_input_dict.keys():
-                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["keyword"] = user_input_dict['keyword']
-                        if 'rank' in user_input_dict.keys():
-                            self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["rank"] = user_input_dict['rank']
-                        return "continue"
-
-
-                    # if "+" in user_input:
-                    #     user_input, aspect = user_input.split("+")
-                    #     if not user_input.isdigit() or aspect not in ["background", "purpose", "method", "finding", "other"]:
-                    #         if user_input in ["no", "NO", "No"]:
-                    #             response = [
-                    #                 "no", "OK, great! It seems you are satisfied with current results. Please feel free to ask more questions : )"]
-                    #             return response
-                    #         else:
-                    #             check_response = "Your input is not in correct format, please type the word number + aspect (e.g., 6 + method), otherwise, please reply 'No'."
-                    #             return check_response
-                    #     else:
-                    #         self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["top_k"] = int(user_input)
-                    #         self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["aspect"] = aspect
-                    #         return "continue"
-
-                    # elif user_input[:7].lower() == "keyword":
-                    #     keyword = user_input.split(":")[1]
-                    #     keyword = keyword.strip()
-                    #     self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["keyword"] = keyword
-                    #     return "continue"
-                    ##############
+                        try:
+                            if 'count' in user_input_dict.keys():
+                                self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["top_k"] = int(user_input_dict['count'])
+                            if 'label' in user_input_dict.keys():
+                                self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["aspect"] = user_input_dict['label']
+                            if 'keyword' in user_input_dict.keys():
+                                self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["keyword"] = user_input_dict['keyword']
+                            if 'rank' in user_input_dict.keys():
+                                self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["attributes"]["rank"] = user_input_dict['rank']
+                            return "continue"
+                        except:
+                            check_response = """Your input is not in correct format, 
+                                <br><br> Please specify ONE or MORE of them by
+                                <span class='font-weight-bold'>'label:your_label, keyword:your_keyword, rank:your_rank_method, count:your_top_k'</span>
+                                <br>(e.g., <span class='text-danger font-weight-bold'>'count:8'</span>, or <span class='text-danger font-weight-bold'>'label:background, keyword:time, rank:quality_score, count:6'</span>)."""
+                            return check_response
 
                 if user_intent == "attribution":
                     if "+" in user_input:
