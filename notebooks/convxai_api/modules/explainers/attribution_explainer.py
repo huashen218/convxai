@@ -7,6 +7,8 @@ from convxai.writing_models.models import *
 from convxai.writing_models.dataloaders import *
 
 
+device = torch.device("cpu")
+
 class AttributionExplainer(object):
     
     def __init__(

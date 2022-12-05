@@ -15,8 +15,8 @@ from convxai.utils import parse_system_config_file
 from convxai.writing_models.models import *
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 
 class ConvXAI(object):
     """The conversational XAI universal API class."""

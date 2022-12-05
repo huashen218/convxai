@@ -22,8 +22,8 @@ logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
 logger.setLevel(logging.INFO)
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cpu")
 
 class Model_Explainer(object):
 
