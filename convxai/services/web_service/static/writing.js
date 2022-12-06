@@ -55,6 +55,7 @@ target_conference_selection.addEventListener("change", function () {
 // Create Editor Panel
 /*****************************************/
 var Delta = Quill.import('delta');
+var change = new Delta();
 
 var quill = new Quill('#editor', {
     theme: 'snow',
@@ -73,15 +74,13 @@ var quill = new Quill('#editor', {
 
 
 
-
-
-function download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
-    a.href = URL.createObjectURL(file);
-    a.download=fileName;
-    a.click();
-}
+// function download(content, fileName, contentType) {
+//     var a = document.createElement("a");
+//     var file = new Blob([content], {type: contentType});
+//     a.href = URL.createObjectURL(file);
+//     a.download=fileName;
+//     a.click();
+// }
 
 
 /*****************************************/
@@ -95,6 +94,7 @@ document.getElementById("editor-form").addEventListener("submit", function (even
     socket.emit(
         "interact",
         {
+            "user_id": $("#user_id").val(),
             "text": quill.getText(),
             "message_type": "task",
             "writing_model": writing_model,
@@ -102,16 +102,43 @@ document.getElementById("editor-form").addEventListener("submit", function (even
         }
     );
 
-
-    const start = Date.now()
-    console.log('file', 'writing'+start+'.txt');
-    writing_artifacts['text'] = quill.getText()
-    var jsonData = JSON.stringify(writing_artifacts);
-    download(jsonData, 'convxai_writing_log_'+start+'.txt', 'text/plain');
+    // const start = Date.now()
+    // console.log('file', 'writing'+start+'.txt');
+    // writing_artifacts['text'] = quill.getText()
+    // var jsonData = JSON.stringify(writing_artifacts);
+    // download(jsonData, 'convxai_writing_log_'+start+'.txt', 'text/plain');
 
     return;
 });
 
+/*****************************************/
+// Auto Save
+/*****************************************/
+const save_document = function() {
+    console.log("save document", Date.now(), quill.getText(), change, change.ops.length);
+
+    // save document - socketio version
+    if (change.ops.length > 0) {
+        socket.emit(
+            "save",
+            {
+                "user_id": $("#user_id").val(),
+                "text": quill.getText(),
+            }
+        );
+        change = new Delta();
+    }
+};
+
+const debounce_save_document = $.debounce(10000, save_document);
+
+quill.on('editor-change', function(eventName, ...args) {
+    if (eventName === 'text-change') {
+        // args will be [delta, oldDelta, source]
+        change = change.compose(args[0]);   
+    }
+    debounce_save_document();
+});
 
 
 

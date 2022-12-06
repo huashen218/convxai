@@ -19,7 +19,8 @@
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
         integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
         crossorigin="anonymous"></script>
-
+    <script src="{{url_for('static', filename='debounce.js')}}" defer></script>
+    
     <!-- Customized CSS and Javascripts -->
     <link href="{{url_for('static', filename='main.css')}}" rel="stylesheet">
     <script src="{{url_for('static', filename='prediction.js')}}" defer></script>
@@ -68,6 +69,17 @@
                     <form class="col-md-12" id="start">
                         <div class="field is-grouped">
                             <p class="control">
+
+                                <input 
+                                    id="user_id" 
+                                    type="text" 
+                                    class="form-control" 
+                                    placeholder="Please Enter Your User ID Here." 
+                                    aria-label="Username"
+                                    required
+                                    style="margin-bottom: 10px;"
+                                >
+
                                 <button class="button-font-class btn btn-primary btn-block btn-theme" id="another"
                                     type="submit">
                                     Start Your Task
