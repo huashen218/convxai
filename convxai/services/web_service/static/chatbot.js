@@ -465,21 +465,27 @@ function createContainer(typeOfContainer) {
             btnLength.setAttribute("class", "reply xaiquestionButton")
             btnLength.setAttribute("type", "button") //
             btnLength.setAttribute("id", "[Sentence Length]") //
-            btnLength.innerHTML = "Sentence Length"
-
+            btnLength.innerHTML = "Sentence Length Info"
 
             var btnExample = document.createElement("button");
             btnExample.setAttribute("class", "reply xaiquestionButton")
             btnExample.setAttribute("type", "button") //
             btnExample.setAttribute("id", "[Similar Examples]") //
-            btnExample.innerHTML = "Similar Published Sentences"
+            btnExample.innerHTML = "Similar Examples"
 
+            var btnAttribution = document.createElement("button");
+            btnAttribution.setAttribute("class", "reply xaiquestionButton")
+            btnAttribution.setAttribute("type", "button") //
+            btnAttribution.setAttribute("id", "[Important Words]") //
+            btnAttribution.innerHTML = "[Important Words]"
 
             lastReplyContainer.appendChild(newReply)
             newReply.appendChild(btnLength)
             newReply.appendChild(btnExample)
+            newReply.appendChild(btnAttribution)
             btnLength.onclick = handleExplanationButtonClicked;
             btnExample.onclick = handleExplanationButtonClicked;
+            btnAttribution.onclick = handleExplanationButtonClicked
             lastReplyContainer.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
             setTimeout(function () {
                 chatBotSession.scrollTop = chatBotSession.scrollHeight;
@@ -506,12 +512,19 @@ function createContainer(typeOfContainer) {
             btnExample.setAttribute("id", "[Similar Examples]") //
             btnExample.innerHTML = "Similar Published Sentences"
 
+            var btnAttribution = document.createElement("button");
+            btnAttribution.setAttribute("class", "reply xaiquestionButton")
+            btnAttribution.setAttribute("type", "button") //
+            btnAttribution.setAttribute("id", "[Important Words]") //
+            btnAttribution.innerHTML = "[Important Words]"
 
             lastReplyContainer.appendChild(newReply)
             newReply.appendChild(btnLength)
             newReply.appendChild(btnExample)
+            newReply.appendChild(btnAttribution)
             btnLength.onclick = handleExplanationButtonClicked;
             btnExample.onclick = handleExplanationButtonClicked;
+            btnAttribution.onclick = handleExplanationButtonClicked
 
             lastReplyContainer.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
 
@@ -534,20 +547,28 @@ function createContainer(typeOfContainer) {
             qualityScore.setAttribute("class", "reply xaiquestionButton")
             qualityScore.setAttribute("type", "button")
             qualityScore.setAttribute("id", "[Quality Score Range]")
-            qualityScore.innerHTML = "Style Quality Score"
+            qualityScore.innerHTML = "Quality Score Info"
 
             var btnExample = document.createElement("button");
             btnExample.setAttribute("class", "reply xaiquestionButton")
             btnExample.setAttribute("type", "button")
             btnExample.setAttribute("id", "[Similar Examples]")
-            btnExample.innerHTML = "Similar Published Sentences"
+            btnExample.innerHTML = "Similar Examples"
+
+            var btnCounterfactual = document.createElement("button");
+            btnCounterfactual.setAttribute("class", "reply xaiquestionButton")
+            btnCounterfactual.setAttribute("type", "button")
+            btnCounterfactual.setAttribute("id", "[Counterfactual Explanation]")
+            btnCounterfactual.innerHTML = "Counterfactual Explanation"
+
 
             lastReplyContainer.appendChild(newReply)
             newReply.appendChild(qualityScore)
             newReply.appendChild(btnExample)
+            newReply.appendChild(btnCounterfactual)
             qualityScore.onclick = handleExplanationButtonClicked;
             btnExample.onclick = handleExplanationButtonClicked;
-
+            btnCounterfactual.onclick = handleExplanationButtonClicked;
             lastReplyContainer.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
             setTimeout(function () {
                 chatBotSession.scrollTop = chatBotSession.scrollHeight;
@@ -568,25 +589,13 @@ function createContainer(typeOfContainer) {
             aspectLabel.setAttribute("class", "reply xaiquestionButton")
             aspectLabel.setAttribute("type", "button")
             aspectLabel.setAttribute("id", "[Aspect Distribution]")
-            aspectLabel.innerHTML = "Label Distribution"
-
-            var btnConfidence = document.createElement("button");
-            btnConfidence.setAttribute("class", "reply xaiquestionButton")
-            btnConfidence.setAttribute("type", "button")
-            btnConfidence.setAttribute("id", "[Prediction Confidence]")
-            btnConfidence.innerHTML = "Prediction Confidence"
+            aspectLabel.innerHTML = "Label Distribution Info"
 
             var btnExample = document.createElement("button");
             btnExample.setAttribute("class", "reply xaiquestionButton")
             btnExample.setAttribute("type", "button")
             btnExample.setAttribute("id", "[Similar Examples]")
-            btnExample.innerHTML = "Similar Published Sentences"
-
-            var btnAttribution = document.createElement("button");
-            btnAttribution.setAttribute("class", "reply xaiquestionButton")
-            btnAttribution.setAttribute("type", "button")
-            btnAttribution.setAttribute("id", "[Important Words]")
-            btnAttribution.innerHTML = "Which words are most important for this prediction?"
+            btnExample.innerHTML = "Similar Examples"
 
             var btnCounterfactual = document.createElement("button");
             btnCounterfactual.setAttribute("class", "reply xaiquestionButton")
@@ -595,17 +604,30 @@ function createContainer(typeOfContainer) {
             btnCounterfactual.innerHTML = "How can I revise the sentence to get a different label?"
 
 
+            // var btnAttribution = document.createElement("button");
+            // btnAttribution.setAttribute("class", "reply xaiquestionButton")
+            // btnAttribution.setAttribute("type", "button")
+            // btnAttribution.setAttribute("id", "[Important Words]")
+            // btnAttribution.innerHTML = "Which words are most important for this prediction?"
+
+            // var btnConfidence = document.createElement("button");
+            // btnConfidence.setAttribute("class", "reply xaiquestionButton")
+            // btnConfidence.setAttribute("type", "button")
+            // btnConfidence.setAttribute("id", "[Prediction Confidence]")
+            // btnConfidence.innerHTML = "Prediction Confidence"
+
+
             lastReplyContainer.appendChild(newReply)
             newReply.appendChild(aspectLabel)
-            newReply.appendChild(btnConfidence)
+            // newReply.appendChild(btnConfidence)
             newReply.appendChild(btnExample)
-            newReply.appendChild(btnAttribution)
+            // newReply.appendChild(btnAttribution)
             newReply.appendChild(btnCounterfactual)
 
             aspectLabel.onclick = handleExplanationButtonClicked;
-            btnConfidence.onclick = handleExplanationButtonClicked;
+            // btnConfidence.onclick = handleExplanationButtonClicked;
             btnExample.onclick = handleExplanationButtonClicked;
-            btnAttribution.onclick = handleExplanationButtonClicked;
+            // btnAttribution.onclick = handleExplanationButtonClicked;
             btnCounterfactual.onclick = handleExplanationButtonClicked;
 
             lastReplyContainer.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
