@@ -202,12 +202,15 @@ def interact_socket(body):
 @socketio.on("save", namespace="/connection")
 def save(body):
     # log text editing results into mongo
-    mongo.log.insert_one({
+    res = mongo.log.insert_one({
         "user_id": body.get("user_id", ""),
         "time": datetime.now(),
         "text": body["text"],
-        "event_type": "auto-save",
+        "event_type": body.get("mode", "auto-save"),
     })
+
+    if res:
+        emit('save', {"status": "success", "mode": body.get("mode", "auto-save")})
 
 ########################################
 # Run Flask and SocketIO.
@@ -217,6 +220,9 @@ def run_flask_socketio():
     Run Flask and Websocket.
     """
     socketio.run(app, host="0.0.0.0", port=8080, debug=False)
+
+    # for debugging
+    # socketio.run(app, host="0.0.0.0", port=8001, debug=True)
 
 
 if __name__ == "__main__":

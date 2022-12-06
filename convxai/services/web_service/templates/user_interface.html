@@ -15,11 +15,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
         integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
         integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
         crossorigin="anonymous"></script>
     <script src="{{url_for('static', filename='debounce.js')}}" defer></script>
+    <script src="{{url_for('static', filename='notify.js')}}" defer></script>
     
     <!-- Customized CSS and Javascripts -->
     <link href="{{url_for('static', filename='main.css')}}" rel="stylesheet">
@@ -140,6 +141,44 @@
                                 <p style="margin-top:10pt;">Or Edit <strong>your paper abstract</strong>:</p>
                                 <div class="row form-group">
                                     <input id="editor-input" type="hidden">
+                                    
+                                    <div id="ql-toolbar">
+
+                                        <button id="save-button" class="my-toolbar" type="button" style="margin-right: 10px;">
+                                            <i class="fa-2xl fa-solid fa-floppy-disk"></i>
+                                        </button>
+                    
+                                        <select class="ql-header left-line">
+                                            <option selected></option>
+                                            <option value="1"></option>
+                                            <option value="2"></option>
+                                            <option value="3"></option>
+                                            <option value="4"></option>
+                                            <option value="5"></option>
+                                            <option value="6"></option>
+                                        </select>
+                    
+                                        <select class="ql-size">
+                                            <option value="small"></option>
+                                            <option selected></option>
+                                            <option value="large"></option>
+                                            <option value="huge"></option>
+                                        </select>
+                    
+                                        <button class="ql-bold left-line"></button>
+                                        <button class="ql-italic"></button>
+                                        <button class="ql-underline"></button>
+                                        <button class="ql-strike"></button>
+                    
+                                        <button class="ql-indent left-line" value="+1"></button>
+                                        <button class="ql-indent" value="-1"></button>
+                    
+                                        <select class="ql-color left-line"></select>
+                                        <select class="ql-background"></select>
+                                        
+                                        <button class="ql-clean left-line"></button>
+                                        
+                                    </div>
                                     <div id="editor">
                                     </div>
                                 </div>

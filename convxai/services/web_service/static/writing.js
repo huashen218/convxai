@@ -60,14 +60,8 @@ var change = new Delta();
 var quill = new Quill('#editor', {
     theme: 'snow',
     modules: {
-        toolbar: [
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            ['bold', 'italic', 'strike', 'underline'],
-            ['link', 'blockquote', 'code-block', 'image'],
-            [{ list: 'ordered' }, { list: 'bullet' }]
-        ]
+        toolbar: "#ql-toolbar",
     },
-    toolbar: '#toolbar',
     scrollingContainer: '#editor',
     placeholder: 'Compose an abstract...'
 });
@@ -87,7 +81,8 @@ var quill = new Quill('#editor', {
 // Submit Writing and Update Visualization
 /*****************************************/
 writing_artifacts = {}
-document.getElementById("editor-form").addEventListener("submit", function (event) {
+// document.getElementById("editor-form").addEventListener("submit", function (event) {
+$(document).on("click", "#editor-submit", function(event) {
     event.preventDefault();
     $('.btn-submit-loader').css({ "display": "block" });    // Adding waiting logo;
     var writing_model = $("#writing-model").val();      // Identify writing model;
@@ -138,7 +133,27 @@ quill.on('editor-change', function(eventName, ...args) {
     debounce_save_document();
 });
 
+$(document).on("click", "#save-button", async function() {
+    console.log("save button");
+    socket.emit(
+        "save",
+        {
+            "user_id": $("#user_id").val(),
+            "text": quill.getText(),
+            "mode": "save",
+        }
+    );
+    change = new Delta();
+});
 
+socket.on("save", function(data) {
+    if (data.mode === "save") {
+        $("#save-button").notify(
+            "Successfully Save the document",
+            "success"
+        );
+    }
+});
 
 /*********************************************************/
 // Return Both Models' Predictions and Update Visualization
