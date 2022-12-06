@@ -601,7 +601,7 @@ function createContainer(typeOfContainer) {
             btnCounterfactual.setAttribute("class", "reply xaiquestionButton")
             btnCounterfactual.setAttribute("type", "button")
             btnCounterfactual.setAttribute("id", "[Counterfactual Explanation]")
-            btnCounterfactual.innerHTML = "How can I revise the sentence to get a different label?"
+            btnCounterfactual.innerHTML = "Counterfactual Explanation"
 
 
             // var btnAttribution = document.createElement("button");
