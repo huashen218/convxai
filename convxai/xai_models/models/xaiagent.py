@@ -303,14 +303,14 @@ class AICommenter(object):
         if review_type == "long":
             response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: XAI use patterns to <span class='text-danger font-weight-bold'>shorten sentence length</span>:
             <br><br><span style='color:#1B5AA2;font-weight:bold'>Pattern1: Similar Examples (rank: short).</span> Refer to similar short examples for rewriting.  
-            <br><br><span style='color:#1B5AA2;font-weight:bold'>Pattern2: Rewrite while keeping important_words.</span> Find important words, then keep them during rewriting to keep the correct aspects.
+            <br><br><span style='color:#1B5AA2;font-weight:bold'>Pattern2: Rewrite while keeping important_words.</span> Find Important Words, then keep them during rewriting to keep the correct aspects.
             <br><br><p class='text-danger font-weight-bold'>Useful XAIs are:</p>
             """
 
         elif review_type == "short":
             response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: XAI use patterns to <span class='text-danger font-weight-bold'>lengthen sentence length</span>:
             <br><br><span style='color:#1B5AA2;font-weight:bold'>Pattern1: Similar Examples (rank: long).</span> Refer to similar long examples for rewriting.  
-            <br><br><span style='color:#1B5AA2;font-weight:bold'>Pattern2: Rewrite while keeping important_words.</span> Find important words, then keep them during rewriting to keep the correct aspects.
+            <br><br><span style='color:#1B5AA2;font-weight:bold'>Pattern2: Rewrite while keeping important_words.</span> Find Important Words, then keep them during rewriting to keep the correct aspects.
             <br><br><p class='text-danger font-weight-bold'>Useful XAIs are:</p>
             """
 
