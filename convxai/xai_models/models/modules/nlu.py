@@ -56,7 +56,7 @@ class XAI_NLU_Module(nn.Module):
                     "counterfactual": ["different", "counterfactual", "prediction", "input", "revise"],
                     "sentence-length": ["length", "lengths"],
                     "ai-comment-global": ["show me model and data"],
-                    "ai-comment-instance": ["explain", "sentence", "review"]
+                    "ai-comment-instance": ["explain", "improve", "review"]
         }
 
 
