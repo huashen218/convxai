@@ -248,48 +248,115 @@ class AICommenter(object):
         comment_improvements = "<br>" + analysis_outputs['instance_results'] if len(analysis_outputs['instance_results']) > 0 else "Your current writing looks good to me. Great job!"
         return comment_conference_intro + comment_overall_score + comment_improvements
 
+
+    # def _explaining_ai_comment_template(self, idx, review, convxai_global_status_track):
+
+    #     review_type = review.split("-")[0]
+
+    #     if review_type == "long":
+
+    #         response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
+    #         This sentence has <strong>{review.split("-")[1]} words</strong>, longer than 80% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
+    #         <br><br>
+    #         <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
+    #         <br><br>
+    #         See more details of sentence length statistics, please click the question below:<br><br>
+    #         """
+
+    #     elif review_type == "short":
+    #         response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
+    #         This sentence has <strong>{review.split("-")[1]} words</strong>, shorter than 20% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
+    #         <br><br>
+    #         <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
+    #         <br><br>
+    #         See the more details of sentence length statistics, please click the question below:<br><br>
+    #         """
+
+    #     elif review_type == "quality":
+    #         response = f"""
+    #         <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: the <strong>Writing Style Model</strong> can generate a quality score, indicating <strong>how well the sentence can match with the {convxai_global_status_track["conference"]} conference</strong>, with <strong>lower the better</strong> style quality.
+    #         <br><br>
+    #         This sentence gets <strong>{float(review.split("-")[1]):.2f}</strong> points, which is larger than <strong>80%</strong> of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference. Indicating the sentence may not match well with the {convxai_global_status_track["conference"]} conference. 
+    #         <br><br>
+    #         <strong>To improve</strong>, you can check similar sentences in {convxai_global_status_track["conference"]} to rewrite. Please click the question below:<br><br>
+    #         """
+
+    #     elif review_type == "aspect":
+    #         response = f"""
+    #         <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we summarized five <strong>five structural patterns</strong> in {convxai_global_status_track["conference"]}, and found this abstract is closest to the pattern: <span class='text-danger font-weight-bold'>{self.review_summary["aspect_distribution_benchmark"]}</span>. 
+    #         <br>
+    #         <br>
+    #         By comparing this abstract pattern with the closest benchmark using <a class='post-link' href='https://en.wikipedia.org/wiki/Dynamic_time_warping' target='_blank'><strong>Dynamic Time Warping</strong></a> algorithm,
+    #         we suggest you to describe <strong>{review.split("-")[2]}</strong> aspect but <strong>not {review.split("-")[1]}</strong> in this sentence to improve the structure.
+    #         <br><br>
+    #         <strong>To improve</strong>, you can check the <strong> most important words </strong> for the label and further check <strong> how to revise input into another label</strong> . See XAI questions below:<br><br>
+    #         """
+
+    #     return [review_type, response]
+
+
+
     def _explaining_ai_comment_template(self, idx, review, convxai_global_status_track):
 
         review_type = review.split("-")[0]
 
         if review_type == "long":
-
-            response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
-            This sentence has <strong>{review.split("-")[1]} words</strong>, longer than 80% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
-            <br><br>
-            <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
-            <br><br>
-            See more details of sentence length statistics, please click the question below:<br><br>
+            response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: XAI use patterns to <strong>shorten</strong> sentence length:
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern1: Similar Examples (rank: short)</p>. Refer to similar short examples for rewriting.  
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern2: Rewrite while keeping important_words</p>. Find important words, then keep them during rewriting to keep the correct aspects.
             """
+
+            # response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
+            # This sentence has <strong>{review.split("-")[1]} words</strong>, longer than 80% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
+            # <br><br>
+            # <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
+            # <br><br>
+            # See more details of sentence length statistics, please click the question below:<br><br>
+            # """
 
         elif review_type == "short":
-            response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
-            This sentence has <strong>{review.split("-")[1]} words</strong>, shorter than 20% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
-            <br><br>
-            <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
-            <br><br>
-            See the more details of sentence length statistics, please click the question below:<br><br>
+            response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: XAI use patterns to <strong>lengthen</strong> sentence length:
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern1: Similar Examples (rank: long)</p>. Refer to similar long examples for rewriting.  
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern2: Rewrite while keeping important_words</p>. Find important words, then keep them during rewriting to keep the correct aspects.
             """
+
+            # response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we are comparing the <strong>length</strong> of this sentence with all the sentences' in {convxai_global_status_track["conference"]} dataset.
+            # This sentence has <strong>{review.split("-")[1]} words</strong>, shorter than 20% of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference.
+            # <br><br>
+            # <strong>To improve</strong>, the sentence is suggested to have <strong>{self.review_summary['sentence_length_benchmark'][1]} to {self.review_summary['sentence_length_benchmark'][3]}</strong> words.
+            # <br><br>
+            # See the more details of sentence length statistics, please click the question below:<br><br>
+            # """
 
         elif review_type == "quality":
-            response = f"""
-            <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: the <strong>Writing Style Model</strong> can generate a quality score, indicating <strong>how well the sentence can match with the {convxai_global_status_track["conference"]} conference</strong>, with <strong>lower the better</strong> style quality.
-            <br><br>
-            This sentence gets <strong>{float(review.split("-")[1]):.2f}</strong> points, which is larger than <strong>80%</strong> of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference. Indicating the sentence may not match well with the {convxai_global_status_track["conference"]} conference. 
-            <br><br>
-            <strong>To improve</strong>, you can check similar sentences in {convxai_global_status_track["conference"]} to rewrite. Please click the question below:<br><br>
+            response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: XAI use patterns to <strong>improve sentence quality</strong>:
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern1: Counterfactual Explanation (use same label)</p>. Ask GPT-3 model to paraphrase the original sentence.  
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern2: Similar Examples (rank: quality_score).</p>. Refer to similar examples with high quality scores.
             """
 
+            # response = f"""
+            # <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: the <strong>Writing Style Model</strong> can generate a quality score, indicating <strong>how well the sentence can match with the {convxai_global_status_track["conference"]} conference</strong>, with <strong>lower the better</strong> style quality.
+            # <br><br>
+            # This sentence gets <strong>{float(review.split("-")[1]):.2f}</strong> points, which is larger than <strong>80%</strong> of the <strong>'{self.review_summary['prediction_label']}'</strong>-labeled sentences in the {convxai_global_status_track["conference"]} conference. Indicating the sentence may not match well with the {convxai_global_status_track["conference"]} conference. 
+            # <br><br>
+            # <strong>To improve</strong>, you can check similar sentences in {convxai_global_status_track["conference"]} to rewrite. Please click the question below:<br><br>
+            # """
+
         elif review_type == "aspect":
-            response = f"""
-            <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we summarized five <strong>five structural patterns</strong> in {convxai_global_status_track["conference"]}, and found this abstract is closest to the pattern: <span class='text-danger font-weight-bold'>{self.review_summary["aspect_distribution_benchmark"]}</span>. 
-            <br>
-            <br>
-            By comparing this abstract pattern with the closest benchmark using <a class='post-link' href='https://en.wikipedia.org/wiki/Dynamic_time_warping' target='_blank'><strong>Dynamic Time Warping</strong></a> algorithm,
-            we suggest you to describe <strong>{review.split("-")[2]}</strong> aspect but <strong>not {review.split("-")[1]}</strong> in this sentence to improve the structure.
-            <br><br>
-            <strong>To improve</strong>, you can check the <strong> most important words </strong> for the label and further check <strong> how to revise input into another label</strong> . See XAI questions below:<br><br>
+            response = f"""<span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: XAI use patterns to <strong>rewrite into target-label</strong>:
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern1: Counterfactual Explanation (use target-label)</p>. Ask GPT-3 model to rewrite the sentence into the target aspect.  
+            <br><br>-<p style='color:#1B5AA2;font-weight:bold'>Pattern2: Similar Examples (label: target-label, rank: quality_score).</p>. Refer to similar examples with the target labels and high quality scores.
             """
+
+            # response = f"""
+            # <span style='background-color: #6D589B; font-weight: bold; border-radius: 3px; color:white'>S{idx+1}</span>: we summarized five <strong>five structural patterns</strong> in {convxai_global_status_track["conference"]}, and found this abstract is closest to the pattern: <span class='text-danger font-weight-bold'>{self.review_summary["aspect_distribution_benchmark"]}</span>. 
+            # <br>
+            # <br>
+            # By comparing this abstract pattern with the closest benchmark using <a class='post-link' href='https://en.wikipedia.org/wiki/Dynamic_time_warping' target='_blank'><strong>Dynamic Time Warping</strong></a> algorithm,
+            # we suggest you to describe <strong>{review.split("-")[2]}</strong> aspect but <strong>not {review.split("-")[1]}</strong> in this sentence to improve the structure.
+            # <br><br>
+            # <strong>To improve</strong>, you can check the <strong> most important words </strong> for the label and further check <strong> how to revise input into another label</strong> . See XAI questions below:<br><br>
+            # """
 
         return [review_type, response]
 
