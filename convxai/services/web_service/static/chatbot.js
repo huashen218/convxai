@@ -335,7 +335,7 @@ function createContainer(typeOfContainer) {
             btnNO.setAttribute("class", "reply xaiquestionButton")
             btnNO.setAttribute("type", "button")
             btnNO.setAttribute("id", "[InstanceWhy]")
-            btnNO.innerHTML = "Explain sentence review"
+            btnNO.innerHTML = "How should I improve?"
             lastReplyContainer.appendChild(newReply)
             newReply.appendChild(breakline)
             newReply.appendChild(btnNO)
@@ -662,7 +662,7 @@ function handleExplanationButtonClicked(e) {
         chatBotTextArea.value = "Can you show me model and data information in general?";
     }
     else if (ButtonID == "[InstanceWhy]") {
-        chatBotTextArea.value = "Can you explain this sentence review?";
+        chatBotTextArea.value = "How to improve the sentence?";
     }
     else {
         console.log("There is an Error here!")
