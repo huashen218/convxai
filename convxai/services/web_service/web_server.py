@@ -169,7 +169,20 @@ def interact_socket(body):
             "writing_model": body.get("writing_model", None),
         },
         "note": "socket",
+        "user_id": body["user_id"],
     })
+
+    
+    # log text editing results into mongo
+    mongo.log.insert_one({
+        "user_id": body["user_id"],
+        "time": datetime.now(),
+        "text": body["text"],
+        "type": body["message_type"],
+        "writing_model": body.get("writing_model", None),
+        "conversation_id": body["conversation_id"],
+    })
+
 
     ### Write logs into files ###
     task_mapping[result.inserted_id] = request.sid
@@ -186,6 +199,16 @@ def interact_socket(body):
     # logFile.close()
     # logging.info("Written to file" + logEntry)
 
+@socketio.on("save", namespace="/connection")
+def save(body):
+    # log text editing results into mongo
+    print("Save", body["text"])
+    mongo.log.insert_one({
+        "user_id": body["user_id"],
+        "time": datetime.now(),
+        "text": body["text"],
+        "event_type": "auto-save",
+    })
 
 ########################################
 # Run Flask and SocketIO.
