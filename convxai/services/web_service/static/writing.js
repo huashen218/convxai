@@ -115,8 +115,6 @@ document.getElementById("editor-form").addEventListener("submit", function (even
 // Auto Save
 /*****************************************/
 const save_document = function() {
-    console.log("save document", Date.now(), quill.getText(), change, change.ops.length);
-
     // save document - socketio version
     if (change.ops.length > 0) {
         socket.emit(

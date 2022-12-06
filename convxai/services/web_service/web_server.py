@@ -169,13 +169,13 @@ def interact_socket(body):
             "writing_model": body.get("writing_model", None),
         },
         "note": "socket",
-        "user_id": body["user_id"],
+        "user_id": body.get("user_id", ""),
     })
 
     
     # log text editing results into mongo
     mongo.log.insert_one({
-        "user_id": body["user_id"],
+        "user_id": body.get("user_id", ""),
         "time": datetime.now(),
         "text": body["text"],
         "type": body["message_type"],
@@ -202,9 +202,8 @@ def interact_socket(body):
 @socketio.on("save", namespace="/connection")
 def save(body):
     # log text editing results into mongo
-    print("Save", body["text"])
     mongo.log.insert_one({
-        "user_id": body["user_id"],
+        "user_id": body.get("user_id", ""),
         "time": datetime.now(),
         "text": body["text"],
         "event_type": "auto-save",
