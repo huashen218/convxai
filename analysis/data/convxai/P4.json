@@ -1,0 +1,128 @@
+[
+  {
+    "_id": "6390f8758c15db04700de55a",
+    "user_id": "P4",
+    "time": "2022-12-07 20:32:53.794000",
+    "text": "The next step for intelligent dialog agents is to demonstrate the ability to escape their role as silent bystanders and become proactive in conversations , showing that they can take control of the conversation to lead it down meaningful paths .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "save"
+  },
+  {
+    "_id": "6390f7968c15db04700de559",
+    "user_id": "P4",
+    "time": "2022-12-07 20:29:10.646000",
+    "text": "The next step for intelligent dialog agents is to demonstrate the ability to escape their role as silent bystanders and become proactive in conversations , showing that they can take control of the conversation to lead it down meaningful paths .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f7818c15db04700de556",
+    "user_id": "P4",
+    "time": "2022-12-07 20:28:49.724000",
+    "text": "The next step for intelligent dialog agents is to demonstrate the ability to escape their role as silent bystanders and become proactive in conversations , showing that they can take control of the conversation to lead it down meaningful paths .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "type": "task",
+    "writing_model": "model-writing-2",
+    "conversation_id": "6390f45d8c15db04700de523"
+  },
+  {
+    "_id": "6390f7168c15db04700de554",
+    "user_id": "P4",
+    "time": "2022-12-07 20:27:02.400000",
+    "text": "The next step for intelligent dialog agents is to demonstrate the ability to escape their role as silent bystanders and become proactive in conversations , showing that they can take control of the conversation to lead it down meaningful paths .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .The core assumption is that users act in accordance with what is best for them , given the limits imposed by their cognitive architecture and their experience of the task environment. Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f6888c15db04700de553",
+    "user_id": "P4",
+    "time": "2022-12-07 20:24:40.877000",
+    "text": "The next step for intelligent dialog agents is to demonstrate the ability to escape their role as silent bystanders and become proactive in conversations , showing that they can take control of the conversation to lead it down meaningful paths .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .The core assumption is that users act in accordance with what is best for them , given the limits imposed by their cognitive architecture and their experience of the task environment Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f6788c15db04700de550",
+    "user_id": "P4",
+    "time": "2022-12-07 20:24:24.337000",
+    "text": "The next step for intelligent dialog agents is to demonstrate the ability to escape their role as silent bystanders and become proactive in conversations, showing that they can take control of the conversation to lead it down meaningful paths.Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .The core assumption is that users act in accordance with what is best for them , given the limits imposed by their cognitive architecture and their experience of the task environment Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "type": "task",
+    "writing_model": "model-writing-2",
+    "conversation_id": "6390f45d8c15db04700de523"
+  },
+  {
+    "_id": "6390f6128c15db04700de548",
+    "user_id": "P4",
+    "time": "2022-12-07 20:22:42.868000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .The core assumption is that users act in accordance with what is best for them , given the limits imposed by their cognitive architecture and their experience of the task environment Optimizing proactive behavior so as to be task-oriented , which would imply high task success and efficiency , while also being socially effective by fostering user trust , is the primary goal of this work .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f5ff8c15db04700de545",
+    "user_id": "P4",
+    "time": "2022-12-07 20:22:23.516000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog.The core assumption is that users act in accordance with what is best for them , given the limits imposed by their cognitive architecture and their experience of the task environment Optimizing proactive behavior so as to be task-oriented, which would imply high task success and efficiency, while also being socially effective by fostering user trust, is the primary goal of this work.We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f5f88c15db04700de544",
+    "user_id": "P4",
+    "time": "2022-12-07 20:22:16.974000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog.The core assumption is that users act in accordance with what is best for them , given the limits imposed by their cognitive architecture and their experience of the task environment Optimizing proactive behavior so as to be task-oriented, which would imply high task success and efficiency, while also being socially effective by fostering user trust, is the primary goal of this work.We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "type": "task",
+    "writing_model": "model-writing-2",
+    "conversation_id": "6390f45d8c15db04700de523"
+  },
+  {
+    "_id": "6390f5b58c15db04700de53e",
+    "user_id": "P4",
+    "time": "2022-12-07 20:21:09.772000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Here , the primary goal is to optimize proactive behavior so that it is task-oriented-this implies high task success and efficiency-while also being socially effective by fostering user trust .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning , which demonstrates the benefit of our approach in achieving more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f5a48c15db04700de53b",
+    "user_id": "P4",
+    "time": "2022-12-07 20:20:52.024000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Here , the primary goal is to optimize proactive behavior so that it is task-oriented-this implies high task success and efficiency-while also being socially effective by fostering user trust. We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning, which demonstrates the benefit of our approach in achieving more successful human-machine cooperation.\n",
+    "type": "task",
+    "writing_model": "model-writing-2",
+    "conversation_id": "6390f45d8c15db04700de523"
+  },
+  {
+    "_id": "6390f58e8c15db04700de537",
+    "user_id": "P4",
+    "time": "2022-12-07 20:20:30.161000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Here , the primary goal is to optimize proactive behavior so that it is task-oriented-this implies high task success and efficiency-while also being socially effective by fostering user trust .We propose a reward function that combines both aspects to train a proactive dialog agent using reinforcement learning, which demonstrates the benefit of our approach in achieving more successful human-machine cooperation \n",
+    "type": "task",
+    "writing_model": "model-writing-2",
+    "conversation_id": "6390f45d8c15db04700de523"
+  },
+  {
+    "_id": "6390f4f98c15db04700de52d",
+    "user_id": "P4",
+    "time": "2022-12-07 20:18:01.932000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Here , the primary goal is to optimize proactive behavior so that it is task-oriented-this implies high task success and efficiency-while also being socially effective by fostering user trust .Including both aspects in the reward function for training a proactive dialog agent using reinforcement learning showed the benefit of our approach for a more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f4e98c15db04700de52a",
+    "user_id": "P4",
+    "time": "2022-12-07 20:17:45.346000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Here , the primary goal is to optimize proactive behavior so that it is task-oriented-this implies high task success and efficiency-while also being socially effective by fostering user trust .Including both aspects in the reward function for training a proactive dialog agent using reinforcement learning showed the benefit of our approach for a more successful human-machine cooperation .\n",
+    "type": "task",
+    "writing_model": "model-writing-2",
+    "conversation_id": "6390f45d8c15db04700de523"
+  },
+  {
+    "_id": "6390f4c98c15db04700de528",
+    "user_id": "P4",
+    "time": "2022-12-07 20:17:13.126000",
+    "text": "The next step for intelligent dialog agents is to escape their role as silent bystanders and become proactive .Well-defined proactive behavior may improve human-machine cooperation , as the agent takes a more active role during interaction and takes off responsibility from the user .However , proactivity is a double-edged sword because poorly executed preemptive actions may have a devastating effect not only on the task outcome but also on the relationship with the user .For designing adequate proactive dialog strategies , we propose a novel approach including both socially as well as task-relevant features in the dialog .Here , the primary goal is to optimize proactive behavior so that it is task-oriented-this implies high task success and efficiency-while also being socially effective by fostering user trust .Including both aspects in the reward function for training a proactive dialog agent using reinforcement learning showed the benefit of our approach for a more successful human-machine cooperation .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "6390f4b88c15db04700de525",
+    "user_id": "P4",
+    "time": "2022-12-07 20:16:56.195000",
+    "text": "The next step for intelligent dialog agents is to escape their role\nas silent bystanders and become proactive. Well-defined proactive behavior may improve human-machine cooperation, as the agent takes a more active role during interaction and takes off\nresponsibility from the user. However, proactivity is a double-\nedged sword because poorly executed preemptive actions may\nhave a devastating effect not only on the task outcome but also\non the relationship with the user. For designing adequate proactive dialog strategies, we propose a novel approach including\nboth socially as well as task-relevant features in the dialog.\nHere, the primary goal is to optimize proactive behavior so that\nit is task-oriented - this implies high task success and efficiency\n- while also being socially effective by fostering user trust. Including both aspects in the reward function for training a proactive dialog agent using reinforcement learning showed the benefit of our approach for a more successful human-machine cooperation.\n",
+    "type": "task",
+    "writing_model": "",
+    "conversation_id": "6390f45d8c15db04700de523"
+  }
+]

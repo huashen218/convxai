@@ -1,0 +1,96 @@
+[
+  {
+    "_id": "638f77c4c3fa89c878d6f281",
+    "user_id": "P1",
+    "time": "2022-12-06 17:11:32.981000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions ( such as inapplicable actions ) , the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f77b6c3fa89c878d6f27e",
+    "user_id": "P1",
+    "time": "2022-12-06 17:11:18.406000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions (such as inapplicable actions), the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "type": "task",
+    "writing_model": "model-writing-1",
+    "conversation_id": "638f748dc3fa89c878d6f264"
+  },
+  {
+    "_id": "638f777ac3fa89c878d6f27c",
+    "user_id": "P1",
+    "time": "2022-12-06 17:10:18.904000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions (such as inapplicable actions), the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f7754c3fa89c878d6f27b",
+    "user_id": "P1",
+    "time": "2022-12-06 17:09:40.250000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions , the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f7739c3fa89c878d6f278",
+    "user_id": "P1",
+    "time": "2022-12-06 17:09:13.698000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions, the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand, while also learning to maximize its reward .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "type": "task",
+    "writing_model": "model-writing-1",
+    "conversation_id": "638f748dc3fa89c878d6f264"
+  },
+  {
+    "_id": "638f771bc3fa89c878d6f274",
+    "user_id": "P1",
+    "time": "2022-12-06 17:08:43.174000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions ( such as inapplicable ones ) , the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "type": "task",
+    "writing_model": "model-writing-1",
+    "conversation_id": "638f748dc3fa89c878d6f264"
+  },
+  {
+    "_id": "638f76fbc3fa89c878d6f272",
+    "user_id": "P1",
+    "time": "2022-12-06 17:08:11.478000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions ( such as inapplicable ones ) , the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f76ebc3fa89c878d6f26f",
+    "user_id": "P1",
+    "time": "2022-12-06 17:07:55.611000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions (such as inapplicable ones), the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward.Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "type": "task",
+    "writing_model": "model-writing-1",
+    "conversation_id": "638f748dc3fa89c878d6f264"
+  },
+  {
+    "_id": "638f76cdc3fa89c878d6f26d",
+    "user_id": "P1",
+    "time": "2022-12-06 17:07:25.037000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions (such as inapplicable ones), the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward.Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f76afc3fa89c878d6f26c",
+    "user_id": "P1",
+    "time": "2022-12-06 17:06:55.573000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environments with many available actions , requiring numerous samples to learn an optimal policy .To ignore irrelevant actions (such as inapplicable ones), the traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward , to ignore irrelevant actions such as inapplicable actions ( i.e. actions that have no effect on the environment when performed in a given state ) .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f74b6c3fa89c878d6f269",
+    "user_id": "P1",
+    "time": "2022-12-06 16:58:30.672000",
+    "text": "Reinforcement Learning ( RL ) algorithms are known to scale poorly to environ-ments with many available actions , requiring numerous samples to learn an opti-mal policy .The traditional approach of considering the same fixed action space in every possible state implies that the agent must understand , while also learning to maximize its reward , to ignore irrelevant actions such as inapplicable actions ( i.e. actions that have no effect on the environment when performed in a given state ) .Knowing this information can help reduce the sample complexity of RL al-gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy .This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm .In this paper , we propose a more systematic approach to introduce this knowledge into the algorithm .We ( i ) standardize the way knowledge can be manually specified to the agent ; and ( ii ) present a new framework to autonomously learn these state-dependent action constraints jointly with the policy .We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo-rithm by providing a reliable signal to mask out irrelevant actions .Moreover , we demonstrate that thanks to the transferability of the knowledge acquired , it can be reused in other tasks to make the learning process more efficient .\n",
+    "event_type": "auto-save"
+  },
+  {
+    "_id": "638f74a6c3fa89c878d6f266",
+    "user_id": "P1",
+    "time": "2022-12-06 16:58:14.856000",
+    "text": "Reinforcement Learning (RL) algorithms are known to scale poorly to environ- ments with many available actions, requiring numerous samples to learn an opti- mal policy. The traditional approach of considering the same fixed action space in every possible state implies that the agent must understand, while also learning to maximize its reward, to ignore irrelevant actions such as\u00a0inapplicable actions\u00a0(i.e. actions that have no effect on the environment when performed in a given state). Knowing this information can help reduce the sample complexity of RL al- gorithms by masking the inapplicable actions from the policy distribution to only explore actions relevant to finding an optimal policy. This is typically done in an ad-hoc manner with hand-crafted domain logic added to the RL algorithm. In this paper, we propose a more systematic approach to introduce this knowledge into the algorithm. We (i) standardize the way knowledge can be manually specified to the agent; and (ii) present a new framework to autonomously learn these state- dependent action constraints jointly with the policy. We show experimentally that learning inapplicable actions greatly improves the sample efficiency of the algo- rithm by providing a reliable signal to mask out irrelevant actions. Moreover, we demonstrate that thanks to the transferability of the knowledge acquired, it can be reused in other tasks to make the learning process more efficient.\n",
+    "type": "task",
+    "writing_model": "",
+    "conversation_id": "638f748dc3fa89c878d6f264"
+  }
+]
