@@ -678,7 +678,7 @@ function handleExplanationButtonClicked(e) {
         chatBotTextArea.value = "Which words in this sentence are most important for this prediction?";
     }
     else if (ButtonID == "[Counterfactual Explanation]") {
-        chatBotTextArea.value = "How can I revise the input to get a different prediction label?";
+        chatBotTextArea.value = "How can I revise the input to get a different prediction?";
     }
     else if (ButtonID == "[GlobalWhy]") {
         chatBotTextArea.value = "Can you show me model and data information in general?";
