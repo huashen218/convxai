@@ -1,4 +1,5 @@
-# jsonnet  conda # need to be installed with conda: ```install -c conda-forge jsonnet```
+# jsonnet  conda # need to be installed withy: ```conda install -c conda-forge jsonnet```
+# also install ```conda install -c conda-forge git-lfs```
 absl-py==1.0.0
 accelerate==0.10.0
 aiohttp==3.8.1
