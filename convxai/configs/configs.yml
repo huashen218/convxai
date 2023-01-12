@@ -3,7 +3,7 @@ scientific_writing:
     quality_model_dir: "huashen218/convxai-quality-model"
 
 conversational_xai:
-    checkpoints_root_dir: "/home/hqs5468/hua/workspace/projects/convxai/checkpoints/xai_models/"
+    checkpoints_root_dir: "/data/data/hua/workspace/projects/convxai/checkpoints/xai_models/"
     xai_example_dir:
         xai_emample_embeddings_dir:
             ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5"
