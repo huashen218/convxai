@@ -108,6 +108,27 @@ class Model_Explainer(object):
         For example, the percentiles = [{global_explanations_data[conference]['abstract_score_range'][0]}, {global_explanations_data[conference]['abstract_score_range'][1]}, {global_explanations_data[conference]['abstract_score_range'][3]}, {global_explanations_data[conference]['abstract_score_range'][4]}]), resulting in the criterion:
         """
 
+
+# % Please add the following required packages to your document preamble:
+# % \usepackage[table,xcdraw]{xcolor}
+# % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+# % \usepackage[normalem]{ulem}
+# % \useunder{\uline}{\ul}{}
+# \begin{table}[]
+# \begin{tabular}{|l|l|}
+# \hline
+# \rowcolor[HTML]{C0C0C0} 
+# \textbf{Aspects} & \textbf{Accuracy} \\ \hline
+# meaningful       & 0.86              \\ \hline
+# replicability    & 0.93              \\ \hline
+# originality      & 0.6               \\ \hline
+# motivation       & 0.76              \\ \hline
+# substance        & 0.72              \\ \hline
+# clarity          & 0.58              \\ \hline
+# \end{tabular}
+# \end{table}
+
+
         explanation2 = """
         <br>
         <style>
