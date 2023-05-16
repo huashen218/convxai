@@ -3,14 +3,14 @@
 # ConvXAI<img src="assets/logo_wotext.png" width="38">
 This repository includes code for the ConvXAI system as described in the paper:
 
->[“Hey ConvXAI<img src="assets/logo_wotext.png" width="21"> , how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
+>[“ConvXAI<img src="assets/logo_wotext.png" width="21">: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
 
 
 
 Bibtex for citations:
 ```bibtex
  @inproceedings{convxai,  
- title = {“Hey ConvXAI, how should I improve?”: Towards Conversational Explainable AI Support for Scientific Writing}
+ title = {ConvXAI: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing}
  }
 ```
 
