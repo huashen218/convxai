@@ -9,9 +9,12 @@ This repository includes code for the ConvXAI system as described in the paper:
 
 Bibtex for citations:
 ```bibtex
- @inproceedings{convxai,  
- title = {ConvXAI: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing}
- }
+@article{shen2023convxai,
+  title={ConvXAI: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing},
+  author={Shen, Hua and Huang, Chieh-Yang and Wu, Tongshuang and Huang, Ting-Hao'Kenneth'},
+  journal={arXiv preprint arXiv:2305.09770},
+  year={2023}
+}
 ```
 
 
