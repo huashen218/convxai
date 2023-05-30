@@ -19,3 +19,4 @@ temp
 ### ignore logs
 runners/logs
 runners/*.log
+analysis
