@@ -1,7 +1,7 @@
 
 
 <!-- # <img src="assets/logo_wotext.png" width="38"> ConvXAI -->
-<img src="assets/logo.png" width="333">
+<img src="assets/logo.png" width="300">
 
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
@@ -13,7 +13,7 @@
 
 This repository includes code for the ConvXAI system as described in the paper:
 
->[“ConvXAI<img src="assets/logo_wotext.png" width="21">: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
+>[“ConvXAI<img src="assets/logo_wotext.png" width="21">: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing](https://arxiv.org/pdf/2305.09770.pdf)  
 
 
 
