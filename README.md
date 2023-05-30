@@ -1,6 +1,16 @@
 
 
 # ConvXAI<img src="assets/logo_wotext.png" width="38">
+
+
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+[![Arxiv](https://img.shields.io/badge/arxiv-2305.09770-green)](https://arxiv.org/pdf/2305.09770.pdf)
+<!-- [![Demo](https://img.shields.io/discord/1086004954872950834)](http://usefulxai.org:8080/) -->
+<!-- [![PyPI version](https://badge.fury.io/py/zenoml.svg)](https://badge.fury.io/py/zenoml) -->
+<!-- [![Demo](https://img.shields.io/appveyor/build/:user/:convxai)](http://usefulxai.org:8080/) -->
+<!-- [![Python application](https://github.com/dylan-slack/TalkToModel/actions/workflows/python-app.yml/badge.svg)](https://github.com/dylan-slack/TalkToModel/actions/workflows/python-app.yml)  -->
+
+
 This repository includes code for the ConvXAI system as described in the paper:
 
 >[“ConvXAI<img src="assets/logo_wotext.png" width="21">: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing](https://hua-shen.org/assets/files/convxai.pdf)  
