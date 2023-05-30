@@ -287,6 +287,5 @@ xxhash==2.0.2
 yarl==1.7.2
 zc.lockfile==2.0
 zipp==3.6.0
-
 sentence-transformers
 openai
