@@ -6,7 +6,7 @@
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![Arxiv](https://img.shields.io/badge/arxiv-2305.09770-green)](https://arxiv.org/pdf/2305.09770.pdf)
-[![Demo](https://img.shields.io/badge/demo-convxai-red)](http://usefulxai.org:8080/)
+<!-- [![Demo](https://img.shields.io/badge/demo-convxai-red)](http://usefulxai.org:8080/) -->
 <!-- [![PyPI version](https://badge.fury.io/py/zenoml.svg)](https://badge.fury.io/py/zenoml) -->
 <!-- [![Python application](https://github.com/dylan-slack/TalkToModel/actions/workflows/python-app.yml/badge.svg)](https://github.com/dylan-slack/TalkToModel/actions/workflows/python-app.yml)  -->
 
