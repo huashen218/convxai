@@ -18,7 +18,7 @@ from transformers import (
     AutoTokenizer,
 )
 from convxai.utils import *
-from convxai.writing_models.dataloaders import *
+from .quality_model_dataloader import *
 
 device = torch.device('cpu')
 

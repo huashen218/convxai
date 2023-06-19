@@ -21,7 +21,7 @@ from transformers import (
     AutoConfig,
 )
 from convxai.utils import *
-from convxai.writing_models.dataloaders import *
+from .diversity_model_dataloader import *
 
 device = torch.device('cpu')
 

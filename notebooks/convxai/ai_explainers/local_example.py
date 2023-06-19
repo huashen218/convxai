@@ -2,8 +2,9 @@
 import h5py
 import torch.nn as nn
 import numpy as np
-from convxai.utils import *
 
+
+from convxai.utils import *
 from ..ai_models import *
 
 
@@ -41,19 +42,21 @@ class ExampleExplainer(object):
 
 
 
-def explain_example(model, input, predict_label, conference, **kwargs):
+def explain_example(model, input, predict_label, **kwargs):
     """XAI Algorithm - Confidence: 
         Paper: An Empirical Comparison of Instance Attribution Methods for NLP (https://aclanthology.org/2021.naacl-main.75.pdf)
     """
 
     ######### User Input Variable #########
-    top_k = kwargs["attributes"]["top_k"] if kwargs["attributes"]["top_k"] is not None else 3
+
+    top_k = kwargs["attributes"]["top_k"] if kwargs["attributes"] is not None else 3
+
     label = label_mapping[kwargs["attributes"]["aspect"]] if kwargs["attributes"]["aspect"] is not None else predict_label
     keyword = kwargs["attributes"]["keyword"] if kwargs["attributes"]["keyword"] is not None else None
     rank    = kwargs["attributes"]["rank"] if kwargs["attributes"]["rank"] is not None else None
 
     ######### Explaining #########
-    example_explainer = ExampleExplainer(conference)
+    example_explainer = ExampleExplainer(kwargs['conference'])
     embeddings = model.generate_embeddings(input)
     filter_index = np.where(example_explainer.aspect_list_tmp == label)[0]
     find_examples = True
@@ -91,7 +94,7 @@ def explain_example(model, input, predict_label, conference, **kwargs):
     top_link = np.array(example_explainer.x_train_link_tmp)
 
     if find_examples:
-        nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{conference}</strong> dataset are (<strong>label={diversity_model_label_mapping[label]}, rank={rank}</strong>):"
+        nlg_template = f"The top-{top_k} similar examples (i.e., of selected-sentence = '<i><span class='text-info'>{input}</span>') from the <strong>{kwargs['conference']}</strong> dataset are (<strong>label={diversity_model_label_mapping[label]}, rank={rank}</strong>):"
         for t in final_top_index:
             nlg_template += f"<br> <strong>sample-{t+1}</strong> - <a class='post-link' href='{top_link[t].decode('UTF-8')}' target='_blank'>{top_text[t].decode('UTF-8')}</a>."
     else:

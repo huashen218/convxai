@@ -1,0 +1,18 @@
+scientific_writing:
+    diversity_model_dir: "huashen218/convxai-diversity-model"
+    quality_model_dir: "huashen218/convxai-quality-model"
+
+conversational_xai:
+    intent_model: "/data/data/hua/workspace/projects/convxai/checkpoints/xai_models/xai_user_intent_model/intent-deberta-v3-xsmall"
+    checkpoints_root_dir: "/data/data/hua/workspace/projects/convxai/checkpoints/xai_models/"
+    xai_example_dir:
+        xai_emample_embeddings_dir:
+            ACL: "xai_example_embeddings/diversity_model_ACL_embeddings.h5"
+            CHI: "xai_example_embeddings/diversity_model_CHI_embeddings.h5"
+            ICLR: "xai_example_embeddings/diversity_model_ICLR_embeddings.h5"
+        xai_emample_texts_dir:
+            ACL: "xai_example_embeddings/diversity_model_ACL_texts.h5"
+            CHI: "xai_example_embeddings/diversity_model_CHI_texts.h5"
+            ICLR: "xai_example_embeddings/diversity_model_ICLR_texts.h5"
+    xai_writing_aspect_prediction_dir: "/xai_writing_aspect_prediction"
+    xai_counterfactual_dir: "xai_gpt3_counterfactual_model"

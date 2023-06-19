@@ -12,32 +12,23 @@ from transformers import (
     AutoConfig,
     AutoModelForSequenceClassification
 )
+import pdb
 from convxai.utils import *
 
 
-# XAI_User_Intent_Map = {
-#     0: '[counterfactual prediction]',
-#     1: '[data statistics]',
-#     2: '[important words]',
-#     3: '[model description]',
-#     4: '[other]',
-#     5: '[prediction confidence]',
-#     6: '[similar examples]',
-# }
-
 
 XAI_User_Intent_Map = {
-    1: '[data statistics]',
-    3: '[model description]',
-    7: '[quality score]',
-    8: '[label distribution]',
-    9: '[sentence length]',
-    5: '[prediction confidence]',
-    6: '[similar examples]',
-    2: '[important words]',
     0: '[counterfactual prediction]',
+    1: '[data statistics]',
+    2: '[important words]',
+    3: '[label distribution]',
+    4: '[model description]',
+    5: '[other]',
+    6: '[prediction confidence]',
+    7: '[quality score]',
+    8: '[sentence length]',
+    9: '[similar examples]',
     10: '[xai tutorial]',
-    4: '[other]'
 }
 
 
@@ -48,14 +39,20 @@ class XAI_NLU_Module:
     def __init__(
         self,
         model_name_or_path: str,
-        intent_threshold: float = 0.9
+        intent_threshold: float = 0.3  # This is a very important threshold variable to filter out '[other]' type
     ) -> None:
-        self.config = AutoConfig.from_pretrained(model_name_or_path)
+        self.config = AutoConfig.from_pretrained(model_name_or_path,
+            num_labels=len(XAI_User_Intent_Map.keys())
+        )
         self.tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
-        self.model = AutoModelForSequenceClassification.from_pretrained(
-            model_name_or_path)
+        self.model = AutoModelForSequenceClassification.from_pretrained(model_name_or_path,
+            from_tf=bool(".ckpt" in model_name_or_path),
+            config=self.config
+        )
+        
         # Note: you can adjust the intent_threshold to convert between pre-trained questions v.s. chatgpt s
         self.intent_threshold = intent_threshold
+
         assert self.config.id2label == XAI_User_Intent_Map, "Please check the XAI Intent Classifier's label mapping with the 'id2label' variable."
 
     def _normalize(self, text: str) -> str:
@@ -85,12 +82,14 @@ class XAI_NLU_Module:
             truncation=True,
             max_length=self.config.max_position_embeddings,
         )
+        
 
         # Run the SequenceClassification model
         outputs = self.model(**inputs)
         logits = outputs.logits
         probs = torch.softmax(logits, dim=-1)
         preds = torch.argmax(probs, dim=-1)
+
 
         # Convert the predictions to labels
         if torch.max(probs).item() >= self.intent_threshold:

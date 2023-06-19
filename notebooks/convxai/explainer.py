@@ -78,23 +78,23 @@ class AI_Explainers(object):
         # You can concretely defines numerous 'global XAI intent and approach' to describe each aspect of the system (e.g., dataset, model, biases, etc.).
         # In this system, we pre-define the output for each global explanation method.
         # 
-
+        
         if xai_user_intent == XAI_User_Intent_Map[1]:
             explanations = explain_meta_data(
                 kwargs['conference'], global_explanations_data)
 
-        elif xai_user_intent == XAI_User_Intent_Map[3]:
+        elif xai_user_intent == XAI_User_Intent_Map[4]:
             explanations = explain_meta_model()
 
         elif xai_user_intent == XAI_User_Intent_Map[7]:
             explanations = explain_quality_score(
                 kwargs['conference'], global_explanations_data)
 
-        elif xai_user_intent == XAI_User_Intent_Map[8]:
+        elif xai_user_intent == XAI_User_Intent_Map[3]:
             explanations = explain_aspect_distribution(
                 kwargs['conference'], global_explanations_data)
 
-        elif xai_user_intent == XAI_User_Intent_Map[9]:
+        elif xai_user_intent == XAI_User_Intent_Map[8]:
             explanations = explain_sentence_length(
                 kwargs['conference'], global_explanations_data)
 
@@ -104,13 +104,13 @@ class AI_Explainers(object):
         # Local explanations explain the model's prediction for each instance input.
         # We include four common local explanation in this system, including confidence_score, example-based, attribution-based, counterfactuals explanations.
 
-        elif xai_user_intent == XAI_User_Intent_Map[5]:
+        elif xai_user_intent == XAI_User_Intent_Map[6]:
             explanations = explain_confidence(
                 self.diversity_model, ai_input_instance, **kwargs)
 
-        elif xai_user_intent == XAI_User_Intent_Map[6]:
+        elif xai_user_intent == XAI_User_Intent_Map[9]:
             explanations = explain_example(
-                self.diversity_model, ai_input_instance, ai_predict_output, kwargs['conference'], **kwargs)
+                self.diversity_model, ai_input_instance, ai_predict_output, **kwargs)
 
         elif xai_user_intent == XAI_User_Intent_Map[2]:
             explanations = explain_attribution(

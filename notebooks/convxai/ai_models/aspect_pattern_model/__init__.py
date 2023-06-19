@@ -1,0 +1,1 @@
+from .aspect_pattern_model import *

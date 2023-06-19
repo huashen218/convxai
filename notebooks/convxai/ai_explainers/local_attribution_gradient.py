@@ -3,7 +3,8 @@ import numpy as np
 from torch import backends
 from allennlp.nn import util
 
-from convxai.writing_models.dataloaders import *
+
+
 from ..ai_models import *
 
 device = torch.device('cpu')

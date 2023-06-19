@@ -11,9 +11,9 @@ import pandas as pd
 from typing import Optional
 from pprint import pprint
 from sentence_transformers import SentenceTransformer, util
+
+
 from convxai.utils import parse_system_config_file
-
-
 from ..ai_models import *
 
 
@@ -138,13 +138,13 @@ class CounterfactualExplainer():
                 })
 
         prompt_example = "\n".join([
-            f"\"{sample['text']}\" is labeled \"{label_mapping[sample['aspect']]}\""
+            f"\"{sample['text']}\" is labeled \"{diversity_model_label_mapping[sample['aspect']]}\""
             for sample in sample_list
         ])
 
         prompt = (
             f"Given the following examples:\n{prompt_example}\n\n\n"
-            f"Rewrite \"{input_text}\" into label \"{label_mapping[contrast_label]}\": "
+            f"Rewrite \"{input_text}\" into label \"{diversity_model_label_mapping[contrast_label]}\": "
         )
         return prompt
 
@@ -170,7 +170,7 @@ class CounterfactualExplainer():
         return {
             "original_input": input_text,
             "counterfactual_input": response["choices"][0]["text"].strip(),
-            "counterfactual_label": label_mapping[contrast_label],
+            "counterfactual_label": diversity_model_label_mapping[contrast_label],
             "counterfactual_confidence": 0.0,
         }
 
@@ -184,6 +184,7 @@ def main():
         contrast_label = 1,
         conference = "ICLR",
     )
+
 
 if __name__ == "__main__":
     main()
