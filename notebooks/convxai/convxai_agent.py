@@ -307,7 +307,7 @@ class ConvXAI(object):
 
 
     def _visualize_single_turn_dialog(self, user_input, responses):
-        message_html = """<div style='float: left; width: 30%; padding: 4px 10px; border-radius: 6px 6px 1px 6px; background: #347AB7; color: white;'>
+        message_html = """<div style='float: left; width: 50%; padding: 4px 10px; border-radius: 6px 6px 1px 6px; background: #347AB7; color: white;'>
             {text}
         </div>
         <div style='float: left;'>
@@ -318,7 +318,7 @@ class ConvXAI(object):
         <div style='float: left;'>
             👨🏼‍🏫:
         </div>
-        <div style='float: left; width: 30%; padding: 4px 10px; border-radius: 6px 6px 6px 1px; background: #B1CFE7;'>
+        <div style='float: left; width: 50%; padding: 4px 10px; border-radius: 6px 6px 6px 1px; background: #B1CFE7;'>
             {text}
         </div>
         """

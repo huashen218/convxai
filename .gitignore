@@ -21,7 +21,3 @@ runners/logs
 runners/*.log
 
 
-
-convxai/xai_models/preprocessing/xai_user_intent_classification
-convxai/xai_models/preprocessing/
-convxai/xai_models/preprocessing/xai_user_intent_classification/src/wandb

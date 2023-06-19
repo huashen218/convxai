@@ -6,9 +6,9 @@
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![Arxiv](https://img.shields.io/badge/arxiv-2305.09770-green)](https://arxiv.org/pdf/2305.09770.pdf)
-<!-- [![Demo](https://img.shields.io/badge/demo-convxai-red)](http://usefulxai.org:8080/) -->
-<!-- [![PyPI version](https://badge.fury.io/py/zenoml.svg)](https://badge.fury.io/py/zenoml) -->
-<!-- [![Python application](https://github.com/dylan-slack/TalkToModel/actions/workflows/python-app.yml/badge.svg)](https://github.com/dylan-slack/TalkToModel/actions/workflows/python-app.yml)  -->
+[![Demo](https://img.shields.io/badge/demo-ConvXai-red)](http://usefulxai.org:8080/)
+[![Unified XAI API](https://img.shields.io/badge/API-UnifiedXAI-orange)](https://github.com/huashen218/convxai/blob/main/notebooks/convxai_unified_api.ipynb)
+
 
 
 This repository includes code for the ConvXAI system as described in the paper:
@@ -55,22 +55,10 @@ Table of Contents
 $conda create --name convxai python=3.7
 $conda activate convxai
 $pip install -r requirements.txt
-$conda install -c conda-forge git-lfs
+$conda install -c conda-forge git-lfs  # to support github large file upload
+$conda install -c conda-forge jsonnet  # to support allennlp package
 ```
 
-<!-- TODO
-From Pypi:
-```bash
-pip install convxai
-```
-
-From source:
-```bash
-git clone git@github.com:huashen218/convxai.git
-cd convxai
-pip install -e .
-```
- -->
 
 
 ### MongoDB setup
