@@ -3,6 +3,7 @@ scientific_writing:
     quality_model_dir: "huashen218/convxai-quality-model"
 
 conversational_xai:
+    intent_model: "/data/data/hua/workspace/projects/convxai/checkpoints/xai_models/xai_user_intent_model/intent-deberta-v3-xsmall"
     checkpoints_root_dir: "/data/data/hua/workspace/projects/convxai/checkpoints/xai_models/"
     xai_example_dir:
         xai_emample_embeddings_dir:

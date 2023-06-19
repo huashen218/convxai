@@ -58,9 +58,6 @@ For a brief summary of writing models, ConvXAI includes the pre-trained [diversi
 
 
 
-
-
-
 ### 4. Conversational XAI Models
 
 Please check the conversational XAI models at [convxai/xai_models/](convxai/xai_models/). ConvXAI specifies the `XaiAgent`, `XAIExplainer` and `AICommenter` in the `convxai/xai_models/xaiagent.py` file.

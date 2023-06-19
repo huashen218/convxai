@@ -16,8 +16,6 @@ from convxai.writing_models.trainers.diversity_trainer.data_loader import *
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-
-
 def output_score(score):
     table = pd.DataFrame(
         [score[3], score[0], score[1], score[2]],
@@ -25,8 +23,6 @@ def output_score(score):
         columns=["background", "purpose", "method", "finding", "other"],
     )
     return table
-
-
 
 
 def main(args):

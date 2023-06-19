@@ -12,7 +12,7 @@ opt:
   debug: True
   models:
     blender_90M:
-      model: convxai.xai_models.models.xaiagent:XaiAgent  ### Locate the ConvXAI xai_agent's model 
+      model: convxai.xai_models.models.convxai_coordinator:XaiAgent  ### Locate the ConvXAI xai_agent's model 
       interactive_mode: True
       no_cuda: True
 additional_args:

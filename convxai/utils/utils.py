@@ -5,16 +5,13 @@ import stanza
 import logging
 import numpy as np
 from pymongo import MongoClient
+# from nltk.tokenize import sent_tokenize
 
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
 nlp = stanza.Pipeline('en')
-
-
-def tokenize(x):
-    return x.split(" ")
 
 def counting_tokens(abs_text):
     ### Extract Abstracts ###
@@ -25,6 +22,10 @@ def counting_tokens(abs_text):
     tokens = [token.text for sentence in doc.sentences for token in sentence.tokens]
     return tokens
 
+
+
+def tokenize(x):
+    return x.split(" ")
 
 def create_folder(folder_list):
     """Create the folders if the pathes do not exist.
@@ -57,11 +58,20 @@ def h5_load(filename, data_list, dtype=None, verbose=False):
         return data
 
 
+
+
+
+# def paragraph_segmentation(abs_text):
+#     return sent_tokenize(abs_text)
+
+
+
 # splitPuctList = [";", "."]
 splitPuctList = ["."]
 LB = ["(", "[", "{"] 
 RB = [")", "]", "}"]
 minTokenNum = 6
+
 
 def paragraph_segmentation(abs_text):
 
@@ -115,6 +125,8 @@ def paragraph_segmentation(abs_text):
             sentences_content[sent_id].append(frag_content)
             fragment_content.append(text_fragments[sent_id][frag_id])
     return fragment_content
+
+
 
 
 class EarlyStop:

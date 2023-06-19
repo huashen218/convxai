@@ -137,34 +137,3 @@ def main():
 ### Debug
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-# output_path = "./ICLR"
-# with open('./ICLR_papers.json', 'r') as f:
-#   data = json.load(f)
-
-# for k in range(len(data)):
-#   abstract = data[k]['Abstract']
-#   prefix_split =  data[k]['url'].split('=')[-1]
-#   prefix = "".join(prefix_split)
-
-#   # exit(prefix)
-#   abstract_seg = abstract.split('. ')
-#   with open(os.path.join(output_path, f'{prefix}.txt'), 'w') as f:
-#       for line in abstract_seg:
-#           f.write(line[:-1] + " .\n" ) if line[-1] == "." else f.write(line + " .\n")
-
-
-
-
-
-
