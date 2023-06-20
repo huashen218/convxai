@@ -87,6 +87,7 @@ class XaiAgent(Agent):
         """
         response_text, response_indicator = self.xai_explainer.explain(
             self.user_inputs, self.ai_predict_outputs)
+        
         response = {
             "text": response_text,
             "writingIndex": response_indicator,
@@ -318,8 +319,6 @@ class ConvxaiCoordinator(object):
                 "attributes": None
             }
         
-        print("======>>>>>>!!!!!self.nlu(user_xai_question)[0]", self.nlu(user_xai_question)[0])
-
         if self.convxai_global_status_track[f"intent_round_{self.convxai_intent_round}"]["binded"] is True:
             # xai_user_intent = self.convxai_global_status_track[
             #     f"intent_round_{self.convxai_intent_round}"]['user_intent']
