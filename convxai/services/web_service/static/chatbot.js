@@ -603,25 +603,9 @@ function createContainer(typeOfContainer) {
             btnCounterfactual.setAttribute("id", "[Counterfactual Explanation]")
             btnCounterfactual.innerHTML = "Counterfactual Explanation"
 
-
-            // var btnAttribution = document.createElement("button");
-            // btnAttribution.setAttribute("class", "reply xaiquestionButton")
-            // btnAttribution.setAttribute("type", "button")
-            // btnAttribution.setAttribute("id", "[Important Words]")
-            // btnAttribution.innerHTML = "Which words are most important for this prediction?"
-
-            // var btnConfidence = document.createElement("button");
-            // btnConfidence.setAttribute("class", "reply xaiquestionButton")
-            // btnConfidence.setAttribute("type", "button")
-            // btnConfidence.setAttribute("id", "[Prediction Confidence]")
-            // btnConfidence.innerHTML = "Prediction Confidence"
-
-
             lastReplyContainer.appendChild(newReply)
             newReply.appendChild(aspectLabel)
-            // newReply.appendChild(btnConfidence)
             newReply.appendChild(btnExample)
-            // newReply.appendChild(btnAttribution)
             newReply.appendChild(btnCounterfactual)
 
             aspectLabel.onclick = handleExplanationButtonClicked;

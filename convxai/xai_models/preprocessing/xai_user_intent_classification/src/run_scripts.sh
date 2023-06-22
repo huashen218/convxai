@@ -10,10 +10,8 @@ DATA_FOLDER="../data"
 #         --input-file ${DATA_FOLDER}/xai_intent_all.csv \
 #         --output-folder ${DATA_FOLDER}/xai_intent_dataset
 
-  # --do_train \
-    # --model_name_or_path ${MODEL_NAME} \
+
 # 3 - train the model
-# MODEL_FOLDER="../checkpoints/intent-deberta-v3-xsmall"
 MODEL_FOLDER="/data/data/hua/workspace/projects/convxai/checkpoints/intent_model/intent-deberta-v3-xsmall"
 MODEL_NAME="microsoft/deberta-v3-xsmall"
 CUDA_VISIBLE_DEVICES=0 python run_glue.py \

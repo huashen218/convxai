@@ -25,10 +25,6 @@ def explain_attribution(model, input, predict_label, **kwargs):
     """
     top_k = kwargs["attributes"]["top_k"] if kwargs and kwargs["attributes"]["top_k"] is not None else 3
     label_idx = label_mapping[kwargs["attributes"]["aspect"]] if kwargs and kwargs["attributes"]["aspect"] is not None else predict_label
-    # if kwargs and kwargs["attributes"]["aspect"] is not None:
-    #     label_idx = label_mapping[kwargs["attributes"]["aspect"]]
-    # else:
-    #     label_idx = predict_label
 
 
     attribution_explainer = AttributionExplainer(model)
@@ -178,7 +174,6 @@ class AttributionExplainer(object):
         embeddings_gradients: List[Tensor] = []
         hooks: List[RemovableHandle] = self._register_embedding_gradient_hooks(self.predictor.model, embeddings_gradients)
 
-        ###### instance = ["Hospitalizations decreased in Australia and Singapore but increased in Taiwan , Republic of China ."]
         dataloader = self.batch_dataloader([instance])
         x_batch = next(iter(dataloader)).to(device)
 

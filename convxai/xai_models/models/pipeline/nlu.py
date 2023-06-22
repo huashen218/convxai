@@ -16,15 +16,6 @@ from convxai.utils import *
 
 import pdb
 
-# XAI_User_Intent_Map = {
-#     0: '[counterfactual prediction]',
-#     1: '[data statistics]',
-#     2: '[important words]',
-#     3: '[model description]',
-#     4: '[other]',
-#     5: '[prediction confidence]',
-#     6: '[similar examples]',
-# }
 
 
 XAI_User_Intent_Map = {

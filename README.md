@@ -7,7 +7,7 @@
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
 [![Arxiv](https://img.shields.io/badge/arxiv-2305.09770-green)](https://arxiv.org/pdf/2305.09770.pdf)
 [![Demo](https://img.shields.io/badge/demo-ConvXai-red)](http://usefulxai.org:8080/)
-[![Unified XAI API](https://img.shields.io/badge/API-UnifiedXAI-orange)](https://github.com/huashen218/convxai/blob/main/notebooks/convxai_unified_api.ipynb)
+[![Unified XAI API](https://img.shields.io/badge/API-UnifiedXAI-purple)](https://github.com/huashen218/convxai/blob/main/notebooks/convxai_unified_api.ipynb)
 
 
 
@@ -97,6 +97,7 @@ For instance, a user clone the convxai repo under `/home/huashen/workspace/proje
 
 ```yaml
 conversational_xai:
+    intent_model: "path_of_convxai/checkpoints/xai_models/xai_user_intent_model/intent-deberta-v3-xsmall"
     checkpoints_root_dir: "path_of_convxai/checkpoints/xai_models/"
     xai_example_dir:
         xai_emample_embeddings_dir:

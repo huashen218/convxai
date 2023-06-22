@@ -115,12 +115,7 @@ def main(args):
     """Handle the repository creation"""
     if accelerator.is_main_process:
         if configs["save_configs"]["push_to_hub"]:
-            # if configs["save_configs"]["hub_model_id"] is None:
-            #     repo_name = get_full_repo_name(Path(configs["save_configs"]["output_dir"]).name, token=configs["save_configs"]["hub_token"])
-            # else:
-            #     repo_name = configs["save_configs"]["hub_model_id"]
-            # repo = Repository(configs["save_configs"]["output_dir"], clone_from=repo_name)
-
+            
             with open(os.path.join(configs["save_configs"]["output_dir"], ".gitignore"), "w+") as gitignore:
                 if "step_*" not in gitignore:
                     gitignore.write("step_*\n")

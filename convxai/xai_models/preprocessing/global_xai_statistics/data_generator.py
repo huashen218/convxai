@@ -14,17 +14,8 @@ import csv
 import pandas as pd
 from tqdm import tqdm
 
-# import warnings
-
-# with warnings.catch_warnings():
-#     warnings.filterwarnings("ignore", category=DeprecationWarning)
-
 import os
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-
-# model_configs_dir = "/data/hua/workspace/projects/convxai/src/convxai/xai_models/models/model_configs.json"
-
-
 
 cia_data_root_path = "/home/hqs5468/hua/workspace/projects/convxai_user_study/src/convxai/writing_models/data/cia"
 
@@ -122,11 +113,6 @@ def main():
             "perplexity": perplexity, 
             "token_count": token_counts,
         }
-
-        # print(f"======>>>>>> conference {token_no} -- ")
-        # print(f"======>>>>>> The Token Count of abstract in '{conf}' conference is {len(filenames)}.")
-        # print(f"======>>>>>> The Token Count of abstract in '{conf}' conference is {sentence_no}.")
-        # print(f"======>>>>>> The Token Count of abstract in '{conf}' conference is {token_no}.")
 
 
         save_dir = f"/data/hua/workspace/projects/convxai_user_study/src/convxai/xai_models/data/{conf}.csv"

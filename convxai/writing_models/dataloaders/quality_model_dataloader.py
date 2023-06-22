@@ -11,12 +11,8 @@ from torch.utils.data import DataLoader
 from transformers import (
     default_data_collator,
 )
-# from transformers.utils.versions import require_version
-
 
 logger = logging.getLogger(__name__)
-
-# require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/language-modeling/requirements.txt")
 
 
 def h5_load(filename, data_list, dtype=None, verbose=False):

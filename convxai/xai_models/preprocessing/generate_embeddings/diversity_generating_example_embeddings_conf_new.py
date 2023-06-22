@@ -73,9 +73,7 @@ def generate_embeddings(inputs, diversity_model):
 def save_embeddings(texts, titles, links, diversity_model, conference, aspect_list, aspect_confidence_list, perplexity, token_counts, abstract_seg_scores):
 
     # x_train_embeddings = generate_embeddings(texts, diversity_model)
-
     # embedding_save_dir = f"/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_{conference}_embeddings.h5"
-    text_save_dir      = f"/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_{conference}_texts.h5"
 
     # ### Save embeddings ###
     # with h5py.File(embedding_save_dir, 'w') as outfile:
@@ -86,6 +84,8 @@ def save_embeddings(texts, titles, links, diversity_model, conference, aspect_li
     #         x_train_embeddings_tmp = np.empty(infile["x_train_embeddings"].shape, dtype=infile["x_train_embeddings"].dtype)
     #         infile["x_train_embeddings"].read_direct(x_train_embeddings_tmp)
 
+
+    text_save_dir      = f"/home/hqs5468/hua/workspace/projects/convxai/src/convxai/xai_models/data/explainer/xai_example_data/embeddings/diversity_model_{conference}_texts.h5"
 
     ### Save texts ###
     with h5py.File(text_save_dir, 'w') as outfile:

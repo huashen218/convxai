@@ -14,25 +14,10 @@ from convxai.writing_models.models import *
 from convxai.utils import *
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
-# logger = logging.getLogger("my-logger")
-# FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
-# # logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"), format=FORMAT)
-# logging.basicConfig(level=logging.DEBUG)
-# logger.setLevel(logging.INFO)
-
-
-
-# logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
-
-
-# logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
 logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-
-# logger.info('=============>>>>>>its working')
-
 
 class MessengerOverworld(World):
     """
