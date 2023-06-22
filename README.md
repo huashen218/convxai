@@ -5,9 +5,10 @@
 
 
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
-[![Arxiv](https://img.shields.io/badge/arxiv-2305.09770-green)](https://arxiv.org/pdf/2305.09770.pdf)
-[![Demo](https://img.shields.io/badge/demo-ConvXai-red)](http://usefulxai.org:8080/)
-[![Unified XAI API](https://img.shields.io/badge/API-UnifiedXAI-purple)](https://github.com/huashen218/convxai/blob/main/notebooks/convxai_unified_api.ipynb)
+[![Arxiv](https://img.shields.io/badge/Arxiv-2305.09770-green)](https://arxiv.org/pdf/2305.09770.pdf)
+[![Demo](https://img.shields.io/badge/LiveDemo-ConvXai-red)](http://usefulxai.org:8080/)
+[![Unified XAI API](https://img.shields.io/badge/API-UnifiedXAI-purple)](https://github.com/huashen218/convxai/blob/main/notebook_unified_XAI_API/convxai_unified_api.ipynb)
+[![Demo](https://img.shields.io/badge/Video-ConvXai-orange)](https://youtu.be/0RXRusy_3D8)
 
 
 
@@ -27,7 +28,11 @@ Bibtex for citations:
 }
 ```
 
+Quick Code Link
+=================
 
+- [ConvXAI Unified API Notebook](https://github.com/huashen218/convxai/blob/main/notebook_unified_XAI_API/convxai_unified_api.ipynb)
+- [Train your own XAI_Question_Classifier with ChatGPT](https://github.com/huashen218/convxai/tree/main/convxai/xai_models/preprocessing/xai_user_intent_classification)
 
 Table of Contents
 =================
