@@ -12,9 +12,10 @@
 
 
 
-This repository includes code for the ConvXAI system as described in the paper:
+This repository includes code for the ConvXAI<img src="assets/logo_wotext.png" width="21"> paper accepted in [CSCW 2023 Demo](https://cscw.acm.org/2023/index.php/submit-demos/):
 
 >[“ConvXAI<img src="assets/logo_wotext.png" width="21">: Delivering Heterogeneous AI Explanations via Conversations to Support Human-AI Scientific Writing](https://arxiv.org/pdf/2305.09770.pdf)  
+
 
 
 
